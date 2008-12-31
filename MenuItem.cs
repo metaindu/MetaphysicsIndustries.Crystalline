@@ -16,7 +16,19 @@ namespace MetaphysicsIndustries.Crystalline
         {
         }
 
-        public virtual void Click()
+        public void Click(CrystallineControl control)
+        {
+            try
+            {
+                InternalClick(control);
+            }
+            catch (Exception ee)
+            {
+                control.ReportException(ee);
+            }
+        }
+
+        protected virtual void InternalClick(CrystallineControl control)
         {
         }
 

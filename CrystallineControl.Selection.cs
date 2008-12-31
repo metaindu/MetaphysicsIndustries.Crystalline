@@ -27,7 +27,7 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public partial class CrystallineControl : UserControl
     {
-        protected enum SelectionModeType
+        public enum SelectionModeType
         {
             Element,
             Path,
@@ -35,7 +35,7 @@ namespace MetaphysicsIndustries.Crystalline
             Pathway,
         };
 
-        protected virtual SelectionModeType SelectionMode
+        public virtual SelectionModeType SelectionMode
         {
             get
             {

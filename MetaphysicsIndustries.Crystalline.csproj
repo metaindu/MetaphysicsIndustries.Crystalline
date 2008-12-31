@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MetaphysicsIndustries.Crystalline</RootNamespace>
-    <AssemblyName>Crystalline</AssemblyName>
+    <AssemblyName>MetaphysicsIndustries.Crystalline</AssemblyName>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -86,8 +86,9 @@
     </Compile>
     <Compile Include="CrystallineControlBoxParentChildrenCollection.cs" />
     <Compile Include="CrystallineControlEntityParentChildrenCollection.cs" />
-    <Compile Include="CrystallineControlFunctionalityOrderedParentChildrenCollection.cs" />
     <Compile Include="CrystallineControlPathParentChildrenCollection.cs" />
+    <Compile Include="CrystallineEngine.cs" />
+    <Compile Include="CrystallineEngineFunctionalityOrderedParentChildrenCollection.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="ElementCollection.cs" />
     <Compile Include="ElementPathChildrenCollection.cs" />
@@ -136,21 +137,21 @@
     <None Include="key.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MetaphysicsIndustries.Collections\MetaphysicsIndustries.Collections.csproj">
+    <Content Include="notes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MetaphysicsIndustries.Collections\MetaphysicsIndustries.Collections.csproj">
       <Project>{FF2B8A90-E8D2-4CF6-81E6-4A7BCE1FF900}</Project>
       <Name>MetaphysicsIndustries.Collections</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\MetaphysicsIndustries.Serialization\MetaphysicsIndustries.Serialization.csproj">
+    <ProjectReference Include="..\MetaphysicsIndustries.Serialization\MetaphysicsIndustries.Serialization.csproj">
       <Project>{486F1C93-4C96-436A-860D-D77DC7F48FB9}</Project>
       <Name>MetaphysicsIndustries.Serialization</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\MetaphysicsIndustries\MetaphysicsIndustries.csproj">
-      <Project>{E9727C2E-C9B0-4487-8EDE-2569970A764A}</Project>
-      <Name>MetaphysicsIndustries</Name>
+    <ProjectReference Include="..\MetaphysicsIndustries.Utilities\MetaphysicsIndustries.Utilities.csproj">
+      <Project>{221A3FBA-E14C-4F05-A099-42508116E910}</Project>
+      <Name>MetaphysicsIndustries.Utilities</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="notes.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

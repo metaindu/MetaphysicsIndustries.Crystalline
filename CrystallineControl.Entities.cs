@@ -88,7 +88,7 @@ namespace MetaphysicsIndustries.Crystalline
         //    return new Pathway();
         //}
 
-        protected virtual Set<Element> GetElementsAtPoint(PointF pf)
+        public virtual Set<Element> GetElementsAtPoint(PointF pf)
         {
             Set<Element> set;
 

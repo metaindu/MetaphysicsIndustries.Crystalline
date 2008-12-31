@@ -92,10 +92,10 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected override void RenderText(Graphics g, Pen pen, Brush brush, Font font)
         {
-            if (Framework.ParentControl.ShowDebugInfo)
-            {
+            //if (Framework.ParentControl.ShowDebugInfo)
+            //{
                 base.RenderText(g, pen, brush, font);
-            }
+            //}
         }
 
 		public virtual InboundToElementPathChildrenCollection Inbound

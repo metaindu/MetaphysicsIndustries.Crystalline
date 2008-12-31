@@ -33,12 +33,10 @@ namespace MetaphysicsIndustries.Crystalline
 			{
 				if (_vertical)
 				{
-					
 					return x.Location.Y.CompareTo(y.Location.Y);
 				}
 				else
 				{
-					
 					return x.Location.X.CompareTo(y.Location.X);
 				}
 			}
@@ -46,12 +44,10 @@ namespace MetaphysicsIndustries.Crystalline
 			{
 				if (_vertical)
 				{
-					
 					return x.Rect.Bottom.CompareTo(y.Rect.Bottom);
 				}
 				else
 				{
-					
 					return x.Rect.Right.CompareTo(y.Rect.Right);
 				}
 			}

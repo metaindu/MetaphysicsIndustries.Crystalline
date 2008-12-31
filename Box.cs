@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using MetaphysicsIndustries.Collections;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -348,7 +349,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         public PointF GetCenterOfBox()
         {
-            return MIMath.CalcCenterOfRectangle(Rect);
+            return Utilities.MIMath.CalcCenterOfRectangle(Rect);
         }
 
         private string _text;

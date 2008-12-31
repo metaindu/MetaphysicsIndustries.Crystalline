@@ -59,7 +59,7 @@
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>CrystallineControl.Cleanup.cs</FileName>
-      <HashCode>iKupsWGJhXvrH/WqHb3y1h6zjtPaJCQYeD+rxeKzIio=</HashCode>
+      <HashCode>iKupsWGJBXvrH/WqHb3w1h6TjtPaJCQYeD+rxeKzIio=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="MetaphysicsIndustries.Crystalline.CrystallineControlPathParentChildrenCollection" Collapsed="true" BaseTypeListCollapsed="true">
@@ -178,11 +178,11 @@
     <Position X="0.5" Y="19.25" Width="1.5" />
     <TypeIdentifier>
       <FileName>Functionality.cs</FileName>
-      <HashCode>AAIEIEAgAEAAAAAAAAAAAACCAAAAAAAgAAAQAIAAAkg=</HashCode>
+      <HashCode>AAIEIEAgAEAAAAAAAAAAAACCIAAgAAAgAAAQAIAAAkg=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="MetaphysicsIndustries.Crystalline.ConnectionEngine&lt;TFrom, TTo, TConduit&gt;" Collapsed="true">
-    <Position X="1.5" Y="20.5" Width="1.5" />
+    <Position X="1.5" Y="22" Width="1.5" />
     <TypeIdentifier>
       <FileName>ConnectionEngine.cs</FileName>
       <HashCode>AAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
@@ -203,24 +203,31 @@
     </TypeIdentifier>
   </Class>
   <Class Name="MetaphysicsIndustries.Crystalline.MenuDisplayEngine" Collapsed="true">
-    <Position X="1.5" Y="22" Width="1.5" />
+    <Position X="1.5" Y="23.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>MenuDisplayEngine.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="MetaphysicsIndustries.Crystalline.EntitySelection" Collapsed="true">
-    <Position X="5" Y="22" Width="1.5" />
+    <Position X="5" Y="23.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>EntitySelection.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Class Name="MetaphysicsIndustries.Crystalline.EntityMovement" Collapsed="true">
-    <Position X="3.25" Y="22" Width="1.5" />
+    <Position X="3.25" Y="23.5" Width="1.5" />
     <TypeIdentifier>
       <FileName>EntityMovement.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MetaphysicsIndustries.Crystalline.CrystallineEngine" Collapsed="true">
+    <Position X="1.5" Y="20.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>CrystallineEngine.cs</FileName>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Class>
   <Struct Name="MetaphysicsIndustries.Crystalline.Interval" Collapsed="true">
@@ -231,21 +238,21 @@
     </TypeIdentifier>
   </Struct>
   <Interface Name="MetaphysicsIndustries.Crystalline.IConnector&lt;TFrom, TTo, TConduit&gt;" Collapsed="true">
-    <Position X="3" Y="20.5" Width="1.5" />
+    <Position X="3" Y="22" Width="1.5" />
     <TypeIdentifier>
       <FileName>IConnector.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Interface>
   <Interface Name="MetaphysicsIndustries.Crystalline.IConnectee&lt;TFrom, TTo, TConduit&gt;" Collapsed="true">
-    <Position X="5" Y="20.5" Width="1.5" />
+    <Position X="5" Y="22" Width="1.5" />
     <TypeIdentifier>
       <FileName>IConnectee.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
     </TypeIdentifier>
   </Interface>
   <Interface Name="MetaphysicsIndustries.Crystalline.IConnectionConduit&lt;TFrom, TTo, TConduit&gt;" Collapsed="true">
-    <Position X="6.75" Y="20.5" Width="1.5" />
+    <Position X="6.5" Y="22" Width="1.5" />
     <TypeIdentifier>
       <FileName>IConnectionConduit.cs</FileName>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>

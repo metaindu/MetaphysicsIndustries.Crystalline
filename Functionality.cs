@@ -7,40 +7,73 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public abstract class Functionality
     {
-        public Functionality(CrystallineControl control)
+        public Functionality(CrystallineEngine engine)
         {
-            ParentCrystallineControl = control;
+            if (engine == null) { throw new ArgumentNullException("engine"); }
+
+            //ParentCrystallineControl = control;
+            ParentCrystallineEngine = engine;
         }
 
-        private CrystallineControl _parentCrystallineControl;
-        public CrystallineControl ParentCrystallineControl
+        protected Functionality()
         {
-            get { return _parentCrystallineControl; }
+            if (!(this is CrystallineEngine))
+            {
+                throw new InvalidOperationException("Parameterless constructor can only be accessed by CrystallineEngine");
+            }
+        }
+
+        //private CrystallineControl _parentCrystallineControl;
+        //public CrystallineControl ParentCrystallineControl
+        //{
+        //    get { return _parentCrystallineControl; }
+        //    set
+        //    {
+        //        if (value != _parentCrystallineControl)
+        //        {
+        //            if (_parentCrystallineControl != null)
+        //            {
+        //                _parentCrystallineControl.Functionalities.Remove(this);
+        //            }
+
+        //            _parentCrystallineControl = value;
+
+        //            if (_parentCrystallineControl != null)
+        //            {
+        //                _parentCrystallineControl.Functionalities.Add(this);
+        //            }
+        //        }
+        //    }
+        //}
+        private CrystallineEngine _parentCrystallineEngine;
+        public virtual CrystallineEngine ParentCrystallineEngine
+        {
+            get { return _parentCrystallineEngine; }
             set
             {
-                if (value != _parentCrystallineControl)
+                if (value != _parentCrystallineEngine)
                 {
-                    if (_parentCrystallineControl != null)
+                    if (_parentCrystallineEngine != null)
                     {
-                        _parentCrystallineControl.Functionalities.Remove(this);
+                        _parentCrystallineEngine.Functionalities.Remove(this);
                     }
 
-                    _parentCrystallineControl = value;
+                    _parentCrystallineEngine = value;
 
-                    if (_parentCrystallineControl != null)
+                    if (_parentCrystallineEngine != null)
                     {
-                        _parentCrystallineControl.Functionalities.Add(this);
+                        _parentCrystallineEngine.Functionalities.Add(this);
                     }
                 }
             }
         }
 
 
-        private bool _active;
-        public bool Active
+        private bool _isActive;
+        public bool IsActive
         {
-            get { return _active; }
-            set { _active = value; }
+            get { return _isActive; }
+            set { _isActive = value; }
         }
 
 

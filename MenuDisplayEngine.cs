@@ -6,8 +6,8 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public class MenuDisplayEngine : Functionality
     {
-        public MenuDisplayEngine(CrystallineControl control)
-            : base(control)
+        public MenuDisplayEngine(CrystallineEngine engine)
+            : base(engine)
         {
         }
 

@@ -13,11 +13,11 @@ namespace MetaphysicsIndustries.Crystalline
             set { _item = value; }
         }
 
-        public override void Click()
+        protected override void InternalClick(CrystallineControl control)
         {
             if (Item != null)
             {
-                Item.Click();
+                Item.Click(control);
             }
         }
 

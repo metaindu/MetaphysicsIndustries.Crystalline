@@ -7,7 +7,7 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public abstract class Entity : IDisposable
     {
-        public abstract void Render(Graphics g, Pen pen, Brush brush, Font font);
+        public abstract void Render(Graphics g, Pen pen, Brush brush, Font font);//InternalRender and try/catch?
 
         public virtual void Dispose()
         {

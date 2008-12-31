@@ -9,8 +9,8 @@ namespace MetaphysicsIndustries.Crystalline
         where TTo : Entity, IConnectee<TFrom, TTo, TConduit>
         where TConduit : Entity, IConnectionConduit<TFrom, TTo, TConduit>
     {
-        public ConnectionEngine(CrystallineControl control)
-            : base(control)
+        public ConnectionEngine(CrystallineEngine engine)
+            : base(engine)
         {
         }
 

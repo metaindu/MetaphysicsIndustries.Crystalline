@@ -6,8 +6,8 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public class EntitySelection : Functionality
     {
-        public EntitySelection(CrystallineControl control)
-            : base(control)
+        public EntitySelection(CrystallineEngine engine)
+            : base(engine)
         {
         }
     }

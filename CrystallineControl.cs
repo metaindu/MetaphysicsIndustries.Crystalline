@@ -44,10 +44,15 @@ namespace MetaphysicsIndustries.Crystalline
             //AutoScrollMargin = new Size(25, 25);
 
             InitEntities();
+
+            _engine = new CrystallineEngine(this);
+
             InitFunctionalities();
 
             UpdateScrolls();
         }
+
+        CrystallineEngine _engine;
 
         //private static int ConvertToTemp(int atdValue)
         //{
@@ -68,15 +73,15 @@ namespace MetaphysicsIndustries.Crystalline
         //    return f;
         //}
 
-        private void InitFunctionalities()
+        public void InitFunctionalities()
         {
-            _functionalities = new CrystallineControlFunctionalityOrderedParentChildrenCollection(this);
+            //_functionalities = new CrystallineControlFunctionalityOrderedParentChildrenCollection(this);
             InternalInitFunctionalities();
         }
 
         protected virtual void InternalInitFunctionalities()
         {
-            _menuDisplayEngine = new MenuDisplayEngine(this);
+            _menuDisplayEngine = new MenuDisplayEngine(_engine);
         }
 
         private void InitEntities()
@@ -143,7 +148,7 @@ namespace MetaphysicsIndustries.Crystalline
         }
         
         BoxFramework _framework;
-        protected BoxFramework Framework
+        public BoxFramework Framework
         {
             get { return _framework; }
         }
@@ -152,7 +157,7 @@ namespace MetaphysicsIndustries.Crystalline
             UpdateScrolls();
         }
 
-        protected void ReportException(Exception ee)
+        public void ReportException(Exception ee)
         {
             MessageBox.Show(this, "There was an error: \r\n" + ee.ToString());
         }
@@ -166,11 +171,11 @@ namespace MetaphysicsIndustries.Crystalline
             return Math.Sqrt(xx * xx + yy * yy);
         }
 
-        private CrystallineControlFunctionalityOrderedParentChildrenCollection _functionalities;
-        public CrystallineControlFunctionalityOrderedParentChildrenCollection Functionalities
-        {
-            get { return _functionalities; }
-        }
+        //private CrystallineControlFunctionalityOrderedParentChildrenCollection _functionalities;
+        //public CrystallineControlFunctionalityOrderedParentChildrenCollection Functionalities
+        //{
+        //    get { return _functionalities; }
+        //}
 
         List<String>				_names;
     }

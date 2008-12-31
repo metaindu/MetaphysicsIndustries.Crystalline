@@ -124,10 +124,18 @@ namespace MetaphysicsIndustries.Crystalline
             Move(boxToMove, newLocation, null);
         }
 
+        private static int _moveCallCount = 0;
 		public virtual void Move(Box boxToMove, PointF newLocation, Set<Box> collidedBoxes)
         {
             if (boxToMove == null) { throw new ArgumentNullException("boxToMove"); }
 
+            _moveCallCount++;
+            if (_moveCallCount > 100)
+            {
+                _moveCallCount = 0;
+                throw new InvalidOperationException("Call count to BoxFramework.Move(Box, PointF, Set<Box>) exceeds 100");
+            }
+            
             float deltax = newLocation.X - boxToMove.X;
             float deltay = newLocation.Y - boxToMove.Y;
             float delta2;
@@ -139,14 +147,14 @@ namespace MetaphysicsIndustries.Crystalline
             ICollection<Box> moveneighbors;
             object param;
 
-            if (boxToMove is Element)
-			{
-                param = ((Element)(boxToMove)).Text;
-			}
-			else
-			{
-				param = boxToMove.ToString();
-			}
+            //if (boxToMove is Element)
+            //{
+            //    param = ((Element)(boxToMove)).Text;
+            //}
+            //else
+            //{
+            //    param = boxToMove.ToString();
+            //}
 			if (deltax != 0)
 			{
 				if (deltax > 0)
@@ -159,6 +167,11 @@ namespace MetaphysicsIndustries.Crystalline
 				}
 				foreach (Box ib in moveneighbors)
 				{
+                    if (ib is Element && ParentControl.SelectionElement.Contains((Element)ib)) 
+                    {
+                        continue;
+                    }
+
 					if (deltax > 0)
 					{
 						delta2 = boxToMove.Right + deltax - ib.Left;		
@@ -281,6 +294,11 @@ namespace MetaphysicsIndustries.Crystalline
 				}
 				foreach (Box ib in moveneighbors)
 				{
+                    if (ib is Element && ParentControl.SelectionElement.Contains((Element)ib)) 
+                    {
+                        continue;
+                    }
+
 					if (deltay > 0)
 					{
 						delta2 = boxToMove.Bottom + deltay - ib.Top;		
@@ -401,6 +419,8 @@ namespace MetaphysicsIndustries.Crystalline
 			_right.Sort(_sorterRight);
 			_up.Sort(_sorterUp);
 			_down.Sort(_sorterDown);
+
+            _moveCallCount--;
 		}
 
         protected virtual void Resize(Box boxToResize, SizeF newSize)

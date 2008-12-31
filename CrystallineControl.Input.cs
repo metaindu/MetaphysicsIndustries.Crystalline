@@ -657,7 +657,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         bool _isClick;
         PointF _dragAnchorInDocument;
-        bool _isDragSelecting;
+        public bool _isDragSelecting;
         PointF _selectionBoxPointInDocument;
     }
 }
