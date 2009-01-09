@@ -23,6 +23,21 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
+        public virtual CrystallineControl Control
+        {
+            get
+            {
+                if (ParentCrystallineEngine != null)
+                {
+                    return ParentCrystallineEngine.Control;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
         //private CrystallineControl _parentCrystallineControl;
         //public CrystallineControl ParentCrystallineControl
         //{
@@ -121,6 +136,20 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
         public virtual void ProcessClick(EventArgs e)
+        {
+        }
+
+        public virtual void ProcesssDoubleClick(EventArgs e)
+        {
+        }
+
+
+
+        public virtual void ProcessLoad(EventArgs e)
+        {
+        }
+
+        public virtual void ProcessPaint(PaintEventArgs e)
         {
         }
     }

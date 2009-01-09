@@ -51,6 +51,8 @@ namespace MetaphysicsIndustries.Crystalline
             Graphics _g = g;
 			float	min;
 			float	max;
+
+            //extract all debug stuff out of entity classes and into crystallinecontrol classes
             if (Framework.ParentControl.ShowDebugInfo)
             {
                 foreach (Box ib in this.LeftNeighbors)

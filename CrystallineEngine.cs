@@ -23,7 +23,7 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
         private CrystallineControl _control;
-        public CrystallineControl Control
+        public override CrystallineControl Control
         {
             get { return _control; }
         }

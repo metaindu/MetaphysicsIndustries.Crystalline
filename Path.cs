@@ -40,6 +40,20 @@ namespace MetaphysicsIndustries.Crystalline
             base.Dispose();
 		}
 
+        public override RectangleF GetBoundingBox()
+        {
+            if (PathJoints.Count < 1) { return new RectangleF(); }
+
+            RectangleF rect = new RectangleF(PathJoints[0].Location, new SizeF(0, 0));
+
+            foreach (PathJoint pj in PathJoints)
+            {
+                rect = RectangleF.Union(rect, new RectangleF(pj.Location, new SizeF(0, 0)));
+            }
+
+            return rect;
+        }
+
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {
             Render(g, pen, brush, font, true, true);

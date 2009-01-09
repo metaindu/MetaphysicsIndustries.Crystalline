@@ -44,6 +44,11 @@ namespace MetaphysicsIndustries.Crystalline
             base.Dispose();
         }
 
+        public override RectangleF GetBoundingBox()
+        {
+            return Rect;
+        }
+
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {
             RectangleF r;
@@ -563,7 +568,7 @@ namespace MetaphysicsIndustries.Crystalline
             //}
         }
 
-        protected void InvalidateWithinParentControl()
+        protected virtual void InvalidateWithinParentControl()
         {
             if (Framework != null && Framework.ParentControl != null)
             {

@@ -36,10 +36,12 @@ namespace MetaphysicsIndustries.Crystalline
                 }
             }
         }
+
         protected void SetParentCrystallineControl(CrystallineControl value)
         {
             _parentCrystallineControl = value;
         }
 
+        public abstract RectangleF GetBoundingBox();
     }
 }

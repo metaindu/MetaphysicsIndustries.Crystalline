@@ -43,13 +43,18 @@ namespace MetaphysicsIndustries.Crystalline
             //BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             //AutoScrollMargin = new Size(25, 25);
 
-            InitEntities();
+            _engine = InitEngine();
 
-            _engine = new CrystallineEngine(this);
+            InitEntities();
 
             InitFunctionalities();
 
             UpdateScrolls();
+        }
+
+        protected virtual CrystallineEngine InitEngine()
+        {
+            return new CrystallineEngine(this);
         }
 
         CrystallineEngine _engine;

@@ -35,6 +35,10 @@ namespace MetaphysicsIndustries.Crystalline
 			_location = location;
 		}
 
+        public override RectangleF GetBoundingBox()
+        {
+            return new RectangleF(Location, new SizeF(2, 2));
+        }
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {

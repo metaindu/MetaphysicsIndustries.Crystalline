@@ -108,14 +108,14 @@ namespace MetaphysicsIndustries.Crystalline
                 RenderDebugInfo2(g);
             }
 
-            if (ShallRenderElements)
-            {
-                RenderElements(g);
-            }
-
             if (ShallRenderPaths)
             {
                 RenderPaths(g);
+            }
+
+            if (ShallRenderElements)
+            {
+                RenderElements(g);
             }
 
             if (ShallRenderPathingJunctions)
@@ -525,25 +525,25 @@ namespace MetaphysicsIndustries.Crystalline
             return rect;
         }
 
-        protected virtual void InvalidateRectInClient(RectangleF rect)
+        public virtual void InvalidateRectInClient(RectangleF rect)
         {
             Invalidate(Rectangle.Ceiling(rect));
         }
-        protected virtual void InvalidateRectInDocument(RectangleF rect)
+        public virtual void InvalidateRectInDocument(RectangleF rect)
         {
             InvalidateRectInClient(ClientSpaceFromDocumentSpace(rect));
         }
 
-        protected virtual void InvalidateRectFromPath(Path path)
+        public virtual void InvalidateRectFromEntity(Entity entity)
+        {
+            InvalidateRectInDocument(entity.GetBoundingBox());
+        }
+
+        public virtual void InvalidateRectFromPath(Path path)
         {
             if (path.PathJoints.Count > 0)
             {
-                RectangleF rect = new RectangleF(path.PathJoints[0].Location, new SizeF(0, 0));
-
-                foreach (PathJoint pj in path.PathJoints)
-                {
-                    rect = RectangleF.Union(rect, new RectangleF(pj.Location, new SizeF(0, 0)));
-                }
+                RectangleF rect = path.GetBoundingBox();
 
                 rect.Inflate(2, 2);
 
@@ -559,7 +559,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        protected void InvalidateRectFromElement(Element element)
+        public void InvalidateRectFromElement(Element element)
         {
             RectangleF rect = CalcInvalidationRectForBox(element);
 
@@ -587,7 +587,7 @@ namespace MetaphysicsIndustries.Crystalline
             InvalidateRectInDocument(rect);
         }
 
-        protected void InvalidateRectFromPointsInDocument(PointF pt1, PointF pt2)
+        public void InvalidateRectFromPointsInDocument(PointF pt1, PointF pt2)
         {
             RectangleF rect = new RectangleF();
 

@@ -137,6 +137,7 @@
     <None Include="key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="names.txt" />
     <Content Include="notes.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,11 @@ namespace MetaphysicsIndustries.Crystalline
         {
         }
 
+        public override RectangleF GetBoundingBox()
+        {
+            return new RectangleF();
+        }
+
         public void Click(CrystallineControl control)
         {
             try

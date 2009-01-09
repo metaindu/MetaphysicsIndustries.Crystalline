@@ -110,7 +110,7 @@ namespace MetaphysicsIndustries.Crystalline
                     s1 = GetElementsAtPoint(_dragAnchorInDocument);
                     if (s1.Count > 0)
                     {
-                        s2 = SelectionElement.Intersection(s1);
+                        s2 = Set<Element>.Intersection(s1, SelectionElement);
                         if (s2.Count > 0)
                         {
                             //clicked a previously-selected element
@@ -151,7 +151,7 @@ namespace MetaphysicsIndustries.Crystalline
                     s1 = GetPathJointsAtPoint(clickLocationInDocument);
                     if (s1.Count > 0)
                     {
-                        s2 = SelectionPathJoint.Intersection(s1);
+                        s2 = Set<PathJoint>.Intersection(s1, SelectionPathJoint);
                         if (s2.Count > 0)
                         {
                             //clicked a previously-selected element
@@ -181,7 +181,7 @@ namespace MetaphysicsIndustries.Crystalline
                     s1 = GetPathingJunctionsAtPoint(clickLocationInDocument);
                     if (s1.Count > 0)
                     {
-                        s2 = SelectionPathingJunction.Intersection(s1);
+                        s2 = Set<PathingJunction>.Intersection(s1, SelectionPathingJunction);
                         if (s2.Count > 0)
                         {
                             //clicked a previously-selected element
@@ -211,7 +211,7 @@ namespace MetaphysicsIndustries.Crystalline
                     s1 = GetPathwaysAtPoint(clickLocationInDocument);
                     if (s1.Count > 0)
                     {
-                        s2 = SelectionPathway.Intersection(s1);
+                        s2 = Set<Pathway>.Intersection(s1, SelectionPathway);
                         if (s2.Count > 0)
                         {
                             //clicked a previously-selected element

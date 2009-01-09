@@ -1,18 +1,19 @@
 
 Crystalline	the root
-Zirconia	Build
-Diamond		the successor to Build
+Zirconia	Build (Stonemason)
+Diamond		the successor to Build/Stonemason
 Ruby		flow charts
 Emerald		state graphs
-Sapphire	??? Regency(UI) or hydras?
+Sapphire	??? Regency(UI) or hydras? general charts & graphs?
 Amethyst	Epiphany
-Onyx		makes crystalline controls
-
+Onyx		makes crystalline controls?
+Quartz		electrical circuits
+Garnet		controls
 
 
 Feldspar/Moonstone
 Beryl
-Garnet
+
 Jasper
 Topaz
 Opal
@@ -23,3 +24,8 @@ Sugar?
 Salt
 
 Obsidian? (not really a crystal)
+
+Jacinth
+Sardius
+Carbunkle
+Chalcedony
