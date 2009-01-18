@@ -130,15 +130,20 @@ namespace MetaphysicsIndustries.Crystalline
         //Pen _connectionPen = new Pen(Color.Gold, 2);
         Pen _connectionPen2 = new Pen(Color.Gold, 2);
 
+        public Pen ConnectionPen
+        {
+            get { return _connectionPen2; }
+        }
+
         public Pen ChoosePenForElement(Element element)
         {
             if (element == _connectionSource)
             {
-                return _connectionPen2;
+                return ConnectionPen;
             }
             else if (element == _connectionTargetCandidate)
             {
-                return _connectionPen2;
+                return ConnectionPen;
             }
 
             return null;

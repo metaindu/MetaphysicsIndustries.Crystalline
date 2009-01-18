@@ -37,7 +37,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        protected void SetParentCrystallineControl(CrystallineControl value)
+        protected virtual void SetParentCrystallineControl(CrystallineControl value)
         {
             _parentCrystallineControl = value;
         }
