@@ -65,7 +65,7 @@ namespace MetaphysicsIndustries.Crystalline
             if (!this.Contains(b))
             {
                 _set.Add(b);
-                b.Framework = this;
+                b.ParentCrystallineControl = this.ParentControl;
 
                 int i;
 
@@ -550,7 +550,7 @@ namespace MetaphysicsIndustries.Crystalline
                     box.UpNeighbors.Remove(b);
                 }
 
-                b.Framework = null;
+                b.ParentCrystallineControl = null;// Framework = null;
 
                 UpdateBounds();
 

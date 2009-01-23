@@ -35,11 +35,11 @@ namespace MetaphysicsIndustries.Crystalline
 
         public override void Dispose()
         {
+            ParentCrystallineControl = null;
             _left.Dispose();
             _right.Dispose();
             _up.Dispose();
             _down.Dispose();
-            Framework = null;
 
             base.Dispose();
         }
@@ -366,20 +366,31 @@ namespace MetaphysicsIndustries.Crystalline
 
         public virtual BoxFramework Framework
         {
+            //get
+            //{
+            //    return _framework;
+            //}
+            //set
+            //{
+            //    if (Framework != value)
+            //    {
+            //        if (Framework != null) { Framework.Remove(this); }
+            //        _framework = value;
+            //        if (Framework != null) { Framework.Add(this); }
+
+            //        InvalidateWithinParentControl();
+            //        UpdateNeighbors();
+            //    }
+            //}
             get
             {
-                return _framework;
-            }
-            set
-            {
-                if (Framework != value)
+                if (ParentCrystallineControl != null)
                 {
-                    if (Framework != null) { Framework.Remove(this); }
-                    _framework = value;
-                    if (Framework != null) { Framework.Add(this); }
-
-                    InvalidateWithinParentControl();
-                    UpdateNeighbors();
+                    return ParentCrystallineControl.Framework;
+                }
+                else
+                {
+                    return null;
                 }
             }
         }
@@ -622,6 +633,5 @@ namespace MetaphysicsIndustries.Crystalline
                 }
             }
         }
-
     }
 }
