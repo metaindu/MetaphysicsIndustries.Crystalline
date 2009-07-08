@@ -9,9 +9,11 @@ Amethyst	Epiphany
 Onyx		makes crystalline controls?
 Quartz		electrical circuits
 Garnet		controls
+Feldspar	database table diagrams
+Moonstone	database query diagrams
 
 
-Feldspar/Moonstone
+
 Beryl
 
 Jasper

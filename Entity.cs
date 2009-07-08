@@ -13,7 +13,7 @@ namespace MetaphysicsIndustries.Crystalline
         {
         }
 
-        [MetaphysicsIndustries.Serialization.Serializable(false)]
+        //[MetaphysicsIndustries.Serialization.Serializable(false)]
         private CrystallineControl _parentCrystallineControl;
         public virtual CrystallineControl ParentCrystallineControl
         {

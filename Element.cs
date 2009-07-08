@@ -213,5 +213,16 @@ namespace MetaphysicsIndustries.Crystalline
         {
             get { return true; }
         }
+
+        public virtual bool ShallProcessDoubleClick
+        {
+            get { return false; }
+        }
+
+        public virtual void ProcessDoubleClick(CrystallineControl control)
+        {
+        }
+
+
     }
 }

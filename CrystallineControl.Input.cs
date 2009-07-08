@@ -619,6 +619,23 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void ProcessMouseDoubleClick(MouseEventArgs e)
         {
+            PointF docSpace = DocumentSpaceFromClientSpace(e.Location);
+            Element element = GetFrontmostElementAtPointInDocumentSpace(docSpace);
+
+            if (element != null)
+            {
+                try
+                {
+                    if (element.ShallProcessDoubleClick)
+                    {
+                        element.ProcessDoubleClick(this);
+                    }
+                }
+                catch (Exception ee)
+                {
+                    MessageBox.Show(this, "There was an exception while processing the double-click: " + ee.ToString());
+                }
+            }
         }
 
         private Point _lastRightClickInClient;

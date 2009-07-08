@@ -603,7 +603,7 @@ namespace MetaphysicsIndustries.Crystalline
             //}
         }
 
-        [Serialization.Serializable(false)]
+        //[Serialization.Serializable(false)]
         private BoxFramework _framework;
         private BoxNeighborCollection _up;
         private BoxNeighborCollection _right;

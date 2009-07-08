@@ -77,6 +77,8 @@ namespace MetaphysicsIndustries.Crystalline
             if (Contains(item))
             {
                 _count--;
+                item.From = null;
+                item.To = null;
             }
 
             return _parentInterlinking.Remove(item);
