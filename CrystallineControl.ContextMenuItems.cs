@@ -253,12 +253,12 @@ namespace MetaphysicsIndustries.Crystalline
             AddMenuItem(item, menu, clickHandler);
         }
 
-        protected void AddMenuItem(ToolStripItem item, ToolStripMenuItem menu)
+        public void AddMenuItem(ToolStripItem item, ToolStripMenuItem menu)
         {
             AddMenuItem(item, menu, null);
         }
 
-        protected void AddMenuItem(ToolStripItem item, ToolStripMenuItem menu, EventHandler clickHandler)
+        public void AddMenuItem(ToolStripItem item, ToolStripMenuItem menu, EventHandler clickHandler)
         {
             if (item == null) { throw new ArgumentNullException("item"); }
 							

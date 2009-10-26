@@ -145,10 +145,6 @@
       <Project>{FF2B8A90-E8D2-4CF6-81E6-4A7BCE1FF900}</Project>
       <Name>MetaphysicsIndustries.Collections</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MetaphysicsIndustries.Serialization\MetaphysicsIndustries.Serialization.csproj">
-      <Project>{486F1C93-4C96-436A-860D-D77DC7F48FB9}</Project>
-      <Name>MetaphysicsIndustries.Serialization</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MetaphysicsIndustries.Utilities\MetaphysicsIndustries.Utilities.csproj">
       <Project>{221A3FBA-E14C-4F05-A099-42508116E910}</Project>
       <Name>MetaphysicsIndustries.Utilities</Name>

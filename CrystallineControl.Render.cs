@@ -43,7 +43,14 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            ProcessPaint(e);
+            try
+            {
+                ProcessPaint(e);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "There was an error: \r\n" + ex.ToString());
+            }
 
             base.OnPaint(e);
         }

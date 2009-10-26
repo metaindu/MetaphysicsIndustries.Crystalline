@@ -71,14 +71,16 @@ namespace MetaphysicsIndustries.Crystalline
 
         }
 
-        public virtual void RemoveRange(params T[] boxesToRemove)
+        public virtual void RemoveRange<U>(params U[] boxesToRemove)
+            where U : T
         {
             RemoveRange((ICollection<T>)boxesToRemove);
         }
 
-        public virtual void RemoveRange(ICollection<T> boxesToRemove)
+        public virtual void RemoveRange<U>(ICollection<U> boxesToRemove)
+            where U : T
         {
-            foreach (T t in boxesToRemove)
+            foreach (U t in boxesToRemove)
             {
                 Remove(t);
             }
@@ -91,9 +93,10 @@ namespace MetaphysicsIndustries.Crystalline
 
         }
 
-        public virtual void AddRange(IEnumerable<T> items)
+        public virtual void AddRange<U>(IEnumerable<U> items)
+            where U : T
         {
-            foreach (T item in items)
+            foreach (U item in items)
             {
                 Add(item);
             }

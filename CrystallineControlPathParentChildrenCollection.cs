@@ -37,9 +37,10 @@ namespace MetaphysicsIndustries.Crystalline
         {
             AddRange((IEnumerable<Path>)items);
         }
-        public void AddRange(IEnumerable<Path> items)
+        public void AddRange<T>(IEnumerable<T> items)
+            where T : Path
         {
-            foreach (Path item in items)
+            foreach (T item in items)
             {
                 Add(item);
             }
@@ -48,9 +49,10 @@ namespace MetaphysicsIndustries.Crystalline
         {
             RemoveRange((IEnumerable<Path>)items);
         }
-        public void RemoveRange(IEnumerable<Path> items)
+        public void RemoveRange<T>(IEnumerable<T> items)
+            where T : Path
         {
-            foreach (Path item in items)
+            foreach (T item in items)
             {
                 Remove(item);
             }
