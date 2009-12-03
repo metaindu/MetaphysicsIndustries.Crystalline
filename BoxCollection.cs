@@ -142,6 +142,7 @@ namespace MetaphysicsIndustries.Crystalline
             return GetEnumerator();
         }
 
+        [NonSerialized]
         private BoxFramework _framework;
         private ICollection<T> _collection;
     }

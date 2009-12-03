@@ -20,6 +20,7 @@ using System.Drawing;
 
 namespace MetaphysicsIndustries.Crystalline
 {
+    [Serializable]
     public class Path : Entity, IConnectionConduit<Element, Element, Path>
 	{
 		public Path()

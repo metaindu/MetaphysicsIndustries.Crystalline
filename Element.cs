@@ -21,6 +21,7 @@ using System.Drawing;
 
 namespace MetaphysicsIndustries.Crystalline
 {
+    [Serializable]
     public class Element : Box, IConnector<Element, Element, Path>, IConnectee<Element, Element, Path>
 	{
 		public Element()

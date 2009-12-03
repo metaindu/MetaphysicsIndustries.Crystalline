@@ -20,7 +20,8 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-	public class OutboundFromElementPathChildrenCollection : ElementPathChildrenCollection
+    [Serializable]
+    public class OutboundFromElementPathChildrenCollection : ElementPathChildrenCollection
 	{
         private OutboundFromElementPathChildrenCollection() { }
 		public OutboundFromElementPathChildrenCollection(Element parent)

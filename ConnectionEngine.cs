@@ -8,9 +8,9 @@ using System.Drawing;
 namespace MetaphysicsIndustries.Crystalline
 {
     public abstract class ConnectionEngine<TFrom, TTo, TConduit> : Functionality
-        where TFrom : Element//, IConnector<TFrom, TTo, TConduit>             //change this to ": Entity"
-        where TTo : Element//, IConnectee<TFrom, TTo, TConduit>               //change this to ": Entity"
-        where TConduit : Path//, IConnectionConduit<TFrom, TTo, TConduit>     //change this to ": Entity"
+        where TFrom : Element//, IConnector<TFrom, TTo, TConduit>             //eventually change this to ": Entity" ?
+        where TTo : Element//, IConnectee<TFrom, TTo, TConduit>               //eventually change this to ": Entity" ?
+        where TConduit : Path//, IConnectionConduit<TFrom, TTo, TConduit>     //eventually change this to ": Entity" ?
                             , new()
     {
         public ConnectionEngine(CrystallineEngine engine)
@@ -37,7 +37,8 @@ namespace MetaphysicsIndustries.Crystalline
                 PointF connectionPoint = GetConnectionPoint();
 
                 Control.InvalidateRectFromPointsInDocument(connectionPoint, Control.LastMouseMoveInDocument);
-                Control.InvalidateRectFromPointsInDocument(connectionPoint, Control.DocumentSpaceFromClientSpace(e.Location));
+                PointF cursorLocationInDocument = Control.DocumentSpaceFromClientSpace(e.Location);
+                Control.InvalidateRectFromPointsInDocument(connectionPoint, cursorLocationInDocument);
 
                 InvalidateConnectionSelection();
 
@@ -124,6 +125,15 @@ namespace MetaphysicsIndustries.Crystalline
                 PointF cursor = Control.PointToClient(System.Windows.Forms.Control.MousePosition);
 
                 e.Graphics.DrawLine(_connectionPen, connectionPoint, cursor);
+
+                if (Control.ShowDebugInfo)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendFormat("connectionPoint = {{ {0}, {1} }}", connectionPoint.X, connectionPoint.Y);
+                    sb.AppendLine();
+
+                    e.Graphics.DrawString(sb.ToString(), Control.Font, Brushes.Green, 5, 360);
+                }
             }
         }
 

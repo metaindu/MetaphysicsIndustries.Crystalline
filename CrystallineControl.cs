@@ -152,6 +152,7 @@ namespace MetaphysicsIndustries.Crystalline
             _names.Add("Jeremy");
         }
         
+        [NonSerialized]
         BoxFramework _framework;
         public BoxFramework Framework
         {

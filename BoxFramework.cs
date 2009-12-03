@@ -20,6 +20,7 @@ using System.Drawing;
 
 namespace MetaphysicsIndustries.Crystalline
 {
+    [Serializable]
     public class BoxFramework : ICollection<Box>, IDisposable
     {
         public BoxFramework(CrystallineControl parentControl)
@@ -124,6 +125,7 @@ namespace MetaphysicsIndustries.Crystalline
             Move(boxToMove, newLocation, null);
         }
 
+        [NonSerialized]
         private static int _moveCallCount = 0;
         public virtual void Move(Box boxToMove, PointF newLocation, Set<Box> collidedBoxes)
         {
@@ -610,6 +612,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
+        [NonSerialized]
         CrystallineControl _parentControl;
         public CrystallineControl ParentControl
         {
@@ -816,6 +819,7 @@ namespace MetaphysicsIndustries.Crystalline
             return boxes;
         }
 
+        [NonSerialized]
         private RectangleF _bounds;
         public RectangleF Bounds
         {
@@ -879,21 +883,37 @@ namespace MetaphysicsIndustries.Crystalline
         //    get { return IsReadOnly; }
         //}
 
+        [NonSerialized]
         private BoxList _roleft;
+        [NonSerialized]
         private IntervalComparer _intervalSorter;
+        [NonSerialized]
         private BoxList _roup;
+        [NonSerialized]
         private BoxComparer _sorterRight;
+        [NonSerialized]
         private BoxComparer _sorterDown;
+        [NonSerialized]
         private List<Box> _down;
+        [NonSerialized]
         private List<Box> _left;
+        [NonSerialized]
         private BoxList _rodown;
+        [NonSerialized]
         private BoxList _roright;
+        [NonSerialized]
         private List<Box> _up;
+        [NonSerialized]
         private BoxComparer _sorterLeft;
+        [NonSerialized]
         private Set<Box> _set;
+        [NonSerialized]
         private List<Box> _right;
+        [NonSerialized]
         private BoxComparer _sorterUp;
+        [NonSerialized]
         private List<Box> _zOrder = new List<Box>();
+        [NonSerialized]
         private BoxList _roZOrder;
     }
 }

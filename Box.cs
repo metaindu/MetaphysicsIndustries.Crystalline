@@ -23,6 +23,7 @@ using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
+    [Serializable]
     public class Box : Entity/*,*/ /*IBox,*/ /*IDisposable*/
     {
         public Box()
@@ -555,6 +556,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
+        [field:NonSerialized]
         public virtual event EventHandler RectChanged;
 
         //public virtual event EventHandler RectChanging;
@@ -603,11 +605,15 @@ namespace MetaphysicsIndustries.Crystalline
             //}
         }
 
-        //[Serialization.Serializable(false)]
+        [NonSerialized]
         private BoxFramework _framework;
+        [NonSerialized]
         private BoxNeighborCollection _up;
+        [NonSerialized]
         private BoxNeighborCollection _right;
+        [NonSerialized]
         private BoxNeighborCollection _down;
+        [NonSerialized]
         private BoxNeighborCollection _left;
         private RectangleF _rect;
 

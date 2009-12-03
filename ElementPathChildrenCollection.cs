@@ -19,7 +19,8 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-	public abstract class ElementPathChildrenCollection : ICollection<Path>, IDisposable
+    [Serializable]
+    public abstract class ElementPathChildrenCollection : ICollection<Path>, IDisposable
 	{
         protected ElementPathChildrenCollection() { }
 

@@ -5,6 +5,7 @@ using System.Drawing;
 
 namespace MetaphysicsIndustries.Crystalline
 {
+    [Serializable]
     public abstract class Entity : IDisposable
     {
         public abstract void Render(Graphics g, Pen pen, Brush brush, Font font);//InternalRender and try/catch?
@@ -13,7 +14,7 @@ namespace MetaphysicsIndustries.Crystalline
         {
         }
 
-        //[MetaphysicsIndustries.Serialization.Serializable(false)]
+        [NonSerialized]
         private CrystallineControl _parentCrystallineControl;
         public virtual CrystallineControl ParentCrystallineControl
         {
