@@ -42,11 +42,16 @@ namespace MetaphysicsIndustries.Crystalline
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {
-			RectangleF	r = new RectangleF();
-            r.Location = Location - new SizeF(1, 1);
-            r.Size = new SizeF(3, 3);
-			g.FillRectangle(pen.Brush, r);
+            RenderPathJoint(g, pen, brush, font, Location);
 		}
+
+        public static void RenderPathJoint(Graphics g, Pen pen, Brush brush, Font font, PointF location)
+        {
+            RectangleF r = new RectangleF();
+            r.Location = location - new SizeF(1, 1);
+            r.Size = new SizeF(3, 3);
+            g.FillRectangle(pen.Brush, r);
+        }
 
 		public virtual Path ParentPath
 		{

@@ -1,7 +1,7 @@
 
 /*****************************************************************************
  *                                                                           *
- *  BoxNeighborCollection.cs                                                         *
+ *  BoxNeighborCollection.cs                                                 *
  *  19 March 2007                                                            *
  *  Project: Crystalline                                                     *
  *  Written by: Richard Sartor                                               *
@@ -20,13 +20,14 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
+    [Serializable]
 	public class BoxNeighborCollection : ICollection<Box>
 	{
         private BoxNeighborCollection() { }
-		public BoxNeighborCollection(Box __parent, BoxOrientation __orientation)
+		public BoxNeighborCollection(Box parent, BoxOrientation orientation)
 		{
-			_parent = __parent;
-			_orientation = __orientation;
+			_parent = parent;
+			_orientation = orientation;
 			_set = new Set<Box>();
 		}
 

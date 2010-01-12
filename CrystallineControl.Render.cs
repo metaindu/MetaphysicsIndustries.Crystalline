@@ -195,10 +195,11 @@ namespace MetaphysicsIndustries.Crystalline
             foreach (Path p in Paths)
             {
                 Pen pen = ChoosePenForPath(p);
+                Brush brush = pen.Brush;
 
                 if (nojointpaths.Contains(p))
                 {
-                    p.Render(g, Pens.Black, Brushes.Black, Font, false, ShowPathArrows);
+                    p.Render(g, pen, brush, Font, false, ShowPathArrows);
 
                     int i;
                     int j;
@@ -220,7 +221,7 @@ namespace MetaphysicsIndustries.Crystalline
                             }
                             else
                             {
-                                pj.Render(g, Pens.Black, null, null);
+                                pj.Render(g, pen, null, null);
                             }
                         }
                     }
@@ -233,13 +234,13 @@ namespace MetaphysicsIndustries.Crystalline
                         }
                         else
                         {
-                            p.RenderArrow(g, Pens.Black, Brushes.Black, Font, p.PathJoints[j - 1].Location, pj.Location);
+                            p.RenderArrow(g, pen, brush, Font, p.PathJoints[j - 1].Location, pj.Location);
                         }
                     }
                 }
                 else
                 {
-                    p.Render(g, Pens.Black, Brushes.Black, Font, ShowPathJoints, ShowPathArrows);
+                    p.Render(g, pen, brush, Font, ShowPathJoints, ShowPathArrows);
                 }
             }
         }

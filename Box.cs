@@ -605,15 +605,15 @@ namespace MetaphysicsIndustries.Crystalline
             //}
         }
 
-        [NonSerialized]
+        //[NonSerialized]
         private BoxFramework _framework;
-        [NonSerialized]
+        //[NonSerialized]
         private BoxNeighborCollection _up;
-        [NonSerialized]
+        //[NonSerialized]
         private BoxNeighborCollection _right;
-        [NonSerialized]
+        //[NonSerialized]
         private BoxNeighborCollection _down;
-        [NonSerialized]
+        //[NonSerialized]
         private BoxNeighborCollection _left;
         private RectangleF _rect;
 
