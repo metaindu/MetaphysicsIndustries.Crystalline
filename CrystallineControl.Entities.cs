@@ -362,6 +362,54 @@ namespace MetaphysicsIndustries.Crystalline
             SelectionPathingJunction.Remove(pathingJunctionToRemove);
         }
 
+        
+        protected void ResetBoxNeighbors(IEnumerable<Box> boxesToReset)
+        {
+            //This method is a kludge necessary because changing the location
+            //of a box doesn't automatically update its neighbors collections.
+            //This will no longer be necessary once the R-Tree is in place,
+            //instead of the BoxFramework.
+
+            Set<Box> boxen = new Set<Box>(boxesToReset);
+
+            Set<Path> inbound = new Set<Path>();
+            Set<Path> outbound = new Set<Path>();
+
+            foreach (Box box in boxen)
+            {
+                Element elem = (box as Element);
+                if (elem != null)
+                {
+                    inbound.Clear();
+                    outbound.Clear();
+
+                    inbound.AddRange(elem.Inbound);
+                    outbound.AddRange(elem.Outbound);
+                }
+
+                Framework.Remove(box);
+                box.UpNeighbors.Clear();
+                box.DownNeighbors.Clear();
+                box.LeftNeighbors.Clear();
+                box.RightNeighbors.Clear();
+                Framework.Add(box);
+
+                if (elem != null)
+                {
+                    Collection.AddRange<Path, Path>(elem.Inbound, inbound);
+                    Collection.AddRange<Path, Path>(elem.Outbound, outbound);
+                }
+
+                InvalidateRectFromBox(box);
+            }
+        }
+        protected void ResetAllBoxNeighbors()
+        {
+            ResetBoxNeighbors(Boxes);
+        }
+
+
+
         ElementCollection _elements;
         CrystallineControlPathParentChildrenCollection _paths;
         PathingJunctionCollection _pathingJunctions;

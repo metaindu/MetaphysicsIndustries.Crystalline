@@ -85,6 +85,43 @@ namespace MetaphysicsIndustries.Crystalline
             base.OnMouseDoubleClick(e);
         }
 
+        public enum SelectionQuantityE
+        {
+            Single,   //clicked right on an item
+            Multiple, //dragging a selection box
+        }
+
+        public enum SelectionOperationE
+        {
+            None,
+            Add,
+            Remove,
+        }
+
+        private SelectionQuantityE _selectionQuantity;
+        public SelectionQuantityE SelectionQuantity
+        {
+            get { return _selectionQuantity; }
+        }
+
+        public SelectionOperationE SelectionOperation
+        {
+            get
+            {
+                if (ModifierKeys == (Keys.Shift | Keys.Control))
+                {
+                }
+                else if (ModifierKeys == Keys.Control)
+                {
+                }
+                else if (ModifierKeys == Keys.Shift)
+                {
+                }
+
+                return SelectionOperationE.None;
+            }
+        }
+
         protected virtual void ProcessMouseDown(MouseEventArgs e)
         {
             //selectionelement.Clear();
@@ -114,12 +151,28 @@ namespace MetaphysicsIndustries.Crystalline
                         if (s2.Count > 0)
                         {
                             //clicked a previously-selected element
+
+                            //if the shift key is down, remove it
+                            if ((ModifierKeys & Keys.Shift) != Keys.None)
+                            {
+                                SelectionElement.RemoveRange(s2);
+                            }
                         }
                         else
                         {
                             //clicked a different element
                             //need to update z-order
-                            SelectionElement.Clear();
+
+                            //if the control key is down, add it
+                            //otherwise, clear the selection
+                            if ((ModifierKeys & Keys.Control) != Keys.None)
+                            {
+                            }
+                            else
+                            {
+                                SelectionElement.Clear();
+                            }
+
                             Element frontmost = s1.GetFirst();
                             int index = Framework.ZOrder.IndexOf(frontmost);
                             foreach (Element ee in s1)
@@ -137,11 +190,18 @@ namespace MetaphysicsIndustries.Crystalline
                         }
                         _isDragSelecting = false;
                     }
-                    else
+                    else if (ModifierKeys == Keys.None)
                     {
                         SelectionElement.Clear();
                         _isDragSelecting = true;
                     }
+                    else if (ModifierKeys == Keys.Control)
+                    {
+                    }
+                    else if (ModifierKeys == Keys.Shift)
+                    {
+                    }
+
                 }
                 else if (SelectionMode == SelectionModeType.Path)
                 {

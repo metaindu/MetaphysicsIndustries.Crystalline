@@ -24,7 +24,7 @@ using MetaphysicsIndustries.Utilities;
 namespace MetaphysicsIndustries.Crystalline
 {
     [Serializable]
-    public class Box : Entity/*,*/ /*IBox,*/ /*IDisposable*/
+    public class Box : Entity
     {
         public Box()
         {
@@ -32,17 +32,6 @@ namespace MetaphysicsIndustries.Crystalline
             _right = new BoxNeighborCollection(this, BoxOrientation.Right);
             _up = new BoxNeighborCollection(this, BoxOrientation.Up);
             _down = new BoxNeighborCollection(this, BoxOrientation.Down);
-        }
-
-        public override void Dispose()
-        {
-            ParentCrystallineControl = null;
-            _left.Dispose();
-            _right.Dispose();
-            _up.Dispose();
-            _down.Dispose();
-
-            base.Dispose();
         }
 
         public override RectangleF GetBoundingBox()

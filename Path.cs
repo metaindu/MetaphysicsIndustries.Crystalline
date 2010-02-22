@@ -28,19 +28,6 @@ namespace MetaphysicsIndustries.Crystalline
 			_pathJoints = new PathPathJointChildrenCollection(this);
 		}
 
-		public override void Dispose()
-		{
-            To = null;
-            From = null;
-            ParentCrystallineControl = null;
-
-            //_pathJoints.Clear();
-			_pathJoints.Dispose();
-            //_pathJoints = null;
-
-            base.Dispose();
-		}
-
         public override RectangleF GetBoundingBox()
         {
             if (PathJoints.Count < 1) { return new RectangleF(); }

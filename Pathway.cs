@@ -28,13 +28,13 @@ namespace MetaphysicsIndustries.Crystalline
 			this.Size = new SizeF(50, 25);
 		}
 
-		public override void Dispose()
-		{
-            LeftUp = null;
-            RightDown = null;
+        //public override void Dispose()
+        //{
+        //    LeftUp = null;
+        //    RightDown = null;
 
-            base.Dispose();
-		}
+        //    base.Dispose();
+        //}
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
 		{

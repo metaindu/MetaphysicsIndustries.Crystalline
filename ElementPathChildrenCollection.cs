@@ -20,7 +20,7 @@ using MetaphysicsIndustries.Collections;
 namespace MetaphysicsIndustries.Crystalline
 {
     [Serializable]
-    public abstract class ElementPathChildrenCollection : ICollection<Path>, IDisposable
+    public abstract class ElementPathChildrenCollection : ICollection<Path>//, IDisposable
 	{
         protected ElementPathChildrenCollection() { }
 
@@ -30,11 +30,11 @@ namespace MetaphysicsIndustries.Crystalline
 			_set = new Set<Path>();
 		}
 
-		public virtual void Dispose()
-		{
-			this.Clear();
-            //_set.Dispose();
-		}
+        //public virtual void Dispose()
+        //{
+        //    this.Clear();
+        //    //_set.Dispose();
+        //}
 
 		public virtual void Add(Path path)
 		{

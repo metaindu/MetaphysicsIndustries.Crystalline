@@ -30,15 +30,15 @@ namespace MetaphysicsIndustries.Crystalline
 			Height = 25.0f;
 		}
 
-		public override void Dispose()
-		{
-            LeftPathway = null;
-            UpPathway = null;
-            RightPathway = null;
-            DownPathway = null;
+        //public override void Dispose()
+        //{
+        //    LeftPathway = null;
+        //    UpPathway = null;
+        //    RightPathway = null;
+        //    DownPathway = null;
 
-            base.Dispose();
-        }
+        //    base.Dispose();
+        //}
 
         //public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         //{

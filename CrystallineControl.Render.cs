@@ -547,6 +547,14 @@ namespace MetaphysicsIndustries.Crystalline
             InvalidateRectInDocument(entity.GetBoundingBox());
         }
 
+        public virtual void InvalidateRectFromEntities(IEnumerable<Entity> entities)
+        {
+            foreach (Entity ent in entities)
+            {
+                InvalidateRectFromEntity(ent);
+            }
+        }
+
         public virtual void InvalidateRectFromPath(Path path)
         {
             if (path.PathJoints.Count > 0)

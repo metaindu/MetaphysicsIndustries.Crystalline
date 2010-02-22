@@ -33,19 +33,19 @@ namespace MetaphysicsIndustries.Crystalline
             Size = new SizeF(50, 20);
 		}
 
-		public override void Dispose()
-		{
-            //_subElements.Clear();
-            //_subElements.Dispose();
+        //public override void Dispose()
+        //{
+        //    //_subElements.Clear();
+        //    //_subElements.Dispose();
 
-            //_inbound.Clear();
-            _inbound.Dispose();
+        //    //_inbound.Clear();
+        //    _inbound.Dispose();
 
-            //_outbound.Clear();
-            _outbound.Dispose();
+        //    //_outbound.Clear();
+        //    _outbound.Dispose();
 
-            base.Dispose();
-		}
+        //    base.Dispose();
+        //}
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {

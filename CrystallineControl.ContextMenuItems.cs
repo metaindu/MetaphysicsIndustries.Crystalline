@@ -328,7 +328,7 @@ namespace MetaphysicsIndustries.Crystalline
                     element.Outbound.Clear();
                     Elements.Remove(element);
                     SelectionElement.Remove(element);
-                    element.Dispose();
+                    //element.Dispose();
                 }
                 SelectionElement.Clear();
             }
