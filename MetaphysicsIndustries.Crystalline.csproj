@@ -116,6 +116,8 @@
     <Compile Include="PathwayCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyMenuItem.cs" />
+    <Compile Include="RTree.cs" />
+    <Compile Include="RTree.RNode.cs" />
     <Compile Include="SelectionRenderStyle.cs" />
     <Compile Include="SubElement.cs" />
   </ItemGroup>

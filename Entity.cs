@@ -40,5 +40,17 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
         public abstract RectangleF GetBoundingBox();
+
+        public event EventHandler BoundingBoxChanged;
+
+        protected virtual void OnBoundingBoxChanged()
+        {
+            if (BoundingBoxChanged != null)
+            {
+                EventArgs e = new EventArgs();
+
+                BoundingBoxChanged(this, e);
+            }
+        }
     }
 }

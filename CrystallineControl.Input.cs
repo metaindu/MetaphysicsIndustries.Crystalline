@@ -87,7 +87,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         public enum SelectionQuantityE
         {
-            Single,   //clicked right on an item
+            Single,   //clicked within an item's bounding box
             Multiple, //dragging a selection box
         }
 
