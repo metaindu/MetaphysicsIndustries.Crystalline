@@ -23,6 +23,7 @@ using System.Text;
 using System.Windows.Forms;
 using MetaphysicsIndustries.Collections;
 using System.Diagnostics;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -54,20 +55,20 @@ namespace MetaphysicsIndustries.Crystalline
                 return _paths;
             }
         }
-        public virtual PathingJunctionCollection PathingJunctions
-        {
-            get
-            {
-                return _pathingJunctions;
-            }
-        }
-        public virtual PathwayCollection Pathways
-        {
-            get
-            {
-                return _pathways;
-            }
-        }
+        //public virtual PathingJunctionCollection PathingJunctions
+        //{
+        //    get
+        //    {
+        //        return _pathingJunctions;
+        //    }
+        //}
+        //public virtual PathwayCollection Pathways
+        //{
+        //    get
+        //    {
+        //        return _pathways;
+        //    }
+        //}
 
         //protected virtual Element CreateElement()
         //{
@@ -88,25 +89,54 @@ namespace MetaphysicsIndustries.Crystalline
         //    return new Pathway();
         //}
 
-        public virtual Set<Element> GetElementsAtPoint(PointF pf)
+        public Entity[] GetEntitiesAtPointInDocument(Vector v)
         {
-            Set<Element> set;
+            return GetEntitiesAtPointInDocument<Entity>(v);
+        }
 
-            set = new Set<Element>();
+        public T[] GetEntitiesAtPointInDocument<T>(Vector v)
+            where T : Entity
+        {
+            //replace this with R-Tree implementation
 
-            foreach (Element e in this.Elements)
+            Set<T> set = new Set<T>();
+
+            foreach (T ent in Collection.Extract<Entity, T>(Entities))
             {
-                if (e.Rect.Contains(pf))
+                if (ent.GetBoundingBox().Contains(v))
                 {
-                    set.Add(e);
+                    set.Add(ent);
                 }
             }
 
-            return set;
+            return set.ToArray();
         }
-        protected virtual Set<Element> GetElementsInRect(RectangleF r)
+
+        public T[] GetEntitiesIntersectingRectInDocument<T>(RectangleV rect)
+            where T : Entity
         {
-            RectangleF _r = r;
+            //replace this with R-Tree implementation
+
+            Set<T> set = new Set<T>();
+
+            foreach (T ent in Collection.Extract<Entity, T>(Entities))
+            {
+                if (ent.GetBoundingBox().IntersectsWith(rect))
+                {
+                    set.Add(ent);
+                }
+            }
+
+            return set.ToArray();
+        }
+
+        public virtual Set<Element> GetElementsAtPoint(Vector v)
+        {
+            return new Set<Element>(GetEntitiesAtPointInDocument<Element>(v));
+        }
+        protected virtual Set<Element> GetElementsInRect(RectangleV r)
+        {
+            RectangleV _r = r;
 
             Set<Element> outElements;
 
@@ -121,21 +151,22 @@ namespace MetaphysicsIndustries.Crystalline
 
             return outElements;
         }
-        protected virtual Set<PathJoint> GetPathJointsAtPoint(PointF pf)
+        protected virtual Set<PathJoint> GetPathJointsAtPoint(Vector pf)
         {
             Set<PathJoint> set;
             set = new Set<PathJoint>();
 
-            RectangleF r = new RectangleF();
+            RectangleV r = new RectangleV();
             float size;
 
             size = 3;
 
-            r.Location = pf;
-            r.X -= size;
-            r.Y -= size;
-            r.Width = 2 * size + 1;
-            r.Height = 2 * size + 1;
+            //r.Location = pf;
+            //r.X -= size;
+            //r.Y -= size;
+            //r.Width = 2 * size + 1;
+            //r.Height = 2 * size + 1;
+            r = new RectangleV(pf.X - size, pf.Y - size, 2 * size + 1, 2 * size + 1);
 
             //int	i;
             //int	j;
@@ -155,7 +186,7 @@ namespace MetaphysicsIndustries.Crystalline
 
             return this.GetPathJointsInRect(r);
         }
-        protected virtual Set<PathJoint> GetPathJointsInRect(RectangleF r)
+        protected virtual Set<PathJoint> GetPathJointsInRect(RectangleV r)
         {
             Set<PathJoint> set;
             set = new Set<PathJoint>();
@@ -176,76 +207,76 @@ namespace MetaphysicsIndustries.Crystalline
 
             return set;
         }
-        protected virtual Set<PathingJunction> GetPathingJunctionsAtPoint(PointF pf)
-        {
-            Set<PathingJunction> set;
+        //protected virtual Set<PathingJunction> GetPathingJunctionsAtPoint(Vector pf)
+        //{
+        //    Set<PathingJunction> set;
 
-            set = new Set<PathingJunction>();
+        //    set = new Set<PathingJunction>();
 
-            foreach (PathingJunction p in this.PathingJunctions)
-            {
-                if (p.Rect.Contains(pf))
-                {
-                    set.Add(p);
-                }
-            }
+        //    foreach (PathingJunction p in this.PathingJunctions)
+        //    {
+        //        if (p.Rect.Contains(pf))
+        //        {
+        //            set.Add(p);
+        //        }
+        //    }
 
-            return set;
-        }
-        protected virtual Set<PathingJunction> GetPathingJunctionsInRect(RectangleF r)
-        {
-            RectangleF _r = r;
+        //    return set;
+        //}
+        //protected virtual Set<PathingJunction> GetPathingJunctionsInRect(RectangleV r)
+        //{
+        //    RectangleV _r = r;
 
-            Set<PathingJunction> outJunctions;
+        //    Set<PathingJunction> outJunctions;
 
-            outJunctions = new Set<PathingJunction>();
-            foreach (PathingJunction p in this.PathingJunctions)
-            {
-                if (p.Rect.IntersectsWith(r))
-                {
-                    outJunctions.Add(p);
-                }
-            }
+        //    outJunctions = new Set<PathingJunction>();
+        //    foreach (PathingJunction p in this.PathingJunctions)
+        //    {
+        //        if (p.Rect.IntersectsWith(r))
+        //        {
+        //            outJunctions.Add(p);
+        //        }
+        //    }
 
-            return outJunctions;
-        }
-        protected virtual Set<Pathway> GetPathwaysAtPoint(PointF pf)
-        {
-            PointF _pf = pf;
+        //    return outJunctions;
+        //}
+        //protected virtual Set<Pathway> GetPathwaysAtPoint(Vector pf)
+        //{
+        //    PointF _pf = pf;
 
-            Set<Pathway> set;
+        //    Set<Pathway> set;
 
-            set = new Set<Pathway>();
+        //    set = new Set<Pathway>();
 
-            foreach (Pathway p in this.Pathways)
-            {
-                if (p.Rect.Contains(pf))
-                {
-                    set.Add(p);
-                }
-            }
+        //    foreach (Pathway p in this.Pathways)
+        //    {
+        //        if (p.Rect.Contains(pf))
+        //        {
+        //            set.Add(p);
+        //        }
+        //    }
 
-            return set;
-        }
-        protected virtual Set<Pathway> GetPathwaysInRect(RectangleF r)
-        {
-            RectangleF _r = r;
+        //    return set;
+        //}
+        //protected virtual Set<Pathway> GetPathwaysInRect(RectangleV r)
+        //{
+        //    RectangleV _r = r;
 
-            Set<Pathway> outPathways;
+        //    Set<Pathway> outPathways;
 
-            outPathways = new Set<Pathway>();
-            foreach (Pathway p in this.Pathways)
-            {
-                if (p.Rect.IntersectsWith(r))
-                {
-                    outPathways.Add(p);
-                }
-            }
+        //    outPathways = new Set<Pathway>();
+        //    foreach (Pathway p in this.Pathways)
+        //    {
+        //        if (p.Rect.IntersectsWith(r))
+        //        {
+        //            outPathways.Add(p);
+        //        }
+        //    }
 
-            return outPathways;
-        }
+        //    return outPathways;
+        //}
 
-        protected virtual Element GetFrontmostElementAtPointInDocumentSpace(PointF pointInDocSpace)
+        protected virtual Element GetFrontmostElementAtPointInDocumentSpace(Vector pointInDocSpace)
         {
             Element frontmost = null;
 
@@ -280,31 +311,31 @@ namespace MetaphysicsIndustries.Crystalline
         public virtual void AddElement(Element elementToAdd)
         {
             Elements.Add(elementToAdd);
-            InvalidateRectFromBox(elementToAdd);
+            InvalidateRectFromEntity(elementToAdd);
         }
 
         public virtual void AddPath(Path pathToAdd)
         {
             Paths.Add(pathToAdd);
             //InvalidateRectFromBox(pathToAdd, 2);
-            InvalidateRectFromPath(pathToAdd);
+            InvalidateRectFromEntity(pathToAdd);
         }
 
-        public virtual void AddPathway(Pathway pathwayToAdd)
-        {
-            Pathways.Add(pathwayToAdd);
-            InvalidateRectFromBox(pathwayToAdd);
-        }
+        //public virtual void AddPathway(Pathway pathwayToAdd)
+        //{
+        //    Pathways.Add(pathwayToAdd);
+        //    InvalidateRectFromEntity(pathwayToAdd);
+        //}
 
-        public virtual void AddPathingJunction(PathingJunction pathingJunctionToAdd)
-        {
-            PathingJunctions.Add(pathingJunctionToAdd);
-            InvalidateRectFromBox(pathingJunctionToAdd);
-        }
+        //public virtual void AddPathingJunction(PathingJunction pathingJunctionToAdd)
+        //{
+        //    PathingJunctions.Add(pathingJunctionToAdd);
+        //    InvalidateRectFromEntity(pathingJunctionToAdd);
+        //}
 
         public virtual void RemoveElement(Element elementToRemove)
         {
-            InvalidateRectFromBox(elementToRemove);
+            InvalidateRectFromEntity(elementToRemove);
 
             Set<Path> paths = new Set<Path>();
             paths.AddRange(elementToRemove.Inbound);
@@ -319,6 +350,9 @@ namespace MetaphysicsIndustries.Crystalline
             }
 
             Elements.Remove(elementToRemove);
+            Boxes.Remove(elementToRemove);
+            Entities.Remove(elementToRemove);
+            Framework.Remove(elementToRemove);
 
             SelectionElement.Remove(elementToRemove);
 
@@ -327,7 +361,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         public virtual void RemovePath(Path pathToRemove)
         {
-            InvalidateRectFromPath(pathToRemove);
+            InvalidateRectFromEntity(pathToRemove);
 
             Paths.Remove(pathToRemove);
 
@@ -339,30 +373,35 @@ namespace MetaphysicsIndustries.Crystalline
             //Invalidate();
         }
 
-        public virtual void RemovePathway(Pathway pathwayToRemove)
-        {
-            InvalidateRectFromBox(pathwayToRemove);
+        //public virtual void RemovePathway(Pathway pathwayToRemove)
+        //{
+        //    InvalidateRectFromEntity(pathwayToRemove);
 
-            Pathways.Remove(pathwayToRemove);
+        //    Pathways.Remove(pathwayToRemove);
 
-            SelectionPathway.Remove(pathwayToRemove);
-        }
+        //    SelectionPathway.Remove(pathwayToRemove);
+        //}
 
-        public virtual void RemovePathingJunction(PathingJunction pathingJunctionToRemove)
-        {
-            InvalidateRectFromBox(pathingJunctionToRemove);
+        //public virtual void RemovePathingJunction(PathingJunction pathingJunctionToRemove)
+        //{
+        //    InvalidateRectFromEntity(pathingJunctionToRemove);
 
-            pathingJunctionToRemove.UpPathway = null;
-            pathingJunctionToRemove.DownPathway = null;
-            pathingJunctionToRemove.LeftPathway = null;
-            pathingJunctionToRemove.RightPathway = null;
+        //    pathingJunctionToRemove.UpPathway = null;
+        //    pathingJunctionToRemove.DownPathway = null;
+        //    pathingJunctionToRemove.LeftPathway = null;
+        //    pathingJunctionToRemove.RightPathway = null;
 
-            PathingJunctions.Remove(pathingJunctionToRemove);
+        //    PathingJunctions.Remove(pathingJunctionToRemove);
 
-            SelectionPathingJunction.Remove(pathingJunctionToRemove);
-        }
+        //    SelectionPathingJunction.Remove(pathingJunctionToRemove);
+        //}
 
-        
+
+        Set<Path> _ResetBoxNeighbors_inbound = new Set<Path>();
+        Set<Path> _ResetBoxNeighbors_outbound = new Set<Path>();
+        IEnumerable<Box> _ResetBoxNeighbors_lastBoxesToReset;
+        Set<Box> _ResetBoxNeighbors_boxen = new Set<Box>();
+
         protected void ResetBoxNeighbors(IEnumerable<Box> boxesToReset)
         {
             //This method is a kludge necessary because changing the location
@@ -370,22 +409,25 @@ namespace MetaphysicsIndustries.Crystalline
             //This will no longer be necessary once the R-Tree is in place,
             //instead of the BoxFramework.
 
-            Set<Box> boxen = new Set<Box>(boxesToReset);
+            _ResetBoxNeighbors_boxen.Clear();
+            _ResetBoxNeighbors_boxen.AddRange(boxesToReset);
 
-            Set<Path> inbound = new Set<Path>();
-            Set<Path> outbound = new Set<Path>();
-
-            foreach (Box box in boxen)
+            foreach (Box box in _ResetBoxNeighbors_boxen)
             {
                 Element elem = (box as Element);
                 if (elem != null)
                 {
-                    inbound.Clear();
-                    outbound.Clear();
+                    InvalidateRectFromEntities(elem.Inbound);
+                    InvalidateRectFromEntities(elem.Outbound);
 
-                    inbound.AddRange(elem.Inbound);
-                    outbound.AddRange(elem.Outbound);
+                    _ResetBoxNeighbors_inbound.Clear();
+                    _ResetBoxNeighbors_outbound.Clear();
+
+                    _ResetBoxNeighbors_inbound.AddRange(elem.Inbound);
+                    _ResetBoxNeighbors_outbound.AddRange(elem.Outbound);
                 }
+
+                InvalidateRectFromEntity(box);
 
                 Framework.Remove(box);
                 box.UpNeighbors.Clear();
@@ -396,11 +438,14 @@ namespace MetaphysicsIndustries.Crystalline
 
                 if (elem != null)
                 {
-                    Collection.AddRange<Path, Path>(elem.Inbound, inbound);
-                    Collection.AddRange<Path, Path>(elem.Outbound, outbound);
+                    Collection.AddRange<Path, Path>(elem.Inbound, _ResetBoxNeighbors_inbound);
+                    Collection.AddRange<Path, Path>(elem.Outbound, _ResetBoxNeighbors_outbound);
+
+                    InvalidateRectFromEntities(elem.Inbound);
+                    InvalidateRectFromEntities(elem.Outbound);
                 }
 
-                InvalidateRectFromBox(box);
+                InvalidateRectFromEntity(box);
             }
         }
         protected void ResetAllBoxNeighbors()
@@ -408,12 +453,22 @@ namespace MetaphysicsIndustries.Crystalline
             ResetBoxNeighbors(Boxes);
         }
 
+        protected static RectangleV GetBoundingBoxFromEntities(Entity[] entities)
+        {
+            return Entity.GetBoundingBoxFromEntities(entities);
+        }
+
+        protected static RectangleV GetBoundingBoxFromCenters(Entity[] entities)
+        {
+            return Entity.GetBoundingBoxFromCenters(entities);
+        }
+
 
 
         ElementCollection _elements;
         CrystallineControlPathParentChildrenCollection _paths;
-        PathingJunctionCollection _pathingJunctions;
-        PathwayCollection _pathways;
+        //PathingJunctionCollection _pathingJunctions;
+        //PathwayCollection _pathways;
 
     }
 }

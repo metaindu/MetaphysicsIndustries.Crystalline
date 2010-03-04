@@ -17,29 +17,23 @@ using System;
 using System.Collections.Generic;
 using MetaphysicsIndustries.Collections;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
     [Serializable]
     public class Path : Entity, IConnectionConduit<Element, Element, Path>
-	{
-		public Path()
-		{
-			_pathJoints = new PathPathJointChildrenCollection(this);
-		}
-
-        public override RectangleF GetBoundingBox()
+    {
+        public Path()
         {
-            if (PathJoints.Count < 1) { return new RectangleF(); }
+            _pathJoints = new PathPathJointChildrenCollection(this);
+        }
 
-            RectangleF rect = new RectangleF(PathJoints[0].Location, new SizeF(0, 0));
+        public override RectangleV GetBoundingBox()
+        {
+            if (PathJoints.Count < 1) { return new RectangleV(); }
 
-            foreach (PathJoint pj in PathJoints)
-            {
-                rect = RectangleF.Union(rect, new RectangleF(pj.Location, new SizeF(0, 0)));
-            }
-
-            return rect;
+            return GetBoundingBoxFromEntities(Collection.ToArray(PathJoints));
         }
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
@@ -48,58 +42,96 @@ namespace MetaphysicsIndustries.Crystalline
         }
         public virtual void Render(Graphics g, Pen pen, Brush brush, Font font, bool renderPathJoints, bool renderArrow)
         {
-            int i;
-            int j;
-            j = PathJoints.Count;
-            for (i = 0; i < j - 1; i++)
+            if (PathJoints.Count >= 2)
             {
-                if (renderPathJoints)
+                int i;
+                int j;
+                j = PathJoints.Count;
+                for (i = 0; i < j - 1; i++)
                 {
-                    PathJoints[i].Render(g, pen, brush, font);
+                    if (renderPathJoints)
+                    {
+                        PathJoints[i].Render(g, pen, brush, font);
+                    }
+                    g.DrawLine(Pens.Black, PathJoints[i].Location, PathJoints[i + 1].Location);
                 }
-                g.DrawLine(Pens.Black, PathJoints[i].Location, PathJoints[i + 1].Location);
-            }
 
-            if (j > 1 && To != null)
+                if (j > 1 && To != null)
+                {
+                    if (renderArrow)
+                    {
+                        //array<PointF>^	r = { PointF(), PointF(), PointF() };
+                        //PointF	p;
+                        //float	angle;
+                        //float	angle2;
+                        //float	size;
+
+                        //size = 10;
+
+                        //p = this->PathJoints[j - 1]->Location - SizeF(this->PathJoints[j - 2]->Location);
+                        //angle = (float)Math::Atan2(p.Y, p.X);
+
+                        //r[0] = this->PathJoints[j - 1]->Location;
+                        //angle2 = angle + (float)(Math::PI * 5.0 / 6.0);
+                        //r[1] = PointF(size * (float)Math::Cos(angle2), size * (float)Math::Sin(angle2)) + SizeF(r[0]);
+                        //angle2 = angle - (float)(Math::PI * 5.0 / 6.0);
+                        //r[2] = PointF(size * (float)Math::Cos(angle2), size * (float)Math::Sin(angle2)) + SizeF(r[0]);
+
+                        //g->FillPolygon(Brushes::Black, r);
+
+                        RenderArrow(g, pen, brush, font, PathJoints[j - 2].Location, PathJoints[j - 1].Location);
+                    }
+                }
+                else if (j > 0)
+                {
+                    if (renderPathJoints)
+                    {
+                        PathJoints[j - 1].Render(g, pen, brush, font);
+                    }
+                }
+            }
+            else if (From != null && To != null)
             {
+                Vector from = From.GetOutboundConnectionPoint(this);
+                Vector to = To.GetInboundConnectionPoint(this);
+
+                g.DrawLine(pen, from, to);
+
                 if (renderArrow)
                 {
-                    //array<PointF>^	r = { PointF(), PointF(), PointF() };
-                    //PointF	p;
-                    //float	angle;
-                    //float	angle2;
-                    //float	size;
-
-                    //size = 10;
-
-                    //p = this->PathJoints[j - 1]->Location - SizeF(this->PathJoints[j - 2]->Location);
-                    //angle = (float)Math::Atan2(p.Y, p.X);
-
-                    //r[0] = this->PathJoints[j - 1]->Location;
-                    //angle2 = angle + (float)(Math::PI * 5.0 / 6.0);
-                    //r[1] = PointF(size * (float)Math::Cos(angle2), size * (float)Math::Sin(angle2)) + SizeF(r[0]);
-                    //angle2 = angle - (float)(Math::PI * 5.0 / 6.0);
-                    //r[2] = PointF(size * (float)Math::Cos(angle2), size * (float)Math::Sin(angle2)) + SizeF(r[0]);
-
-                    //g->FillPolygon(Brushes::Black, r);
-
-                    RenderArrow(g, pen, brush, font, PathJoints[j - 2].Location, PathJoints[j - 1].Location);
+                    RenderArrow(g, pen, brush, font, from, to);
                 }
             }
-            else if (j > 0)
+            else if (From != null)
             {
-                if (renderPathJoints)
-                {
-                    PathJoints[j - 1].Render(g, pen, brush, font);
-                }
+                Vector from = From.GetOutboundConnectionPoint(this);
+                Vector center = From.GetCenterOfBox();
+
+                g.DrawLine(pen, from, 10 * (from - center).Normalized());
+            }
+            else if (To != null)
+            {
+                Vector to = To.GetInboundConnectionPoint(this);
+                Vector center = To.GetCenterOfBox();
+
+                g.DrawLine(pen, 10 * (to - center).Normalized(), to);
+            }
+            else if (PathJoints.Count == 1)
+            {
+                PathJoints[0].Render(g, pen, brush, font);
+            }
+            else
+            {
+                //no from, no to, no pathjoints
+                //don't render anything
             }
         }
 
-        public virtual void RenderArrow(Graphics g, Pen pen, Brush brush, Font font, PointF previousJointLocation, PointF tipLocation)
+        public virtual void RenderArrow(Graphics g, Pen pen, Brush brush, Font font, Vector startLocation, Vector tipLocation)
         {
 
-            PointF[] r = { new PointF(), new PointF(), new PointF() };
-            PointF p;
+            Vector[] r = { new Vector(), new Vector(), new Vector() };
+            Vector p;
 
             float angle;
             float angle2;
@@ -107,16 +139,16 @@ namespace MetaphysicsIndustries.Crystalline
 
             size = ArrowSize;
 
-            p = tipLocation - new SizeF(previousJointLocation);
+            p = tipLocation - startLocation;
 
             angle = (float)Math.Atan2(p.Y, p.X);
             r[0] = tipLocation;
             angle2 = angle + (float)(Math.PI * 5.0 / 6.0);
-            r[1] = new PointF(size * (float)Math.Cos(angle2), size * (float)Math.Sin(angle2)) + new SizeF(r[0]);
+            r[1] = new Vector(size * (float)Math.Cos(angle2), size * (float)Math.Sin(angle2)) + r[0];
             angle2 = angle - (float)(Math.PI * 5.0 / 6.0);
-            r[2] = new PointF(size * (float)Math.Cos(angle2), size * (float)Math.Sin(angle2)) + new SizeF(r[0]);
+            r[2] = new Vector(size * (float)Math.Cos(angle2), size * (float)Math.Sin(angle2)) + r[0];
 
-            g.FillPolygon(pen.Brush, r);
+            g.FillPolygon(pen.Brush, Vector.ConvertArray(r));
         }
 
         //private float _arrowSize;
@@ -129,70 +161,71 @@ namespace MetaphysicsIndustries.Crystalline
 
 
         public virtual PathPathJointChildrenCollection PathJoints
-		{
-			get
-			{
-				return _pathJoints;
-			}
-		}
+        {
+            get { return _pathJoints; }
+        }
 
-		public virtual Element To
-		{
-			get
-			{
-				return _to;
-			}
-			set
-			{
-				if (_to != value)
-				{
-					this.OnToChanging(new EventArgs());
-					if (_to != null)
-					{
-						_to.Inbound.Remove(this);
-					}
+        public virtual Element To
+        {
+            get { return _to; }
+            set
+            {
+                if (_to != value)
+                {
+                    this.OnToChanging(new EventArgs());
+
+                    if (_to != null)
+                    {
+                        _to.Inbound.Remove(this);
+                    }
+
                     _to = value;
-					if (_to != null)
-					{
-						_to.Inbound.Add(this);
-					}
-                    if (ParentCrystallineControl != null)
-                    {
-                        ParentCrystallineControl.RoutePath(this);
-                    }
-                    this.OnToChanged(new EventArgs());
-				}
-			}
-		}
 
-		public virtual Element From
-		{
-			get
-			{
-				return _from;
-			}
-			set
-			{
-                if (_from != value)
-				{
-					this.OnFromChanging(new EventArgs());
-					if (_from != null)
-					{
-						_from.Outbound.Remove(this);
-					}
-                    _from = value;
-					if (_from != null)
-					{
-						_from.Outbound.Add(this);
-					}
+                    if (_to != null)
+                    {
+                        _to.Inbound.Add(this);
+                    }
+
                     if (ParentCrystallineControl != null)
                     {
                         ParentCrystallineControl.RoutePath(this);
                     }
-					this.OnFromChanged(new EventArgs());
-				}
-			}
-		}
+
+                    this.OnToChanged(new EventArgs());
+                }
+            }
+        }
+
+        public virtual Element From
+        {
+            get { return _from; }
+            set
+            {
+                if (_from != value)
+                {
+                    this.OnFromChanging(new EventArgs());
+
+                    if (_from != null)
+                    {
+                        _from.Outbound.Remove(this);
+                    }
+
+                    _from = value;
+
+                    if (_from != null)
+                    {
+                        _from.Outbound.Add(this);
+                    }
+
+                    if (ParentCrystallineControl != null)
+                    {
+                        ParentCrystallineControl.RoutePath(this);
+                    }
+
+                    this.OnFromChanged(new EventArgs());
+                }
+            }
+        }
 
         //[MetaphysicsIndustries.Serialization.Serializable(false)]
         //CrystallineControl _parentCrystallineControl;
@@ -218,48 +251,48 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-		public  event EventHandler ToChanging;
+        public event EventHandler ToChanging;
 
-		public  event EventHandler ToChanged;
+        public event EventHandler ToChanged;
 
-		public  event EventHandler FromChanged;
+        public event EventHandler FromChanged;
 
-		public  event EventHandler FromChanging;
+        public event EventHandler FromChanging;
 
-		protected virtual void OnFromChanged(EventArgs e)
-		{
+        protected virtual void OnFromChanged(EventArgs e)
+        {
             if (FromChanged != null)
             {
                 this.FromChanged(this, e);
             }
-		}
+        }
 
-		protected virtual void OnToChanged(EventArgs e)
-		{
+        protected virtual void OnToChanged(EventArgs e)
+        {
             if (ToChanged != null)
             {
                 this.ToChanged(this, e);
             }
-		}
+        }
 
-		protected virtual void OnFromChanging(EventArgs e)
-		{
+        protected virtual void OnFromChanging(EventArgs e)
+        {
             if (FromChanging != null)
             {
                 this.FromChanging(this, e);
             }
-		}
+        }
 
-		protected virtual void OnToChanging(EventArgs e)
-		{
+        protected virtual void OnToChanging(EventArgs e)
+        {
             if (ToChanging != null)
             {
                 this.ToChanging(this, e);
             }
-		}
+        }
 
         private PathPathJointChildrenCollection _pathJoints;
         private Element _to;
         private Element _from;
-	}
+    }
 }

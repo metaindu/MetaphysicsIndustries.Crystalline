@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using MetaphysicsIndustries.Collections;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -120,14 +121,14 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public virtual void Move(Box boxToMove, PointF newLocation)
+        public virtual void Move(Box boxToMove, Vector newLocation)
         {
             Move(boxToMove, newLocation, null);
         }
 
         [NonSerialized]
         private static int _moveCallCount = 0;
-        public virtual void Move(Box boxToMove, PointF newLocation, Set<Box> collidedBoxes)
+        public virtual void Move(Box boxToMove, Vector newLocation, Set<Box> collidedBoxes)
         {
             if (boxToMove == null) { throw new ArgumentNullException("boxToMove"); }
 
@@ -141,7 +142,7 @@ namespace MetaphysicsIndustries.Crystalline
             float deltax = newLocation.X - boxToMove.X;
             float deltay = newLocation.Y - boxToMove.Y;
             float delta2;
-            PointF p;
+            Vector p;
 
             Set<Box> newneighbors1;
             Set<Box> newneighbors2;
@@ -187,11 +188,11 @@ namespace MetaphysicsIndustries.Crystalline
                         p = ib.Location;
                         if (deltax > 0)
                         {
-                            p.X += delta2;
+                            p = new Vector(p.X + delta2, p.Y);
                         }
                         else
                         {
-                            p.X -= delta2;
+                            p = new Vector(p.X - delta2, p.Y);
                         }
                         ib.Move(p, collidedBoxes);
                         if (collidedBoxes != null)
@@ -314,11 +315,11 @@ namespace MetaphysicsIndustries.Crystalline
                         p = ib.Location;
                         if (deltay > 0)
                         {
-                            p.Y += delta2;
+                            p = new Vector(p.X, p.Y + delta2);
                         }
                         else
                         {
-                            p.Y -= delta2;
+                            p = new Vector(p.X, p.Y - delta2);
                         }
                         ib.Move(p, collidedBoxes);
                         if (collidedBoxes != null)
@@ -425,12 +426,12 @@ namespace MetaphysicsIndustries.Crystalline
             _moveCallCount--;
         }
 
-        protected virtual void Resize(Box boxToResize, SizeF newSize)
+        protected virtual void Resize(Box boxToResize, SizeV newSize)
         {
             Resize(boxToResize, newSize, null);
         }
 
-        protected virtual void Resize(Box boxToResize, SizeF newSize, Set<Box> collidedBoxes)
+        protected virtual void Resize(Box boxToResize, SizeV newSize, Set<Box> collidedBoxes)
         {
             throw new NotImplementedException();
 
@@ -440,7 +441,7 @@ namespace MetaphysicsIndustries.Crystalline
             float deltaw = newSize.Width - boxToResize.Width;
             float deltah = newSize.Height - boxToResize.Height;
             float delta2 = 0;
-            PointF newLocation;
+            Vector newLocation;
 
             if (deltaw > 0)
             {
@@ -449,8 +450,7 @@ namespace MetaphysicsIndustries.Crystalline
                     delta2 = boxToResize.Right + deltaw - ib.Left;
                     if (delta2 > 0)
                     {
-                        newLocation = ib.Location;
-                        newLocation.X += delta2;
+                        newLocation = ib.Location + new Vector(delta2, 0);
                         ib.Move(newLocation, collidedBoxes);
                         if (collidedBoxes != null)
                         {
@@ -820,8 +820,8 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
         [NonSerialized]
-        private RectangleF _bounds;
-        public RectangleF Bounds
+        private RectangleV _bounds;
+        public RectangleV Bounds
         {
             get { return _bounds; }
             protected set
@@ -849,12 +849,12 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (Left.Count > 0)
             {
-                RectangleF r = new RectangleF();
-
-                r.X = Left[0].Left;
-                r.Y = Up[0].Top;
-                r.Width = Right[Right.Count - 1].Right - r.X;
-                r.Height = Down[Down.Count - 1].Bottom - r.Y;
+                RectangleV r = 
+                    new RectangleV(
+                            Left[0].Left,
+                            Up[0].Top,
+                            Right[Right.Count - 1].Right - Left[0].Left,
+                            Down[Down.Count - 1].Bottom - Up[0].Top);
 
                 Bounds = r;
             }

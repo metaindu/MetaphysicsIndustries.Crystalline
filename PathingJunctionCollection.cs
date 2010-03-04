@@ -20,13 +20,13 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-	public class PathingJunctionCollection : BoxCollection<PathingJunction>
-	{
-        private PathingJunctionCollection() { }
-		public PathingJunctionCollection(BoxFramework f)
-            : base(f)
-		{
-		}
+    //public class PathingJunctionCollection : BoxCollection<PathingJunction>
+    //{
+    //    private PathingJunctionCollection() { }
+    //    public PathingJunctionCollection(BoxFramework f)
+    //        : base(f)
+    //    {
+    //    }
 
-	}
+    //}
 }

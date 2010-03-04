@@ -22,6 +22,7 @@ using System.Text;
 using System.Windows.Forms;
 using MetaphysicsIndustries.Collections;
 using System.Diagnostics;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -80,7 +81,7 @@ namespace MetaphysicsIndustries.Crystalline
 
             j = Framework.Left.Count;
 
-            RectangleF[] rects = new RectangleF[Framework.Left.Count];
+            RectangleV[] rects = new RectangleV[Framework.Left.Count];
 
             bool cont = true;
             while (cont)
@@ -103,7 +104,7 @@ namespace MetaphysicsIndustries.Crystalline
                             //collision
                             float delta = rects[i].Right - rects[k].Left;
 
-                            Framework.Left[k].Move(new PointF(rects[k].Left + delta + 10, rects[k].Top), null);
+                            Framework.Left[k].Move(new Vector(rects[k].Left + delta + 10, rects[k].Top), null);
                             cont = true;
                             break;
                         }

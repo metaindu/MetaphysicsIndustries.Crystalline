@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using MetaphysicsIndustries.Collections;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -30,7 +31,7 @@ namespace MetaphysicsIndustries.Crystalline
 			_inbound = new InboundToElementPathChildrenCollection(this);
 			_outbound = new OutboundFromElementPathChildrenCollection(this);
 
-            Size = new SizeF(50, 20);
+            Size = new SizeV(50, 20);
 		}
 
         //public override void Dispose()
@@ -132,23 +133,17 @@ namespace MetaphysicsIndustries.Crystalline
 
 		public virtual OutboundFromElementPathChildrenCollection Outbound
 		{
-			get
-			{
-				return _outbound;
-			}
-            protected set
-            {
-                _outbound = value;
-            }
+			get			{				return _outbound;			}
+            protected set            {                _outbound = value;            }
 		}
 
-		public virtual float TerminalSpacing
-		{
-			get
-			{
-				return 10;
-			}
-		}
+        //public virtual float TerminalSpacing
+        //{
+        //    get
+        //    {
+        //        return 10;
+        //    }
+        //}
 
 		public  event EventHandler LocationChanged;
 
@@ -193,14 +188,14 @@ namespace MetaphysicsIndustries.Crystalline
         private InboundToElementPathChildrenCollection _inbound;
         private OutboundFromElementPathChildrenCollection _outbound;
 
-        public virtual PointF GetOutboundConnectionPoint(Path path)
+        public virtual Vector GetOutboundConnectionPoint(Path path)
         {
-            return new PointF(Rect.Right, Location.Y + Size.Height / 2);
+            return new Vector(Rect.Right, Location.Y + Size.Height / 2);
         }
 
-        public virtual PointF GetInboundConnectionPoint(Path path)
+        public virtual Vector GetInboundConnectionPoint(Path path)
         {
-            return new PointF(Location.X, Location.Y + path.To.Size.Height / 2);
+            return new Vector(Location.X, Location.Y + path.To.Size.Height / 2);
         }
 
         //private ElementSubElementParentChildrenCollection _subElements;

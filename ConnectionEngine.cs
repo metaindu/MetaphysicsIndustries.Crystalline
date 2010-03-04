@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using MetaphysicsIndustries.Collections;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -34,10 +35,10 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (_connectionSource != null)
             {
-                PointF connectionPoint = GetConnectionPoint();
+                Vector connectionPoint = GetConnectionPoint();
 
                 Control.InvalidateRectFromPointsInDocument(connectionPoint, Control.LastMouseMoveInDocument);
-                PointF cursorLocationInDocument = Control.DocumentSpaceFromClientSpace(e.Location);
+                Vector cursorLocationInDocument = Control.DocumentSpaceFromClientSpace(e.Location);
                 Control.InvalidateRectFromPointsInDocument(connectionPoint, cursorLocationInDocument);
 
                 InvalidateConnectionSelection();
@@ -64,19 +65,19 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (_connectionSource != null)
             {
-                Control.InvalidateRectFromElement(_connectionSource);
+                Control.InvalidateRectFromEntity(_connectionSource);
             }
             if (_connectionTargetCandidate != null)
             {
-                Control.InvalidateRectFromElement(_connectionTargetCandidate);
+                Control.InvalidateRectFromEntity(_connectionTargetCandidate);
             }
             if (_connectionPath != null)
             {
-                Control.InvalidateRectFromPath(_connectionPath);
+                Control.InvalidateRectFromEntity(_connectionPath);
             }
         }
 
-        private PointF GetConnectionPoint()
+        private Vector GetConnectionPoint()
         {
             return _connectionSource.GetOutboundConnectionPoint(_connectionPath);
         }
@@ -85,7 +86,7 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (_connectionSource != null)
             {
-                PointF connectionPoint = GetConnectionPoint();
+                Vector connectionPoint = GetConnectionPoint();
 
                 Control.InvalidateRectFromPointsInDocument(connectionPoint, Control.DocumentSpaceFromClientSpace(e.Location));
                 Control.InvalidateRectFromPointsInDocument(connectionPoint, Control.LastMouseMoveInDocument);
@@ -95,12 +96,12 @@ namespace MetaphysicsIndustries.Crystalline
                 if (_connectionTargetCandidate != null)
                 {
                     _connectionPath.To = _connectionTargetCandidate;
-                    Control.InvalidateRectFromPath(_connectionPath);
+                    Control.InvalidateRectFromEntity(_connectionPath);
                     Control.RoutePath(_connectionPath);
                 }
                 else
                 {
-                    Control.InvalidateRectFromPath(_connectionPath);
+                    Control.InvalidateRectFromEntity(_connectionPath);
                     _connectionPath.From = null;
                     Control.RemovePath(_connectionPath);
                 }
@@ -118,18 +119,19 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (_connectionSource != null)
             {
-                PointF connectionPoint = _connectionSource.GetOutboundConnectionPoint(_connectionPath);
+                Vector connectionPointInDocument = _connectionSource.GetOutboundConnectionPoint(_connectionPath);
 
-                connectionPoint = Control.ClientSpaceFromDocumentSpace(connectionPoint);
+                Point connectionPointInClient = Control.ClientSpaceFromDocumentSpace(connectionPointInDocument);
 
-                PointF cursor = Control.PointToClient(System.Windows.Forms.Control.MousePosition);
+                Vector cursorInDocument = Control.LastMouseMoveInDocument;
+                    //Control.PointToClient(System.Windows.Forms.Control.MousePosition);
 
-                e.Graphics.DrawLine(_connectionPen, connectionPoint, cursor);
+                e.Graphics.DrawLine(_connectionPen, connectionPointInDocument, cursorInDocument);
 
                 if (Control.ShowDebugInfo)
                 {
                     StringBuilder sb = new StringBuilder();
-                    sb.AppendFormat("connectionPoint = {{ {0}, {1} }}", connectionPoint.X, connectionPoint.Y);
+                    sb.AppendFormat("connectionPointInDocument = {{ {0}, {1} }}", connectionPointInDocument.X, connectionPointInDocument.Y);
                     sb.AppendLine();
 
                     e.Graphics.DrawString(sb.ToString(), Control.Font, Brushes.Green, 5, 360);

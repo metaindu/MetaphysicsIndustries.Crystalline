@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using MetaphysicsIndustries.Collections;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -14,13 +15,13 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
         bool _isClick;
-        PointF _dragAnchorInDocument;
+        Vector _dragAnchorInDocument;
 
         //public override void ProcessMouseDown(System.Windows.Forms.MouseEventArgs e)
         //{
         //    if (false && e.Button == System.Windows.Forms.MouseButtons.Left)
         //    {
-        //        PointF clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
+        //        Vector clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
 
         //        _isClick = true;
         //        _dragAnchorInDocument = clickLocationInDocument;
@@ -162,34 +163,34 @@ namespace MetaphysicsIndustries.Crystalline
 
 
 
-        //public Point ClientSpaceFromDocumentSpace(PointF locationInDocumentSpace)
+        //public Point ClientSpaceFromDocumentSpace(Vector locationInDocumentSpace)
         //{
         //    //return Point.Round(locationInDocumentSpace) + new Size(AutoScrollPosition);
         //    return Point.Truncate(ClientSpaceFromScrollableSpace(ScrollableSpaceFromDocumentSpace(locationInDocumentSpace)));
         //}
 
-        //public PointF DocumentSpaceFromClientSpace(Point locationInClientSpace)
+        //public Vector DocumentSpaceFromClientSpace(Point locationInClientSpace)
         //{
         //    //return locationInClientSpace - new Size(AutoScrollPosition);
         //    return DocumentSpaceFromScrollableSpace(ScrollableSpaceFromClientSpace(locationInClientSpace));
         //}
 
-        //protected PointF ClientSpaceFromScrollableSpace(PointF locationInScrollableSpace)
+        //protected Vector ClientSpaceFromScrollableSpace(Vector locationInScrollableSpace)
         //{
         //    return locationInScrollableSpace + new SizeF(AutoScrollPosition);
         //}
 
-        //protected PointF ScrollableSpaceFromClientSpace(PointF locationInClientSpace)
+        //protected Vector ScrollableSpaceFromClientSpace(Vector locationInClientSpace)
         //{
         //    return locationInClientSpace - new SizeF(AutoScrollPosition);
         //}
 
-        //protected PointF ScrollableSpaceFromDocumentSpace(PointF locationInDocumentSpace)
+        //protected Vector ScrollableSpaceFromDocumentSpace(Vector locationInDocumentSpace)
         //{
         //    return locationInDocumentSpace - new SizeF(_scrollableAreaInDocument.Location);
         //}
 
-        //protected PointF DocumentSpaceFromScrollableSpace(PointF locationInScrollableSpace)
+        //protected Vector DocumentSpaceFromScrollableSpace(Vector locationInScrollableSpace)
         //{
         //    return locationInScrollableSpace + new SizeF(_scrollableAreaInDocument.Location);
         //}

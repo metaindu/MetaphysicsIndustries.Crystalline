@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -45,7 +46,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public override void ProcessMouseDoubleClick(System.Windows.Forms.MouseEventArgs e)
+        public override void ProcessMouseDoubleClick(MouseEventArgs e)
         {
             foreach (Functionality f in Functionalities)
             {
@@ -56,7 +57,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public override void ProcessMouseDown(System.Windows.Forms.MouseEventArgs e)
+        public override void ProcessMouseDown(MouseEventArgs e)
         {
             foreach (Functionality f in Functionalities)
             {
@@ -67,7 +68,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public override void ProcessMouseMove(System.Windows.Forms.MouseEventArgs e)
+        public override void ProcessMouseMove(MouseEventArgs e)
         {
             foreach (Functionality f in Functionalities)
             {
@@ -78,7 +79,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public override void ProcessMouseUp(System.Windows.Forms.MouseEventArgs e)
+        public override void ProcessMouseUp(MouseEventArgs e)
         {
             foreach (Functionality f in Functionalities)
             {

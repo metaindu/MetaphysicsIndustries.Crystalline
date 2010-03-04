@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -39,7 +40,7 @@ namespace MetaphysicsIndustries.Crystalline
             _parentCrystallineControl = value;
         }
 
-        public abstract RectangleF GetBoundingBox();
+        public abstract RectangleV GetBoundingBox();
 
         public event EventHandler BoundingBoxChanged;
 
@@ -50,6 +51,60 @@ namespace MetaphysicsIndustries.Crystalline
                 EventArgs e = new EventArgs();
 
                 BoundingBoxChanged(this, e);
+            }
+        }
+
+        protected void InvalidateRectInParentControlFromSelf()
+        {
+            if (ParentCrystallineControl != null)
+            {
+                ParentCrystallineControl.InvalidateRectFromEntity(this);
+            }
+        }
+
+        public static RectangleV GetBoundingBoxFromEntities(Entity[] entities)
+        {
+            if (entities.Length > 0)
+            {
+                RectangleV rect = entities[0].GetBoundingBox();
+
+                foreach (Entity ent in entities)
+                {
+                    rect = rect.Union(ent.GetBoundingBox());
+                }
+
+                return rect;
+            }
+            else
+            {
+                return new RectangleV();
+            }
+        }
+
+        public static RectangleV GetBoundingBoxFromCenters(Entity[] entities)
+        {
+            if (entities.Length > 0)
+            {
+                //vec
+                RectangleV rect =
+                    new RectangleV(
+                        MIMath.CalcCenterOfRectangle(entities[0].GetBoundingBox()),
+                        new SizeF(0, 0));
+
+                foreach (Entity ent in entities)
+                {
+                    Vector v = MIMath.CalcCenterOfRectangle(ent.GetBoundingBox());
+                    rect = rect.Union(
+                        new RectangleV(
+                            v,
+                            new SizeV(0, 0)));
+                }
+
+                return rect;
+            }
+            else
+            {
+                return new RectangleV();
             }
         }
     }

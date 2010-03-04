@@ -22,6 +22,7 @@ using System.Text;
 using System.Windows.Forms;
 using MetaphysicsIndustries.Collections;
 using System.Diagnostics;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -134,20 +135,20 @@ namespace MetaphysicsIndustries.Crystalline
 
             if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                PointF clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
+                Vector clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
 
                 _isClick = true;
                 _dragAnchorInDocument = clickLocationInDocument;
 
                 if (SelectionMode == SelectionModeType.Element)
                 {
-                    Set<Element> s1;
+                    Element[] s1;
                     Set<Element> s2;
 
-                    s1 = GetElementsAtPoint(_dragAnchorInDocument);
-                    if (s1.Count > 0)
+                    s1 = GetElementsAtPoint(_dragAnchorInDocument).ToArray();
+                    if (s1.Length > 0)
                     {
-                        s2 = Set<Element>.Intersection(s1, SelectionElement);
+                        s2 = Set<Element>.Intersection(SelectionElement,s1);
                         if (s2.Count > 0)
                         {
                             //clicked a previously-selected element
@@ -173,7 +174,7 @@ namespace MetaphysicsIndustries.Crystalline
                                 SelectionElement.Clear();
                             }
 
-                            Element frontmost = s1.GetFirst();
+                            Element frontmost = s1[0];//.GetFirst();
                             int index = Framework.ZOrder.IndexOf(frontmost);
                             foreach (Element ee in s1)
                             {
@@ -233,66 +234,66 @@ namespace MetaphysicsIndustries.Crystalline
                         _isDragSelecting = true;
                     }
                 }
-                else if (SelectionMode == SelectionModeType.PathingJunction)
-                {
-                    Set<PathingJunction> s1;
-                    Set<PathingJunction> s2;
+                //else if (SelectionMode == SelectionModeType.PathingJunction)
+                //{
+                //    Set<PathingJunction> s1;
+                //    Set<PathingJunction> s2;
 
-                    s1 = GetPathingJunctionsAtPoint(clickLocationInDocument);
-                    if (s1.Count > 0)
-                    {
-                        s2 = Set<PathingJunction>.Intersection(s1, SelectionPathingJunction);
-                        if (s2.Count > 0)
-                        {
-                            //clicked a previously-selected element
-                        }
-                        else
-                        {
-                            //clicked a different element
-                            SelectionPathingJunction.Clear();
-                            foreach (PathingJunction ee in s1)
-                            {
-                                SelectionPathingJunction.Add(ee);
-                            }
-                        }
-                        _isDragSelecting = false;
-                    }
-                    else
-                    {
-                        SelectionPathingJunction.Clear();
-                        _isDragSelecting = true;
-                    }
-                }
-                else if (SelectionMode == SelectionModeType.Pathway)
-                {
-                    Set<Pathway> s1;
-                    Set<Pathway> s2;
+                //    s1 = GetPathingJunctionsAtPoint(clickLocationInDocument);
+                //    if (s1.Count > 0)
+                //    {
+                //        s2 = Set<PathingJunction>.Intersection(s1, SelectionPathingJunction);
+                //        if (s2.Count > 0)
+                //        {
+                //            //clicked a previously-selected element
+                //        }
+                //        else
+                //        {
+                //            //clicked a different element
+                //            SelectionPathingJunction.Clear();
+                //            foreach (PathingJunction ee in s1)
+                //            {
+                //                SelectionPathingJunction.Add(ee);
+                //            }
+                //        }
+                //        _isDragSelecting = false;
+                //    }
+                //    else
+                //    {
+                //        SelectionPathingJunction.Clear();
+                //        _isDragSelecting = true;
+                //    }
+                //}
+                //else if (SelectionMode == SelectionModeType.Pathway)
+                //{
+                //    Set<Pathway> s1;
+                //    Set<Pathway> s2;
 
-                    s1 = GetPathwaysAtPoint(clickLocationInDocument);
-                    if (s1.Count > 0)
-                    {
-                        s2 = Set<Pathway>.Intersection(s1, SelectionPathway);
-                        if (s2.Count > 0)
-                        {
-                            //clicked a previously-selected element
-                        }
-                        else
-                        {
-                            //clicked a different element
-                            SelectionPathway.Clear();
-                            foreach (Pathway ee in s1)
-                            {
-                                SelectionPathway.Add(ee);
-                            }
-                        }
-                        _isDragSelecting = false;
-                    }
-                    else
-                    {
-                        SelectionPathway.Clear();
-                        _isDragSelecting = true;
-                    }
-                }
+                //    s1 = GetPathwaysAtPoint(clickLocationInDocument);
+                //    if (s1.Count > 0)
+                //    {
+                //        s2 = Set<Pathway>.Intersection(s1, SelectionPathway);
+                //        if (s2.Count > 0)
+                //        {
+                //            //clicked a previously-selected element
+                //        }
+                //        else
+                //        {
+                //            //clicked a different element
+                //            SelectionPathway.Clear();
+                //            foreach (Pathway ee in s1)
+                //            {
+                //                SelectionPathway.Add(ee);
+                //            }
+                //        }
+                //        _isDragSelecting = false;
+                //    }
+                //    else
+                //    {
+                //        SelectionPathway.Clear();
+                //        _isDragSelecting = true;
+                //    }
+                //}
 
             }
             else if (e.Button == System.Windows.Forms.MouseButtons.Right)
@@ -305,7 +306,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void ProcessMouseMove(MouseEventArgs e)
         {
-            PointF clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
+            Vector clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
 
             //_lastButtons = e.Button;
             ////Refresh();
@@ -324,13 +325,15 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     if (_isDragSelecting)
                     {
+                        InvalidateRectFromPointsInDocument(_selectionBoxPointInDocument, clickLocationInDocument);
+
                         //draw the box (do nothing here)
                         _selectionBoxPointInDocument = clickLocationInDocument;
                     }
                     else
                     {
-                        System.Drawing.SizeF delta;
-                        delta = new SizeF(clickLocationInDocument - new SizeF(_dragAnchorInDocument));
+                        Vector delta;
+                        delta = clickLocationInDocument - _dragAnchorInDocument;
 
                         //move the selection
                         if (SelectionMode == SelectionModeType.Element)
@@ -341,22 +344,22 @@ namespace MetaphysicsIndustries.Crystalline
                         {
                             MovePaths(delta);
                         }
-                        else if (SelectionMode == SelectionModeType.PathingJunction)
-                        {
-                            foreach (PathingJunction p in SelectionPathingJunction)
-                            {
-                                //p.X += delta.Width;
-                                //p.Y += delta.Height;
-                                p.Move(p.Location + delta, null);
-                            }
-                        }
-                        else if (SelectionMode == SelectionModeType.Pathway)
-                        {
-                            foreach (Pathway p in SelectionPathway)
-                            {
-                                p.Move(p.Location + delta, null);
-                            }
-                        }
+                        //else if (SelectionMode == SelectionModeType.PathingJunction)
+                        //{
+                        //    foreach (PathingJunction p in SelectionPathingJunction)
+                        //    {
+                        //        //p.X += delta.Width;
+                        //        //p.Y += delta.Height;
+                        //        p.Move(p.Location + delta, null);
+                        //    }
+                        //}
+                        //else if (SelectionMode == SelectionModeType.Pathway)
+                        //{
+                        //    foreach (Pathway p in SelectionPathway)
+                        //    {
+                        //        p.Move(p.Location + delta, null);
+                        //    }
+                        //}
 
                         _dragAnchorInDocument = clickLocationInDocument;
                     }
@@ -374,10 +377,10 @@ namespace MetaphysicsIndustries.Crystalline
             //}
         }
 
-        protected virtual void MovePaths(SizeF delta)
+        protected virtual void MovePaths(Vector delta)
         {
             Path p = null;
-            PointF pt = new PointF();
+            Vector pt = new Vector();
             bool first = false; ;
 
             if (SelectionPathJoint.Count == 1)
@@ -446,7 +449,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        private void MoveElements(SizeF delta)
+        private void MoveElements(Vector delta)
         {
             Set<Path> wholepaths;
             wholepaths = new Set<Path>();
@@ -539,7 +542,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void ProcessMouseUp(MouseEventArgs e)
         {
-            PointF clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
+            Vector clickLocationInDocument = DocumentSpaceFromClientSpace(e.Location);
 
             //Invalidate();
 
@@ -547,13 +550,13 @@ namespace MetaphysicsIndustries.Crystalline
             {
                 if (_isDragSelecting)
                 {
-                    if (Dist(_dragAnchorInDocument, clickLocationInDocument) < 3)
+                    if ((_dragAnchorInDocument- clickLocationInDocument).Length<3)
                     {
                         if (SelectionMode == SelectionModeType.Element)
                         {
                             SelectionElement.Clear();
 
-                            PointF pointInDocSpace = _dragAnchorInDocument;
+                            Vector pointInDocSpace = _dragAnchorInDocument;
                             Element frontmost = GetFrontmostElementAtPointInDocumentSpace(pointInDocSpace);
                             if (frontmost != null)
                             {
@@ -571,40 +574,50 @@ namespace MetaphysicsIndustries.Crystalline
                                 SelectionPathJoint.Add(ee);
                             }
                         }
-                        else if (SelectionMode == SelectionModeType.PathingJunction)
-                        {
-                            Set<PathingJunction> s1;
-                            s1 = GetPathingJunctionsAtPoint(_dragAnchorInDocument);
-                            SelectionPathingJunction.Clear();
-                            foreach (PathingJunction p in s1)
-                            {
-                                SelectionPathingJunction.Add(p);
-                            }
-                        }
-                        else if (SelectionMode == SelectionModeType.Pathway)
-                        {
-                            Set<Pathway> s1;
-                            s1 = GetPathwaysAtPoint(_dragAnchorInDocument);
-                            SelectionPathway.Clear();
-                            foreach (Pathway p in s1)
-                            {
-                                SelectionPathway.Add(p);
-                            }
-                        }
+                        //else if (SelectionMode == SelectionModeType.PathingJunction)
+                        //{
+                        //    Set<PathingJunction> s1;
+                        //    s1 = GetPathingJunctionsAtPoint(_dragAnchorInDocument);
+                        //    SelectionPathingJunction.Clear();
+                        //    foreach (PathingJunction p in s1)
+                        //    {
+                        //        SelectionPathingJunction.Add(p);
+                        //    }
+                        //}
+                        //else if (SelectionMode == SelectionModeType.Pathway)
+                        //{
+                        //    Set<Pathway> s1;
+                        //    s1 = GetPathwaysAtPoint(_dragAnchorInDocument);
+                        //    SelectionPathway.Clear();
+                        //    foreach (Pathway p in s1)
+                        //    {
+                        //        SelectionPathway.Add(p);
+                        //    }
+                        //}
                     }
                     else
                     {
-                        RectangleF r = new RectangleF();
-                        PointF pt;
-                        System.Drawing.SizeF s = new SizeF();
+                        RectangleV r = new RectangleV();
+                        Vector pt;
+                        SizeV s = new SizeV();
 
                         pt = clickLocationInDocument;//MainPanel.PointToClient(MainPanel.MousePosition);
-                        s.Width = Math.Abs(pt.X - _dragAnchorInDocument.X);
-                        s.Height = Math.Abs(pt.Y - _dragAnchorInDocument.Y);
-                        pt.X = Math.Min(_dragAnchorInDocument.X, pt.X);
-                        pt.Y = Math.Min(_dragAnchorInDocument.Y, pt.Y);
-                        r.Location = pt;
-                        r.Size = s;
+
+                        //s.Width = Math.Abs(pt.X - _dragAnchorInDocument.X);
+                        //s.Height = Math.Abs(pt.Y - _dragAnchorInDocument.Y);
+                        s = new SizeV(
+                            Math.Abs(pt.X - _dragAnchorInDocument.X),
+                            Math.Abs(pt.Y - _dragAnchorInDocument.Y));
+
+                        //pt.X = Math.Min(_dragAnchorInDocument.X, pt.X);
+                        //pt.Y = Math.Min(_dragAnchorInDocument.Y, pt.Y);
+                        pt = new Vector(
+                                    Math.Min(_dragAnchorInDocument.X, pt.X),
+                                    Math.Min(_dragAnchorInDocument.Y, pt.Y));
+
+                        //r.Location = pt;
+                        //r.Size = s;
+                        r = new RectangleV(pt, s);
 
                         if (SelectionMode == SelectionModeType.Element)
                         {
@@ -627,26 +640,26 @@ namespace MetaphysicsIndustries.Crystalline
                                 SelectionPathJoint.Add(ee);
                             }
                         }
-                        else if (SelectionMode == SelectionModeType.PathingJunction)
-                        {
-                            Set<PathingJunction> set;
-                            set = GetPathingJunctionsInRect(r);
-                            SelectionPathingJunction.Clear();
-                            foreach (PathingJunction p in set)
-                            {
-                                SelectionPathingJunction.Add(p);
-                            }
-                        }
-                        else if (SelectionMode == SelectionModeType.Pathway)
-                        {
-                            Set<Pathway> set;
-                            set = GetPathwaysInRect(r);
-                            SelectionPathway.Clear();
-                            foreach (Pathway p in set)
-                            {
-                                SelectionPathway.Add(p);
-                            }
-                        }
+                        //else if (SelectionMode == SelectionModeType.PathingJunction)
+                        //{
+                        //    Set<PathingJunction> set;
+                        //    set = GetPathingJunctionsInRect(r);
+                        //    SelectionPathingJunction.Clear();
+                        //    foreach (PathingJunction p in set)
+                        //    {
+                        //        SelectionPathingJunction.Add(p);
+                        //    }
+                        //}
+                        //else if (SelectionMode == SelectionModeType.Pathway)
+                        //{
+                        //    Set<Pathway> set;
+                        //    set = GetPathwaysInRect(r);
+                        //    SelectionPathway.Clear();
+                        //    foreach (Pathway p in set)
+                        //    {
+                        //        SelectionPathway.Add(p);
+                        //    }
+                        //}
                     }
                 }
                 else
@@ -679,7 +692,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void ProcessMouseDoubleClick(MouseEventArgs e)
         {
-            PointF docSpace = DocumentSpaceFromClientSpace(e.Location);
+            Vector docSpace = DocumentSpaceFromClientSpace(e.Location);
             Element element = GetFrontmostElementAtPointInDocumentSpace(docSpace);
 
             if (element != null)
@@ -693,7 +706,8 @@ namespace MetaphysicsIndustries.Crystalline
                 }
                 catch (Exception ee)
                 {
-                    MessageBox.Show(this, "There was an exception while processing the double-click: " + ee.ToString());
+                    //MessageBox.Show(this, "There was an exception while processing the double-click: " + ee.ToString());
+                    ReportException(ee);
                 }
             }
         }
@@ -708,8 +722,8 @@ namespace MetaphysicsIndustries.Crystalline
                 _lastRightClickInDocument = DocumentSpaceFromClientSpace(value);
             }
         }
-        private PointF _lastRightClickInDocument;
-        public PointF LastRightClickInDocument
+        private Vector _lastRightClickInDocument;
+        public Vector LastRightClickInDocument
         {
             get { return _lastRightClickInDocument; }
         }
@@ -725,16 +739,16 @@ namespace MetaphysicsIndustries.Crystalline
                 _lastMouseMoveInDocument = DocumentSpaceFromClientSpace(value);
             }
         }
-        private PointF _lastMouseMoveInDocument;
-        public PointF LastMouseMoveInDocument
+        private Vector _lastMouseMoveInDocument;
+        public Vector LastMouseMoveInDocument
         {
             get { return _lastMouseMoveInDocument; }
         }
 
 
         bool _isClick;
-        PointF _dragAnchorInDocument;
+        Vector _dragAnchorInDocument;
         public bool _isDragSelecting;
-        PointF _selectionBoxPointInDocument;
+        Vector _selectionBoxPointInDocument;
     }
 }

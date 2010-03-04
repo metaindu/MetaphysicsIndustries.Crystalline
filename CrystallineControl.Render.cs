@@ -23,6 +23,8 @@ using System.Windows.Forms;
 using MetaphysicsIndustries.Collections;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using MetaphysicsIndustries.Utilities;
+using System.Drawing.Imaging;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -49,7 +51,8 @@ namespace MetaphysicsIndustries.Crystalline
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "There was an error: \r\n" + ex.ToString());
+                //MessageBox.Show(this, "There was an error: \r\n" + ex.ToString());
+                ReportException(ex);
             }
 
             base.OnPaint(e);
@@ -101,7 +104,7 @@ namespace MetaphysicsIndustries.Crystalline
                 RenderDebugInfo(g);
             }
 
-            PointF offset = ClientSpaceFromDocumentSpace(new Point(0, 0));
+            Point offset = ClientSpaceFromDocumentSpace(new Vector(0, 0));
 
             //g.TranslateTransform(AutoScrollPosition.X
             //    + _scrollableAreaInDocument.X
@@ -125,64 +128,64 @@ namespace MetaphysicsIndustries.Crystalline
                 RenderElements(g);
             }
 
-            if (ShallRenderPathingJunctions)
-            {
-                RenderPathingJunctions(g);
-            }
+            //if (ShallRenderPathingJunctions)
+            //{
+            //    RenderPathingJunctions(g);
+            //}
 
-            if (ShallRenderPathways)
-            {
-                RenderPathways(g);
-            }
+            //if (ShallRenderPathways)
+            //{
+            //    RenderPathways(g);
+            //}
 
             RenderBoxes(g);
 
             if (_isDragSelecting && _isClick)
             {
-                RectangleF r = new Rectangle();
-                PointF pt;
-                System.Drawing.SizeF s = new Size();
+                Vector topleft = new Vector(
+                                Math.Min(_dragAnchorInDocument.X, _selectionBoxPointInDocument.X),
+                                Math.Min(_dragAnchorInDocument.Y, _selectionBoxPointInDocument.Y));
 
-                pt = _selectionBoxPointInDocument;
-                s.Width = Math.Abs(pt.X - _dragAnchorInDocument.X);
-                s.Height = Math.Abs(pt.Y - _dragAnchorInDocument.Y);
-                pt.X = Math.Min(_dragAnchorInDocument.X, pt.X);
-                pt.Y = Math.Min(_dragAnchorInDocument.Y, pt.Y);
-                r.Location = pt;
-                r.Size = s;
+                Vector bottomright = new Vector(
+                                Math.Max(_dragAnchorInDocument.X, _selectionBoxPointInDocument.X),
+                                Math.Max(_dragAnchorInDocument.Y, _selectionBoxPointInDocument.Y));
+
+
+                RectangleV r = new RectangleV(topleft, bottomright);
+
                 g.DrawRectangle(Pens.Gray, Rectangle.Truncate(r));
             }
         }
 
-        protected virtual void RenderPathways(Graphics g)
-        {
-            foreach (Pathway p in Pathways)
-            {
-                RenderPathway(g, p);
-            }
-        }
+        //protected virtual void RenderPathways(Graphics g)
+        //{
+        //    foreach (Pathway p in Pathways)
+        //    {
+        //        RenderPathway(g, p);
+        //    }
+        //}
 
-        protected virtual void RenderPathway(Graphics g, Pathway p)
-        {
-            Pen pen = ChoosePenForPathway(p);
+        //protected virtual void RenderPathway(Graphics g, Pathway p)
+        //{
+        //    Pen pen = ChoosePenForPathway(p);
 
-            p.Render(g, pen, pen.Brush, Font);
-        }
+        //    p.Render(g, pen, pen.Brush, Font);
+        //}
 
-        protected virtual void RenderPathingJunctions(Graphics g)
-        {
-            foreach (PathingJunction p in PathingJunctions)
-            {
-                RenderPathingJunction(g, p);
-            }
-        }
+        //protected virtual void RenderPathingJunctions(Graphics g)
+        //{
+        //    foreach (PathingJunction p in PathingJunctions)
+        //    {
+        //        RenderPathingJunction(g, p);
+        //    }
+        //}
 
-        protected virtual void RenderPathingJunction(Graphics g, PathingJunction p)
-        {
-            Pen pen = ChoosePenForPathingJunction(p);
+        //protected virtual void RenderPathingJunction(Graphics g, PathingJunction p)
+        //{
+        //    Pen pen = ChoosePenForPathingJunction(p);
 
-            p.Render(g, pen, pen.Brush, Font);
-        }
+        //    p.Render(g, pen, pen.Brush, Font);
+        //}
 
         protected virtual void RenderPaths(Graphics g)
         {
@@ -269,7 +272,7 @@ namespace MetaphysicsIndustries.Crystalline
 
                 if (SelectionElement.Contains(elem))
                 {
-                    RectangleF rect = elem.Rect;
+                    RectangleV rect = elem.Rect;
                     rect.Inflate(SelectionOutlineMargin, SelectionOutlineMargin);
                     g.DrawRectangle(_selectionOutlinePen, rect.Left, rect.Top, rect.Width, rect.Height);
                 }
@@ -286,9 +289,10 @@ namespace MetaphysicsIndustries.Crystalline
         {
             foreach (Box box in Framework)
             {
-                if (!(box is Element) &&
-                    !(box is Pathway) &&
-                    !(box is PathingJunction))
+                if (!(box is Element) 
+                    //&& !(box is Pathway)
+                    //&& !(box is PathingJunction)
+                    )
                 {
                     RenderBox(g, box);
                 }
@@ -300,33 +304,33 @@ namespace MetaphysicsIndustries.Crystalline
             box.Render(g, Pens.Black, Brushes.Black, Font);
         }
 
-        protected virtual Pen ChoosePenForPathway(Pathway p)
-        {
-            Pen pen;
-            if (SelectionMode == SelectionModeType.Pathway && SelectionPathway.Contains(p))
-            {
-                pen = _selectionPen;
-            }
-            else
-            {
-                pen = Pens.Orange;
-            }
-            return pen;
-        }
+        //protected virtual Pen ChoosePenForPathway(Pathway p)
+        //{
+        //    Pen pen;
+        //    if (SelectionMode == SelectionModeType.Pathway && SelectionPathway.Contains(p))
+        //    {
+        //        pen = _selectionPen;
+        //    }
+        //    else
+        //    {
+        //        pen = Pens.Orange;
+        //    }
+        //    return pen;
+        //}
 
-        protected virtual Pen ChoosePenForPathingJunction(PathingJunction p)
-        {
-            Pen pen;
-            if (SelectionMode == SelectionModeType.PathingJunction && SelectionPathingJunction.Contains(p))
-            {
-                pen = _selectionPen;
-            }
-            else
-            {
-                pen = Pens.Orange;
-            }
-            return pen;
-        }
+        //protected virtual Pen ChoosePenForPathingJunction(PathingJunction p)
+        //{
+        //    Pen pen;
+        //    if (SelectionMode == SelectionModeType.PathingJunction && SelectionPathingJunction.Contains(p))
+        //    {
+        //        pen = _selectionPen;
+        //    }
+        //    else
+        //    {
+        //        pen = Pens.Orange;
+        //    }
+        //    return pen;
+        //}
 
         protected virtual Pen ChoosePenForPath(Path path)
         {
@@ -357,12 +361,12 @@ namespace MetaphysicsIndustries.Crystalline
             sb.Append("paths = ");
             sb.Append(_paths.Count);
             sb.Append("\r\n");
-            sb.Append("pathingjunctions = ");
-            sb.Append(_pathingJunctions.Count);
-            sb.Append("\r\n");
-            sb.Append("pathways = ");
-            sb.Append(_pathways.Count);
-            sb.Append("\r\n");
+            //sb.Append("pathingjunctions = ");
+            //sb.Append(_pathingJunctions.Count);
+            //sb.Append("\r\n");
+            //sb.Append("pathways = ");
+            //sb.Append(_pathways.Count);
+            //sb.Append("\r\n");
             sb.Append("\r\n");
             //sb.Append("SortElementsLeft = ");
             //sb.Append(SortElementsLeft.Count);
@@ -407,12 +411,12 @@ namespace MetaphysicsIndustries.Crystalline
             sb.Append("selectionpath = ");
             sb.Append(SelectionPathJoint.Count);
             sb.Append("\r\n");
-            sb.Append("selectionpathingjunction = ");
-            sb.Append(SelectionPathingJunction.Count);
-            sb.Append("\r\n");
-            sb.Append("selectionpathway = ");
-            sb.Append(SelectionPathway.Count);
-            sb.Append("\r\n");
+            //sb.Append("selectionpathingjunction = ");
+            //sb.Append(SelectionPathingJunction.Count);
+            //sb.Append("\r\n");
+            //sb.Append("selectionpathway = ");
+            //sb.Append(SelectionPathway.Count);
+            //sb.Append("\r\n");
             sb.Append("selectionmode = ");
             sb.Append(_selectionMode.ToString());
             sb.Append("\r\n");
@@ -526,28 +530,32 @@ namespace MetaphysicsIndustries.Crystalline
             set { _showPathArrows = value; }
         }
 
-        protected virtual RectangleF CalcInvalidationRectForBox(Box box)
+        protected virtual RectangleV CalcInvalidationRectForBox(Box box)
         {
-            RectangleF rect = box.Rect;
+            RectangleV rect = box.Rect;
             rect.Inflate(4, 4);
             return rect;
         }
 
-        public virtual void InvalidateRectInClient(RectangleF rect)
+        public virtual void InvalidateRectInClient(Rectangle rect)
         {
-            Invalidate(Rectangle.Ceiling(rect));
+            //Invalidate(Rectangle.Ceiling(rect));
+            Invalidate(rect);
         }
-        public virtual void InvalidateRectInDocument(RectangleF rect)
+        public virtual void InvalidateRectInDocument(RectangleV rect)
         {
             InvalidateRectInClient(ClientSpaceFromDocumentSpace(rect));
         }
 
         public virtual void InvalidateRectFromEntity(Entity entity)
         {
-            InvalidateRectInDocument(entity.GetBoundingBox());
+            RectangleV rect = entity.GetBoundingBox();
+            rect = rect.Inflate(2, 2);
+            InvalidateRectInDocument(rect);
         }
 
-        public virtual void InvalidateRectFromEntities(IEnumerable<Entity> entities)
+        public virtual void InvalidateRectFromEntities<T>(IEnumerable<T> entities)
+            where T : Entity
         {
             foreach (Entity ent in entities)
             {
@@ -555,87 +563,147 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public virtual void InvalidateRectFromPath(Path path)
+        //public virtual void InvalidateRectFromPath(Path path)
+        //{
+        //    if (path.PathJoints.Count > 0)
+        //    {
+        //        RectangleF rect = path.GetBoundingBox();
+
+        //        rect.Inflate(2, 2);
+
+        //        InvalidateRectInDocument(rect);
+
+        //        PointF pt = path.PathJoints[path.PathJoints.Count - 1].Location;
+        //        float size = path.ArrowSize;
+
+        //        rect = new RectangleF(pt - new SizeF(size, size), new SizeF(2 * size, 2 * size));
+        //        rect.Inflate(2, 2);
+
+        //        InvalidateRectInDocument(rect);
+        //    }
+        //}
+
+        //public void InvalidateRectFromElement(Element element)
+        //{
+        //    RectangleF rect = CalcInvalidationRectForBox(element);
+
+        //    if (SelectionElement.Contains(element))
+        //    {
+        //        float marginSize;
+        //        switch (SelectionRenderStyle)
+        //        {
+        //            case SelectionRenderStyle.Outline: 
+        //                marginSize = SelectionOutlineMargin; 
+        //                break;
+        //            default:
+        //                marginSize = 2;
+        //                break;
+        //        }
+        //        rect.Inflate(marginSize, marginSize);
+        //    }
+
+        //    InvalidateRectInDocument(rect);
+        //}
+
+        //public void InvalidateRectFromBox(Box box)
+        //{
+        //    RectangleF rect = CalcInvalidationRectForBox(box);
+        //    InvalidateRectInDocument(rect);
+        //}
+
+        public void InvalidateRectFromPointsInDocument(params Vector[] pts)
         {
-            if (path.PathJoints.Count > 0)
+            float left = pts[0].X;
+            float top = pts[0].Y;
+            float right = left;
+            float bottom = top;
+
+            foreach (Vector v in pts)
             {
-                RectangleF rect = path.GetBoundingBox();
-
-                rect.Inflate(2, 2);
-
-                InvalidateRectInDocument(rect);
-
-                PointF pt = path.PathJoints[path.PathJoints.Count - 1].Location;
-                float size = path.ArrowSize;
-
-                rect = new RectangleF(pt - new SizeF(size, size), new SizeF(2 * size, 2 * size));
-                rect.Inflate(2, 2);
-
-                InvalidateRectInDocument(rect);
-            }
-        }
-
-        public void InvalidateRectFromElement(Element element)
-        {
-            RectangleF rect = CalcInvalidationRectForBox(element);
-
-            if (SelectionElement.Contains(element))
-            {
-                float marginSize;
-                switch (SelectionRenderStyle)
-                {
-                    case SelectionRenderStyle.Outline: 
-                        marginSize = SelectionOutlineMargin; 
-                        break;
-                    default:
-                        marginSize = 2;
-                        break;
-                }
-                rect.Inflate(marginSize, marginSize);
+                left = Math.Min(left, v.X);
+                top = Math.Min(top, v.Y);
+                right = Math.Max(right, v.X);
+                bottom = Math.Max(Bottom, v.Y);
             }
 
-            InvalidateRectInDocument(rect);
-        }
-
-        public void InvalidateRectFromBox(Box box)
-        {
-            RectangleF rect = CalcInvalidationRectForBox(box);
-            InvalidateRectInDocument(rect);
-        }
-
-        public void InvalidateRectFromPointsInDocument(PointF pt1, PointF pt2)
-        {
-            RectangleF rect = new RectangleF();
-
-            rect.X = Math.Min(pt1.X, pt2.X);
-            rect.Y = Math.Min(pt1.Y, pt2.Y);
-            rect.Width = Math.Max(pt1.X, pt2.X) - rect.X;
-            rect.Height = Math.Max(pt1.Y, pt2.Y) - rect.Y;
-
+            RectangleV rect = new RectangleV(left, top, right - left, bottom - top);
             rect.Inflate(2, 2);
             InvalidateRectInDocument(rect);
         }
 
 
+        protected void SaveContentsAsImagePrompt()
+        {
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+            saveFileDialog1.Filter = "Bitmap Images (*.bmp)|*.bmp|JPEG Images (*.jpg, *.jpeg)|*.jpg;*.jpeg|GIF Images (*.gif)|*.gif|PNG Images (*.png)|*.png*.png|All Files (*.*)|*.*";
+
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                ImageFormat format = ImageFormat.Bmp;
+                switch (saveFileDialog1.FilterIndex)
+                {
+                    case 2: format = System.Drawing.Imaging.ImageFormat.Jpeg; break;
+                    case 3: format = System.Drawing.Imaging.ImageFormat.Gif; break;
+                    case 4: format = System.Drawing.Imaging.ImageFormat.Png; break;
+                }
+
+                string filename = saveFileDialog1.FileName;
+
+                SaveContentsAsImage(format, filename);
+            }
+        }
+
+        protected void SaveContentsAsImage(ImageFormat format, string filename)
+        {
+            try
+            {
+                RectangleF rect = this.Framework.Bounds;
+                foreach (Entity ent in Entities)
+                {
+                    RectangleF entrect = ent.GetBoundingBox();
+
+                    rect = RectangleF.Union(rect, entrect);
+                }
+                rect = RectangleF.Inflate(rect, 100, 100);
+                Rectangle rect2 = ClientSpaceFromDocumentSpace(rect);
+                rect2.X = 0;
+                rect2.Y = 0;
+                Bitmap bmp = new Bitmap(rect2.Width, rect2.Height);
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    g.FillRectangle(Brushes.White, rect2);
+                    this.Render(g);
+                }
+                //this.DrawToBitmap(bmp, rect2);
+
+                bmp.Save(filename, format);
+            }
+            catch (Exception ex)
+            {
+                ReportException(ex);
+            }
+        }
+
         public void BringForward(Box box)
         {
             Framework.BringForward(box);
-            InvalidateRectFromBox(box);
+            InvalidateRectFromEntity(box);
         }
         public void SendBackward(Box box)
         {
             Framework.SendBackward(box);
-            InvalidateRectFromBox(box);
+            InvalidateRectFromEntity(box);
         }
         public void BringToFront(Box box)
         {
             Framework.BringToFront(box);
-            InvalidateRectFromBox(box);
+            InvalidateRectFromEntity(box);
         }
         public void SendToBack(Box box)
         {
             Framework.SendToBack(box);
-            InvalidateRectFromBox(box);
+            InvalidateRectFromEntity(box);
         }
 
         Pen _selectionPen;

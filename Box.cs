@@ -34,14 +34,14 @@ namespace MetaphysicsIndustries.Crystalline
             _down = new BoxNeighborCollection(this, BoxOrientation.Down);
         }
 
-        public override RectangleF GetBoundingBox()
+        public override RectangleV GetBoundingBox()
         {
             return Rect;
         }
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {
-            RectangleF r;
+            RectangleV r;
             if (pen == null)
             {
                 pen = Pens.Black;
@@ -51,7 +51,7 @@ namespace MetaphysicsIndustries.Crystalline
             RenderText(g, pen, brush, font);
         }
 
-        protected virtual void RenderShape(Graphics g, Pen pen, Brush fillBrush, RectangleF rect)
+        protected virtual void RenderShape(Graphics g, Pen pen, Brush fillBrush, RectangleV rect)
         {
             g.FillRectangle(fillBrush, rect);
             g.DrawRectangle(pen, rect.X, rect.Y, rect.Width, rect.Height);
@@ -65,7 +65,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public virtual void Move(PointF newlocation, Set<Box> collidedBoxes)
+        public virtual void Move(Vector newlocation, Set<Box> collidedBoxes)
         {
             //maybe route this to the framework
             //
@@ -75,7 +75,7 @@ namespace MetaphysicsIndustries.Crystalline
             //BUT!!! would it prevent us from customizing movement for
             //different kinds of boxes, e.g. Pathway moves/resizes with
             //PathingJunction?
-            
+
             //if (Box._moveCallCount > Box._moveCallCountMax)
             //{
             //    Box._moveCallCount = Box._moveCallCount;
@@ -337,14 +337,19 @@ namespace MetaphysicsIndustries.Crystalline
             Framework.Move(this, newlocation, collidedBoxes);
         }
 
-        public virtual void Resize(SizeF newsize)
+        public virtual void Resize(SizeV newsize)
         {
             throw new NotImplementedException();
         }
 
-        public PointF GetCenterOfBox()
+        public Vector GetCenterOfBox()
         {
-            return Utilities.MIMath.CalcCenterOfRectangle(Rect);
+            return Rect.CalcCenter();
+        }
+
+        public void SetCenterOfBox(Vector pt)
+        {
+            this.Location = new Vector(pt.X - Width / 2, pt.Y - Height / 2);
         }
 
         private string _text;
@@ -387,47 +392,32 @@ namespace MetaphysicsIndustries.Crystalline
 
         public virtual BoxNeighborCollection UpNeighbors
         {
-            get
-            {
-                return _up;
-            }
+            get { return _up; }
         }
 
         public virtual BoxNeighborCollection RightNeighbors
         {
-            get
-            {
-                return _right;
-            }
+            get { return _right; }
         }
 
         public virtual BoxNeighborCollection DownNeighbors
         {
-            get
-            {
-                return _down;
-            }
+            get { return _down; }
         }
 
         public virtual BoxNeighborCollection LeftNeighbors
         {
-            get
-            {
-                return _left;
-            }
+            get { return _left; }
         }
 
-        public virtual RectangleF Rect
+        public virtual RectangleV Rect
         {
-            get
-            {
-                return _rect;
-            }
+            get { return _rect; }
             set
             {
                 //Debug::WriteLine("Need to make Box::Rect::set to use Move() ?" + __WCODESIG__);
                 //Debug::WriteLine("Definitely need to make Box::Rect::set update neighbor collections" + __WCODESIG__);
-                
+
                 if (_rect != value)
                 {
                     this.OnRectChanging(new EventArgs());
@@ -441,111 +431,63 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public PointF Location
+        public Vector Location
         {
-            get
-            {
-                return Rect.Location;
-            }
-            set
-            {
-                Rect = new RectangleF(value, Size);
-            }
+            get { return Rect.Location; }
+            set { Rect = new RectangleV(value, Size); }
         }
 
         public float X
         {
-            get
-            {
-                return Rect.X;
-            }
-            set
-            {
-                Rect = new RectangleF(value, Y, Width, Height);
-            }
+            get { return Rect.X; }
+            set { Rect = new RectangleV(value, Y, Width, Height); }
         }
 
         public float Y
         {
-            get
-            {
-                return Rect.Y;
-            }
-            set
-            {
-                Rect = new RectangleF(X, value, Width, Height);
-            }
+            get { return Rect.Y; }
+            set { Rect = new RectangleV(X, value, Width, Height); }
         }
 
-        public SizeF Size
+        public SizeV Size
         {
-            get
-            {
-                return Rect.Size;
-            }
-            set
-            {
-                Rect = new RectangleF(Location, value);
-            }
+            get { return Rect.Size; }
+            set { Rect = new RectangleV(Location, value); }
         }
 
         public float Width
         {
-            get
-            {
-                return Rect.Width;
-            }
-            set
-            {
-                Rect = new RectangleF(X, Y, value, Height);
-            }
+            get { return Rect.Width; }
+            set { Rect = new RectangleV(X, Y, value, Height); }
         }
 
         public float Height
         {
-            get
-            {
-                return Rect.Height;
-            }
-            set
-            {
-                Rect = new RectangleF(X, Y, Width, value);
-            }
+            get { return Rect.Height; }
+            set { Rect = new RectangleV(X, Y, Width, value); }
         }
 
         public float Left
         {
-            get
-            {
-                return Rect.Left;
-            }
+            get { return Rect.Left; }
         }
 
         public float Right
         {
-            get
-            {
-                return Rect.Right;
-            }
+            get { return Rect.Right; }
         }
 
         public float Top
         {
-            get
-            {
-                return Rect.Top;
-            }
+            get { return Rect.Top; }
         }
 
         public float Bottom
         {
-            get
-            {
-                return Rect.Bottom;
-            }
+            get { return Rect.Bottom; }
         }
 
-        [field:NonSerialized]
+        [field: NonSerialized]
         public virtual event EventHandler RectChanged;
 
         //public virtual event EventHandler RectChanging;
@@ -553,7 +495,7 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual void OnRectChanged(EventArgs e)
         {
             InvalidateWithinParentControl();
-            
+
             if (RectChanged != null)
             {
                 this.RectChanged(this, e);
@@ -574,7 +516,7 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (Framework != null && Framework.ParentControl != null)
             {
-                Framework.ParentControl.InvalidateRectFromBox(this);
+                Framework.ParentControl.InvalidateRectFromEntity(this);
             }
         }
 
@@ -604,7 +546,7 @@ namespace MetaphysicsIndustries.Crystalline
         private BoxNeighborCollection _down;
         //[NonSerialized]
         private BoxNeighborCollection _left;
-        private RectangleF _rect;
+        private RectangleV _rect;
 
         //because the collection classes interact, this override is unnecessary
         public override CrystallineControl ParentCrystallineControl

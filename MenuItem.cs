@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
@@ -16,9 +17,9 @@ namespace MetaphysicsIndustries.Crystalline
         {
         }
 
-        public override RectangleF GetBoundingBox()
+        public override RectangleV GetBoundingBox()
         {
-            return new RectangleF();
+            return new RectangleV();
         }
 
         public void Click(CrystallineControl control)

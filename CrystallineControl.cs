@@ -100,8 +100,8 @@ namespace MetaphysicsIndustries.Crystalline
 
             _elements = new ElementCollection(Framework);
             _paths = new CrystallineControlPathParentChildrenCollection(_entities);
-            _pathingJunctions = new PathingJunctionCollection(Framework);
-            _pathways = new PathwayCollection(Framework);
+            //_pathingJunctions = new PathingJunctionCollection(Framework);
+            //_pathways = new PathwayCollection(Framework);
 
             //_selectionElement = new Set<Element>();
             //_selectionPathJoint = new Set<PathJoint>();
@@ -163,19 +163,19 @@ namespace MetaphysicsIndustries.Crystalline
             UpdateScrolls();
         }
 
-        public void ReportException(Exception ee)
+        public void ReportException(Exception ex)
         {
-            MessageBox.Show(this, "There was an error: \r\n" + ee.ToString());
+            MessageBox.Show(this, "There was an error: \r\n" + ex.ToString());
         }
 
-        private double Dist(PointF p1, PointF p2)
-        {
-            float xx;
-            float yy;
-            xx = (p1.X - p2.X);
-            yy = (p1.Y - p2.Y);
-            return Math.Sqrt(xx * xx + yy * yy);
-        }
+        //private double Dist(PointF p1, PointF p2)
+        //{
+        //    float xx;
+        //    float yy;
+        //    xx = (p1.X - p2.X);
+        //    yy = (p1.Y - p2.Y);
+        //    return Math.Sqrt(xx * xx + yy * yy);
+        //}
 
         //private CrystallineControlFunctionalityOrderedParentChildrenCollection _functionalities;
         //public CrystallineControlFunctionalityOrderedParentChildrenCollection Functionalities

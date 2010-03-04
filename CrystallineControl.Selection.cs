@@ -31,8 +31,8 @@ namespace MetaphysicsIndustries.Crystalline
         {
             Element,
             Path,
-            PathingJunction,
-            Pathway,
+            //PathingJunction,
+            //Pathway,
         };
 
         public virtual SelectionModeType SelectionMode
@@ -58,8 +58,8 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     case SelectionModeType.Element: return SelectionElement.Count;
                     case SelectionModeType.Path: return SelectionPathJoint.Count;
-                    case SelectionModeType.PathingJunction: return SelectionPathingJunction.Count;
-                    case SelectionModeType.Pathway: return SelectionPathway.Count;
+                    //case SelectionModeType.PathingJunction: return SelectionPathingJunction.Count;
+                    //case SelectionModeType.Pathway: return SelectionPathway.Count;
                 }
                 return 0;
             }
@@ -76,16 +76,16 @@ namespace MetaphysicsIndustries.Crystalline
         {
             get { return _selectionPathJoint; }
         }
-        Set<PathingJunction> _selectionPathingJunction = new Set<PathingJunction>();
-        public Set<PathingJunction> SelectionPathingJunction
-        {
-            get { return _selectionPathingJunction; }
-        }
-        Set<Pathway> _selectionPathway = new Set<Pathway>();
-        public Set<Pathway> SelectionPathway
-        {
-            get { return _selectionPathway; }
-        }
+        //Set<PathingJunction> _selectionPathingJunction = new Set<PathingJunction>();
+        //public Set<PathingJunction> SelectionPathingJunction
+        //{
+        //    get { return _selectionPathingJunction; }
+        //}
+        //Set<Pathway> _selectionPathway = new Set<Pathway>();
+        //public Set<Pathway> SelectionPathway
+        //{
+        //    get { return _selectionPathway; }
+        //}
 
         SelectionModeType _selectionMode = SelectionModeType.Element;
     }

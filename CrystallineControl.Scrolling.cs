@@ -23,74 +23,78 @@ using System.Text;
 using System.Windows.Forms;
 using MetaphysicsIndustries.Collections;
 using System.Diagnostics;
+using MetaphysicsIndustries.Utilities;
 
 namespace MetaphysicsIndustries.Crystalline
 {
     public partial class CrystallineControl : UserControl
     {
 
-        public Point ClientSpaceFromDocumentSpace(PointF locationInDocumentSpace)
+        public Point ClientSpaceFromDocumentSpace(Vector locationInDocumentSpace)
         {
             //return Point.Round(locationInDocumentSpace) + new Size(AutoScrollPosition);
             return Point.Truncate(ClientSpaceFromScrollableSpace(ScrollableSpaceFromDocumentSpace(locationInDocumentSpace)));
         }
 
-        public PointF DocumentSpaceFromClientSpace(Point locationInClientSpace)
+        public Vector DocumentSpaceFromClientSpace(Point locationInClientSpace)
         {
             //return locationInClientSpace - new Size(AutoScrollPosition);
             return DocumentSpaceFromScrollableSpace(ScrollableSpaceFromClientSpace(locationInClientSpace));
         }
 
-        protected PointF ClientSpaceFromScrollableSpace(PointF locationInScrollableSpace)
+        protected Point ClientSpaceFromScrollableSpace(Vector locationInScrollableSpace)
         {
-            return locationInScrollableSpace + new SizeF(AutoScrollPosition);
+            return new Point((int)Math.Round(locationInScrollableSpace.X + AutoScrollPosition.X),
+                             (int)Math.Round(locationInScrollableSpace.Y + AutoScrollPosition.Y));
         }
 
-        protected PointF ScrollableSpaceFromClientSpace(PointF locationInClientSpace)
+        protected Vector ScrollableSpaceFromClientSpace(Point locationInClientSpace)
         {
-            return locationInClientSpace - new SizeF(AutoScrollPosition);
+            return (Vector)((PointF)locationInClientSpace) - ((PointF)AutoScrollPosition);
         }
 
-        protected PointF ScrollableSpaceFromDocumentSpace(PointF locationInDocumentSpace)
+        protected Vector ScrollableSpaceFromDocumentSpace(Vector locationInDocumentSpace)
         {
-            return locationInDocumentSpace - new SizeF(_scrollableAreaInDocument.Location);
+            return locationInDocumentSpace - _scrollableAreaInDocument.Location;
         }
 
-        protected PointF DocumentSpaceFromScrollableSpace(PointF locationInScrollableSpace)
+        protected Vector DocumentSpaceFromScrollableSpace(Vector locationInScrollableSpace)
         {
-            return locationInScrollableSpace + new SizeF(_scrollableAreaInDocument.Location);
+            return locationInScrollableSpace + _scrollableAreaInDocument.Location;
         }
 
 
 
-        public Rectangle ClientSpaceFromDocumentSpace(RectangleF rectInDocumentSpace)
+        public Rectangle ClientSpaceFromDocumentSpace(RectangleV rectInDocumentSpace)
         {
             return Rectangle.Truncate(ClientSpaceFromScrollableSpace(ScrollableSpaceFromDocumentSpace(rectInDocumentSpace)));
         }
 
-        public RectangleF DocumentSpaceFromClientSpace(Rectangle rectInClientSpace)
+        public RectangleV DocumentSpaceFromClientSpace(Rectangle rectInClientSpace)
         {
             return DocumentSpaceFromScrollableSpace(ScrollableSpaceFromClientSpace(rectInClientSpace));
         }
 
-        protected RectangleF ClientSpaceFromScrollableSpace(RectangleF rectInScrollableSpace)
+        protected Rectangle ClientSpaceFromScrollableSpace(RectangleV rectInScrollableSpace)
         {
-            return new RectangleF(ClientSpaceFromScrollableSpace(rectInScrollableSpace.Location), rectInScrollableSpace.Size);
+            Point location = ClientSpaceFromScrollableSpace(rectInScrollableSpace.Location);
+            return new Rectangle(location.X, location.Y, (int)rectInScrollableSpace.Width, (int)rectInScrollableSpace.Height);
         }
 
-        protected RectangleF ScrollableSpaceFromClientSpace(RectangleF rectInClientSpace)
+        protected RectangleV ScrollableSpaceFromClientSpace(Rectangle rectInClientSpace)
         {
-            return new RectangleF(ScrollableSpaceFromClientSpace(rectInClientSpace.Location), rectInClientSpace.Size);
+            Vector location = ScrollableSpaceFromClientSpace(rectInClientSpace.Location);
+            return new RectangleV(location.X, location.Y, rectInClientSpace.Width, rectInClientSpace.Height);
         }
 
-        protected RectangleF ScrollableSpaceFromDocumentSpace(RectangleF rectInDocumentSpace)
+        protected RectangleV ScrollableSpaceFromDocumentSpace(RectangleV rectInDocumentSpace)
         {
-            return new RectangleF(ScrollableSpaceFromDocumentSpace(rectInDocumentSpace.Location), rectInDocumentSpace.Size);
+            return new RectangleV(ScrollableSpaceFromDocumentSpace(rectInDocumentSpace.Location), rectInDocumentSpace.Size);
         }
 
-        protected RectangleF DocumentSpaceFromScrollableSpace(RectangleF rectInScrollableSpace)
+        protected RectangleV DocumentSpaceFromScrollableSpace(RectangleV rectInScrollableSpace)
         {
-            return new RectangleF(DocumentSpaceFromScrollableSpace(rectInScrollableSpace.Location), rectInScrollableSpace.Size);
+            return new RectangleV(DocumentSpaceFromScrollableSpace(rectInScrollableSpace.Location), rectInScrollableSpace.Size);
         }
 
         protected override void OnScroll(ScrollEventArgs se)
@@ -107,11 +111,11 @@ namespace MetaphysicsIndustries.Crystalline
 
         public virtual void UpdateScrolls()
         {
-            RectangleF client = GetClientRectInDocument();
-            RectangleF rect = client;
+            RectangleV client = GetClientRectInDocument();
+            RectangleV rect = client;
             if (!Framework.Bounds.IsEmpty)
             {
-                rect = RectangleF.Union(rect, RectangleF.Inflate(Framework.Bounds, 25, 25));
+                rect = rect.Union(Framework.Bounds.Inflate(25, 25));
             }
 
             if (_scrollableAreaInDocument != rect)
@@ -120,9 +124,9 @@ namespace MetaphysicsIndustries.Crystalline
                 //_scrollableAreaInDocument - new SizeF(client.Location);
 
                 //PointF positionInDocument = DocumentSpaceFromClientSpace(AutoScrollPosition);
-                Point newAutoScrollPosition = Point.Truncate(rect.Location - new SizeF(client.Location));
+                Point newAutoScrollPosition = Point.Truncate(rect.Location - client.Location);
 
-                PointF origin = DocumentSpaceFromClientSpace(new Point(0, 0));
+                Vector origin = DocumentSpaceFromClientSpace(new Point(0, 0));
 
                 if (_scrollableAreaInDocument.X < 0)
                 {
@@ -131,24 +135,24 @@ namespace MetaphysicsIndustries.Crystalline
 
                 //AutoScroll = false;
                 AutoScrollPosition = new Point(-newAutoScrollPosition.X, -newAutoScrollPosition.Y);
-                AutoScrollMinSize = rect.Size.ToSize();//(new SizeF(Framework.Bounds.Location + Framework.Bounds.Size)).ToSize();
+                AutoScrollMinSize = (new SizeF(rect.Width, rect.Height)).ToSize(); //rect.Size.ToSize();//(new SizeF(Framework.Bounds.Location + Framework.Bounds.Size)).ToSize();
                 _scrollableAreaInDocument = rect;
                 //AutoScroll = true;
 
-                PointF origin2 = DocumentSpaceFromClientSpace(new Point(0, 0));
+                Vector origin2 = DocumentSpaceFromClientSpace(new Point(0, 0));
 
                 Invalidate();
             }
         }
 
-        private RectangleF GetClientRectInDocument()
+        private RectangleV GetClientRectInDocument()
         {
-            PointF p1 = DocumentSpaceFromClientSpace(new Point(0, 0));
-            PointF p2 = DocumentSpaceFromClientSpace(new Point(ClientSize));
-            RectangleF rect = new RectangleF(p1, new SizeF(p2 - new SizeF(p1)));
+            Vector p1 = DocumentSpaceFromClientSpace(new Point(0, 0));
+            Vector p2 = DocumentSpaceFromClientSpace(new Point(ClientSize));
+            RectangleV rect = new RectangleV(p1, new SizeV(p2 - p1));
             return rect;
         }
 
-        RectangleF _scrollableAreaInDocument;
+        RectangleV _scrollableAreaInDocument;
     }
 }

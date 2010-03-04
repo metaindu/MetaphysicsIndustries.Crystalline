@@ -22,150 +22,150 @@ using System.Drawing;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-	public class PathingJunction : Box
-	{
-		public PathingJunction()
-		{
-			Width = 25.0f;
-			Height = 25.0f;
-		}
+    //public class PathingJunction : Box
+    //{
+    //    public PathingJunction()
+    //    {
+    //        Width = 25.0f;
+    //        Height = 25.0f;
+    //    }
 
-        //public override void Dispose()
-        //{
-        //    LeftPathway = null;
-        //    UpPathway = null;
-        //    RightPathway = null;
-        //    DownPathway = null;
+    //    //public override void Dispose()
+    //    //{
+    //    //    LeftPathway = null;
+    //    //    UpPathway = null;
+    //    //    RightPathway = null;
+    //    //    DownPathway = null;
 
-        //    base.Dispose();
-        //}
+    //    //    base.Dispose();
+    //    //}
 
-        //public override void Render(Graphics g, Pen pen, Brush brush, Font font)
-        //{
-        //    Graphics _g = g;
+    //    //public override void Render(Graphics g, Pen pen, Brush brush, Font font)
+    //    //{
+    //    //    Graphics _g = g;
 			
-        //    if (pen == null)
-        //    {
-        //        pen = Pens.Black;
-        //    }
+    //    //    if (pen == null)
+    //    //    {
+    //    //        pen = Pens.Black;
+    //    //    }
 			
-        //    g.DrawRectangle(pen, this.X, this.Y, this.Width, this.Height);
-        //}
+    //    //    g.DrawRectangle(pen, this.X, this.Y, this.Width, this.Height);
+    //    //}
 
-		public virtual Pathway LeftPathway
-		{
-			get
-			{
-				return _leftPathway;
-			}
-			set
-			{
-                if (_leftPathway != value)
-				{
-                    if (_leftPathway != null)
-                    {
-                        _leftPathway.RightDown = null;
-                    }
+    //    public virtual Pathway LeftPathway
+    //    {
+    //        get
+    //        {
+    //            return _leftPathway;
+    //        }
+    //        set
+    //        {
+    //            if (_leftPathway != value)
+    //            {
+    //                if (_leftPathway != null)
+    //                {
+    //                    _leftPathway.RightDown = null;
+    //                }
 
-                    _leftPathway = value;
+    //                _leftPathway = value;
 
-                    if (_leftPathway != null)
-                    {
-                        _leftPathway.RightDown = this;
-                    }
-				}
-			}
-		}
+    //                if (_leftPathway != null)
+    //                {
+    //                    _leftPathway.RightDown = this;
+    //                }
+    //            }
+    //        }
+    //    }
 
-		public virtual Pathway UpPathway
-		{
-			get
-			{
-				return _upPathway;
-			}
-			set
-			{
-                if (_upPathway != value)
-				{
-					if (_upPathway != null)
-					{
-						_upPathway.RightDown = null;
-					}
+    //    public virtual Pathway UpPathway
+    //    {
+    //        get
+    //        {
+    //            return _upPathway;
+    //        }
+    //        set
+    //        {
+    //            if (_upPathway != value)
+    //            {
+    //                if (_upPathway != null)
+    //                {
+    //                    _upPathway.RightDown = null;
+    //                }
 
-                    _upPathway = value;
+    //                _upPathway = value;
 
-                    if (_upPathway != null)
-                    {
-                        _upPathway.RightDown = this;
-                    }
-                }
-			}
-		}
+    //                if (_upPathway != null)
+    //                {
+    //                    _upPathway.RightDown = this;
+    //                }
+    //            }
+    //        }
+    //    }
 
-		public virtual Pathway RightPathway
-		{
-			get
-			{
-				return _rightPathway;
-			}
-			set
-			{
-                if (_rightPathway != value)
-				{
-                    if (_rightPathway != null)
-                    {
-                        _rightPathway.LeftUp = null;
-                    }
+    //    public virtual Pathway RightPathway
+    //    {
+    //        get
+    //        {
+    //            return _rightPathway;
+    //        }
+    //        set
+    //        {
+    //            if (_rightPathway != value)
+    //            {
+    //                if (_rightPathway != null)
+    //                {
+    //                    _rightPathway.LeftUp = null;
+    //                }
 
-                    _rightPathway = value;
+    //                _rightPathway = value;
 
-                    if (_rightPathway != null)
-                    {
-                        _rightPathway.LeftUp = this;
-                    }
-				}
-			}
-		}
+    //                if (_rightPathway != null)
+    //                {
+    //                    _rightPathway.LeftUp = this;
+    //                }
+    //            }
+    //        }
+    //    }
 
-		public virtual Pathway DownPathway
-		{
-			get
-			{
-				return _downPathway;
-			}
-			set
-			{
-                if (_downPathway != value)
-				{
-                    if (_downPathway != null)
-                    {
-                        _downPathway.LeftUp = null;
-                    }
+    //    public virtual Pathway DownPathway
+    //    {
+    //        get
+    //        {
+    //            return _downPathway;
+    //        }
+    //        set
+    //        {
+    //            if (_downPathway != value)
+    //            {
+    //                if (_downPathway != null)
+    //                {
+    //                    _downPathway.LeftUp = null;
+    //                }
 
-                    _downPathway = value;
+    //                _downPathway = value;
 
-                    if (_downPathway != null)
-                    {
-                        _downPathway.LeftUp = this;
-                    }
-				}
-			}
-		}
+    //                if (_downPathway != null)
+    //                {
+    //                    _downPathway.LeftUp = this;
+    //                }
+    //            }
+    //        }
+    //    }
 
-        protected void UpdateUpPathwayRect()
-        {
-            if (UpPathway == null) { return; }
+    //    protected void UpdateUpPathwayRect()
+    //    {
+    //        if (UpPathway == null) { return; }
 
 
-        }
+    //    }
 
-        protected void UpdateRightPathway()
-        {
-        }
+    //    protected void UpdateRightPathway()
+    //    {
+    //    }
 
-        private Pathway _rightPathway;
-        private Pathway _downPathway;
-        private Pathway _upPathway;
-        private Pathway _leftPathway;
-	}
+    //    private Pathway _rightPathway;
+    //    private Pathway _downPathway;
+    //    private Pathway _upPathway;
+    //    private Pathway _leftPathway;
+    //}
 }

@@ -20,13 +20,13 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-	public class PathwayCollection : BoxCollection<Pathway>
-	{
-        private PathwayCollection() { }
-		public PathwayCollection(BoxFramework f)
-            : base(f)
-		{
-		}
+    //public class PathwayCollection : BoxCollection<Pathway>
+    //{
+    //    private PathwayCollection() { }
+    //    public PathwayCollection(BoxFramework f)
+    //        : base(f)
+    //    {
+    //    }
 
-	}
+    //}
 }
