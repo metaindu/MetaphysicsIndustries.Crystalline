@@ -55,39 +55,6 @@ namespace MetaphysicsIndustries.Crystalline
                 return _paths;
             }
         }
-        //public virtual PathingJunctionCollection PathingJunctions
-        //{
-        //    get
-        //    {
-        //        return _pathingJunctions;
-        //    }
-        //}
-        //public virtual PathwayCollection Pathways
-        //{
-        //    get
-        //    {
-        //        return _pathways;
-        //    }
-        //}
-
-        //protected virtual Element CreateElement()
-        //{
-        //    Element e = new Element();
-        //    //e->Framework = this->Framework;
-        //    return e;
-        //}
-        //protected virtual Path CreatePath()
-        //{
-        //    return new Path();
-        //}
-        //protected virtual PathingJunction CreatePathingJunction()
-        //{
-        //    return new PathingJunction();
-        //}
-        //protected virtual Pathway CreatePathway()
-        //{
-        //    return new Pathway();
-        //}
 
         public Entity[] GetEntitiesAtPointInDocument(Vector v)
         {
@@ -115,13 +82,19 @@ namespace MetaphysicsIndustries.Crystalline
         public T[] GetEntitiesIntersectingRectInDocument<T>(RectangleV rect)
             where T : Entity
         {
+            return GetEntitiesIntersectingRectInDocument<T>(rect, true);
+        }
+
+        public T[] GetEntitiesIntersectingRectInDocument<T>(RectangleV rect, bool inclusive)
+            where T : Entity
+        {
             //replace this with R-Tree implementation
 
             Set<T> set = new Set<T>();
 
             foreach (T ent in Collection.Extract<Entity, T>(Entities))
             {
-                if (ent.GetBoundingBox().IntersectsWith(rect))
+                if (ent.GetBoundingBox().IntersectsWith(rect, inclusive))
                 {
                     set.Add(ent);
                 }
@@ -151,130 +124,6 @@ namespace MetaphysicsIndustries.Crystalline
 
             return outElements;
         }
-        protected virtual Set<PathJoint> GetPathJointsAtPoint(Vector pf)
-        {
-            Set<PathJoint> set;
-            set = new Set<PathJoint>();
-
-            RectangleV r = new RectangleV();
-            float size;
-
-            size = 3;
-
-            //r.Location = pf;
-            //r.X -= size;
-            //r.Y -= size;
-            //r.Width = 2 * size + 1;
-            //r.Height = 2 * size + 1;
-            r = new RectangleV(pf.X - size, pf.Y - size, 2 * size + 1, 2 * size + 1);
-
-            //int	i;
-            //int	j;
-            //for each (Path^ p in this->Paths)
-            //{
-            //	j = p->Points->Count;
-            //	for (i = 0; i < j; i++)
-            //	{
-            //		if (r.Contains(p->Points[i]))
-            //		{
-            //			set->Add(PathJoint(p, i));
-            //		}
-            //	}
-            //}
-
-            //return set;
-
-            return this.GetPathJointsInRect(r);
-        }
-        protected virtual Set<PathJoint> GetPathJointsInRect(RectangleV r)
-        {
-            Set<PathJoint> set;
-            set = new Set<PathJoint>();
-
-            int i;
-            int j;
-            foreach (Path p in this.Paths)
-            {
-                j = p.PathJoints.Count;
-                for (i = 0; i < j; i++)
-                {
-                    if (r.Contains(p.PathJoints[i].Location))
-                    {
-                        set.Add(p.PathJoints[i]);
-                    }
-                }
-            }
-
-            return set;
-        }
-        //protected virtual Set<PathingJunction> GetPathingJunctionsAtPoint(Vector pf)
-        //{
-        //    Set<PathingJunction> set;
-
-        //    set = new Set<PathingJunction>();
-
-        //    foreach (PathingJunction p in this.PathingJunctions)
-        //    {
-        //        if (p.Rect.Contains(pf))
-        //        {
-        //            set.Add(p);
-        //        }
-        //    }
-
-        //    return set;
-        //}
-        //protected virtual Set<PathingJunction> GetPathingJunctionsInRect(RectangleV r)
-        //{
-        //    RectangleV _r = r;
-
-        //    Set<PathingJunction> outJunctions;
-
-        //    outJunctions = new Set<PathingJunction>();
-        //    foreach (PathingJunction p in this.PathingJunctions)
-        //    {
-        //        if (p.Rect.IntersectsWith(r))
-        //        {
-        //            outJunctions.Add(p);
-        //        }
-        //    }
-
-        //    return outJunctions;
-        //}
-        //protected virtual Set<Pathway> GetPathwaysAtPoint(Vector pf)
-        //{
-        //    PointF _pf = pf;
-
-        //    Set<Pathway> set;
-
-        //    set = new Set<Pathway>();
-
-        //    foreach (Pathway p in this.Pathways)
-        //    {
-        //        if (p.Rect.Contains(pf))
-        //        {
-        //            set.Add(p);
-        //        }
-        //    }
-
-        //    return set;
-        //}
-        //protected virtual Set<Pathway> GetPathwaysInRect(RectangleV r)
-        //{
-        //    RectangleV _r = r;
-
-        //    Set<Pathway> outPathways;
-
-        //    outPathways = new Set<Pathway>();
-        //    foreach (Pathway p in this.Pathways)
-        //    {
-        //        if (p.Rect.IntersectsWith(r))
-        //        {
-        //            outPathways.Add(p);
-        //        }
-        //    }
-
-        //    return outPathways;
-        //}
 
         protected virtual Element GetFrontmostElementAtPointInDocumentSpace(Vector pointInDocSpace)
         {
@@ -287,7 +136,7 @@ namespace MetaphysicsIndustries.Crystalline
                 int index = Framework.ZOrder.IndexOf(frontmost);
                 foreach (Element ee in s1)
                 {
-                    //SelectionElement.Add(ee);
+                    //Selection.Add(ee);
                     int index2 = Framework.ZOrder.IndexOf(ee);
                     if (index2 > index)
                     {
@@ -321,18 +170,6 @@ namespace MetaphysicsIndustries.Crystalline
             InvalidateRectFromEntity(pathToAdd);
         }
 
-        //public virtual void AddPathway(Pathway pathwayToAdd)
-        //{
-        //    Pathways.Add(pathwayToAdd);
-        //    InvalidateRectFromEntity(pathwayToAdd);
-        //}
-
-        //public virtual void AddPathingJunction(PathingJunction pathingJunctionToAdd)
-        //{
-        //    PathingJunctions.Add(pathingJunctionToAdd);
-        //    InvalidateRectFromEntity(pathingJunctionToAdd);
-        //}
-
         public virtual void RemoveElement(Element elementToRemove)
         {
             InvalidateRectFromEntity(elementToRemove);
@@ -354,7 +191,7 @@ namespace MetaphysicsIndustries.Crystalline
             Entities.Remove(elementToRemove);
             Framework.Remove(elementToRemove);
 
-            SelectionElement.Remove(elementToRemove);
+            Selection.Remove(elementToRemove);
 
             //Invalidate();
         }
@@ -365,36 +202,14 @@ namespace MetaphysicsIndustries.Crystalline
 
             Paths.Remove(pathToRemove);
 
-            foreach (PathJoint pj in pathToRemove.PathJoints)
-            {
-                SelectionPathJoint.Remove(pj);
-            }
+            //foreach (PathJoint pj in pathToRemove.PathJoints)
+            //{
+            //    SelectionPathJoint.Remove(pj);
+            //}
 
             //Invalidate();
         }
 
-        //public virtual void RemovePathway(Pathway pathwayToRemove)
-        //{
-        //    InvalidateRectFromEntity(pathwayToRemove);
-
-        //    Pathways.Remove(pathwayToRemove);
-
-        //    SelectionPathway.Remove(pathwayToRemove);
-        //}
-
-        //public virtual void RemovePathingJunction(PathingJunction pathingJunctionToRemove)
-        //{
-        //    InvalidateRectFromEntity(pathingJunctionToRemove);
-
-        //    pathingJunctionToRemove.UpPathway = null;
-        //    pathingJunctionToRemove.DownPathway = null;
-        //    pathingJunctionToRemove.LeftPathway = null;
-        //    pathingJunctionToRemove.RightPathway = null;
-
-        //    PathingJunctions.Remove(pathingJunctionToRemove);
-
-        //    SelectionPathingJunction.Remove(pathingJunctionToRemove);
-        //}
 
 
         Set<Path> _ResetBoxNeighbors_inbound = new Set<Path>();
@@ -430,10 +245,6 @@ namespace MetaphysicsIndustries.Crystalline
                 InvalidateRectFromEntity(box);
 
                 Framework.Remove(box);
-                box.UpNeighbors.Clear();
-                box.DownNeighbors.Clear();
-                box.LeftNeighbors.Clear();
-                box.RightNeighbors.Clear();
                 Framework.Add(box);
 
                 if (elem != null)
@@ -469,6 +280,72 @@ namespace MetaphysicsIndustries.Crystalline
         CrystallineControlPathParentChildrenCollection _paths;
         //PathingJunctionCollection _pathingJunctions;
         //PathwayCollection _pathways;
+
+
+        public void ImportEntities(Entity[] entities)
+        {
+            Set<Element> elements = new Set<Element>();
+            Set<Path> paths = new Set<Path>();
+            Set<Entity> others = new Set<Entity>();
+
+            //foreach (Entity ent in entities)
+            //{
+            //    if (ent is EmeraldElement)
+            //    {
+            //        elements.Add((EmeraldElement)ent);
+            //    }
+            //    else if (ent is EmeraldPath)
+            //    {
+            //        paths.Add((EmeraldPath)ent);
+            //    }
+            //}
+            foreach (Entity ent in entities)
+            {
+                if (ent is Element)
+                {
+                    elements.Add((Element)ent);
+                }
+                else if (ent is Path)
+                {
+                    paths.Add((Path)ent);
+                }
+                else
+                {
+                    others.Add(ent);
+                }
+            }
+
+            Dictionary<Element, Path[]> outbound = new Dictionary<Element, Path[]>();
+            Dictionary<Element, Path[]> inbound = new Dictionary<Element, Path[]>();
+
+            foreach (Element elem in elements)
+            {
+                outbound[elem] = Collection.ToArray(elem.Outbound);
+                inbound[elem] = Collection.ToArray(elem.Inbound);
+            }
+
+            Elements.AddRange(elements);
+            Paths.AddRange(paths);
+            Entities.AddRange(others);
+
+            foreach (Element elem in elements)
+            {
+                Collection.AddRange(elem.Outbound, outbound[elem]);
+                Collection.AddRange(elem.Inbound, inbound[elem]);
+            }
+
+            ResetBoxNeighbors(elements.ToArray());
+            ResetBoxNeighbors(Collection.Extract<Entity, Box>(others));
+        }
+
+        public virtual void ResetContent()
+        {
+            Selection.Clear();
+            Elements.Clear();
+            Boxes.Clear();
+            Paths.Clear();
+            Entities.Clear();
+        }
 
     }
 }

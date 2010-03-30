@@ -48,51 +48,51 @@ namespace MetaphysicsIndustries.Crystalline
         //    base.Dispose();
         //}
 
-        public override void Render(Graphics g, Pen pen, Brush brush, Font font)
-        {
-            Graphics _g = g;
-			float	min;
-			float	max;
+        //public override void Render(Graphics g, Pen pen, Brush brush, Font font)
+        //{
+        //    Graphics _g = g;
+        //    float	min;
+        //    float	max;
 
-            //extract all debug stuff out of entity classes and into crystallinecontrol classes
-            if (Framework.ParentControl.ShowDebugInfo)
-            {
-                foreach (Box ib in this.LeftNeighbors)
-                {
-                    min = Math.Max(this.Top, ib.Top);
-                    max = Math.Min(this.Bottom, ib.Bottom);
-                    min = (min + max) / 2;
-                    min++;
-                    g.DrawLine(Pens.Blue, this.Left, min, ib.Right, min);
-                }
-                foreach (Box ib in this.UpNeighbors)
-                {
-                    min = Math.Max(this.Left, ib.Left);
-                    max = Math.Min(this.Right, ib.Right);
-                    min = (min + max) / 2;
-                    min++;
-                    g.DrawLine(Pens.Blue, min, this.Top, min, ib.Bottom);
-                }
-                foreach (Box ib in this.RightNeighbors)
-                {
-                    min = Math.Max(this.Top, ib.Top);
-                    max = Math.Min(this.Bottom, ib.Bottom);
-                    min = (min + max) / 2;
-                    min--;
-                    g.DrawLine(Pens.Orange, this.Right, min, ib.Left, min);
-                }
-                foreach (Box ib in this.DownNeighbors)
-                {
-                    min = Math.Max(this.Left, ib.Left);
-                    max = Math.Min(this.Right, ib.Right);
-                    min = (min + max) / 2;
-                    min--;
-                    g.DrawLine(Pens.Orange, min, this.Bottom, min, ib.Top);
-                }
-            }
+        //    ////extract all debug stuff out of entity classes and into crystallinecontrol classes
+        //    //if (Framework.ParentControl.ShowDebugInfo)
+        //    //{
+        //    //    foreach (Box ib in this.LeftNeighbors)
+        //    //    {
+        //    //        min = Math.Max(this.Top, ib.Top);
+        //    //        max = Math.Min(this.Bottom, ib.Bottom);
+        //    //        min = (min + max) / 2;
+        //    //        min++;
+        //    //        g.DrawLine(Pens.Blue, this.Left, min, ib.Right, min);
+        //    //    }
+        //    //    foreach (Box ib in this.UpNeighbors)
+        //    //    {
+        //    //        min = Math.Max(this.Left, ib.Left);
+        //    //        max = Math.Min(this.Right, ib.Right);
+        //    //        min = (min + max) / 2;
+        //    //        min++;
+        //    //        g.DrawLine(Pens.Blue, min, this.Top, min, ib.Bottom);
+        //    //    }
+        //    //    foreach (Box ib in this.RightNeighbors)
+        //    //    {
+        //    //        min = Math.Max(this.Top, ib.Top);
+        //    //        max = Math.Min(this.Bottom, ib.Bottom);
+        //    //        min = (min + max) / 2;
+        //    //        min--;
+        //    //        g.DrawLine(Pens.Orange, this.Right, min, ib.Left, min);
+        //    //    }
+        //    //    foreach (Box ib in this.DownNeighbors)
+        //    //    {
+        //    //        min = Math.Max(this.Left, ib.Left);
+        //    //        max = Math.Min(this.Right, ib.Right);
+        //    //        min = (min + max) / 2;
+        //    //        min--;
+        //    //        g.DrawLine(Pens.Orange, min, this.Bottom, min, ib.Top);
+        //    //    }
+        //    //}
 
-            base.Render(g, pen, brush, font);
-		}
+        //    base.Render(g, pen, brush, font);
+        //}
 
         protected override void RenderText(Graphics g, Pen pen, Brush brush, Font font)
         {

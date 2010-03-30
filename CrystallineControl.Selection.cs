@@ -27,66 +27,27 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public partial class CrystallineControl : UserControl
     {
-        public enum SelectionModeType
-        {
-            Element,
-            Path,
-            //PathingJunction,
-            //Pathway,
-        };
-
-        public virtual SelectionModeType SelectionMode
-        {
-            get
-            {
-                return _selectionMode;
-            }
-            set
-            {
-                if (_selectionMode != value)
-                {
-                    _selectionMode = value;
-                }
-            }
-        }
+        
 
         public int SelectionEntitiesCount
         {
             get
             {
-                switch (SelectionMode)
-                {
-                    case SelectionModeType.Element: return SelectionElement.Count;
-                    case SelectionModeType.Path: return SelectionPathJoint.Count;
-                    //case SelectionModeType.PathingJunction: return SelectionPathingJunction.Count;
-                    //case SelectionModeType.Pathway: return SelectionPathway.Count;
-                }
-                return 0;
+                return Selection.Count;
             }
         }
 
 
-        Set<Element> _selectionElement = new Set<Element>();
-        public Set<Element> SelectionElement
+        Set<Entity> _selectionElement = new Set<Entity>();
+        public Set<Entity> Selection
         {
             get { return _selectionElement; }
         }
-        Set<PathJoint> _selectionPathJoint = new Set<PathJoint>();
-        public Set<PathJoint> SelectionPathJoint
+        public Element[] SelectionElement
         {
-            get { return _selectionPathJoint; }
+            get { return Selection.Extract<Element>(); }
         }
-        //Set<PathingJunction> _selectionPathingJunction = new Set<PathingJunction>();
-        //public Set<PathingJunction> SelectionPathingJunction
-        //{
-        //    get { return _selectionPathingJunction; }
-        //}
-        //Set<Pathway> _selectionPathway = new Set<Pathway>();
-        //public Set<Pathway> SelectionPathway
-        //{
-        //    get { return _selectionPathway; }
-        //}
 
-        SelectionModeType _selectionMode = SelectionModeType.Element;
+
     }
 }

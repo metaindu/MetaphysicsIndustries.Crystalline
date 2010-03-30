@@ -19,30 +19,30 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-	public class IntervalComparer : IComparer<Interval>
-	{
-		public IntervalComparer(bool SortByMin)
-		{
-			_sortByMin = SortByMin;
-		}
+    //public class IntervalComparer : IComparer<Interval>
+    //{
+    //    public IntervalComparer(bool SortByMin)
+    //    {
+    //        _sortByMin = SortByMin;
+    //    }
 
-		public  void Dispose()
-		{
+    //    public  void Dispose()
+    //    {
 			
-		}
+    //    }
 
-		public virtual int Compare(Interval x, Interval y)
-		{
-			if (_sortByMin)
-			{
-				return x.Min.CompareTo(y.Min);
-			}
-			else
-			{
-				return x.Max.CompareTo(y.Max);
-			}
-		}
+    //    public virtual int Compare(Interval x, Interval y)
+    //    {
+    //        if (_sortByMin)
+    //        {
+    //            return x.Min.CompareTo(y.Min);
+    //        }
+    //        else
+    //        {
+    //            return x.Max.CompareTo(y.Max);
+    //        }
+    //    }
 
-        private bool _sortByMin;
-	}
+    //    private bool _sortByMin;
+    //}
 }

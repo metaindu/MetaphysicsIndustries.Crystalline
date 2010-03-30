@@ -104,14 +104,18 @@ namespace MetaphysicsIndustries.Crystalline
                 RenderDebugInfo(g);
             }
 
-            Point offset = ClientSpaceFromDocumentSpace(new Vector(0, 0));
 
+            RenderWithTopLeft(g, DocumentSpaceFromClientSpace(new Point(0, 0)));
+        }
+
+        private void RenderWithTopLeft(Graphics g, Vector topLeft)
+        {
             //g.TranslateTransform(AutoScrollPosition.X
             //    + _scrollableAreaInDocument.X
             //    , AutoScrollPosition.Y
             //    + _scrollableAreaInDocument.Y
             //    );
-            g.TranslateTransform(offset.X, offset.Y);
+            g.TranslateTransform(-topLeft.X, -topLeft.Y);
 
             if (ShowDebugInfo)
             {
@@ -189,62 +193,62 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void RenderPaths(Graphics g)
         {
-            Set<Path> nojointpaths;
-            nojointpaths = new Set<Path>();
-            foreach (PathJoint pj in SelectionPathJoint)
-            {
-                nojointpaths.Add(pj.ParentPath);
-            }
+            //Set<Path> nojointpaths;
+            //nojointpaths = new Set<Path>();
+            //foreach (PathJoint pj in SelectionPathJoint)
+            //{
+            //    nojointpaths.Add(pj.ParentPath);
+            //}
             foreach (Path p in Paths)
             {
                 Pen pen = ChoosePenForPath(p);
                 Brush brush = pen.Brush;
 
-                if (nojointpaths.Contains(p))
-                {
-                    p.Render(g, pen, brush, Font, false, ShowPathArrows);
+                //if (nojointpaths.Contains(p))
+                //{
+                //    p.Render(g, pen, brush, Font, false, ShowPathArrows);
 
-                    int i;
-                    int j;
-                    PathJoint pj;
+                //    int i;
+                //    int j;
+                //    Vector pj;
 
-                    j = p.PathJoints.Count;
-                    if (p.To != null)
-                    {
-                        j--;
-                    }
-                    if (ShowPathJoints)
-                    {
-                        for (i = 0; i < j; i++)
-                        {
-                            pj = p.PathJoints[i];
-                            if (SelectionPathJoint.Contains(pj))
-                            {
-                                pj.Render(g, _selectionPen, null, null);
-                            }
-                            else
-                            {
-                                pj.Render(g, pen, null, null);
-                            }
-                        }
-                    }
-                    if (p.To != null)
-                    {
-                        pj = p.PathJoints[j];
-                        if (SelectionPathJoint.Contains(pj))
-                        {
-                            p.RenderArrow(g, _selectionPen, _selectionPen.Brush, Font, p.PathJoints[j - 1].Location, pj.Location);
-                        }
-                        else
-                        {
-                            p.RenderArrow(g, pen, brush, Font, p.PathJoints[j - 1].Location, pj.Location);
-                        }
-                    }
-                }
-                else
-                {
+                //    j = p.PathJoints.Count;
+                //    if (p.To != null)
+                //    {
+                //        j--;
+                //    }
+                //    if (ShowPathJoints)
+                //    {
+                //        for (i = 0; i < j; i++)
+                //        {
+                //            pj = p.PathJoints[i];
+                //            if (SelectionPathJoint.Contains(pj))
+                //            {
+                //                pj.Render(g, _selectionPen, null, null);
+                //            }
+                //            else
+                //            {
+                //                pj.Render(g, pen, null, null);
+                //            }
+                //        }
+                //    }
+                //    if (p.To != null)
+                //    {
+                //        pj = p.PathJoints[j];
+                //        if (SelectionPathJoint.Contains(pj))
+                //        {
+                //            p.RenderArrow(g, _selectionPen, _selectionPen.Brush, Font, p.PathJoints[j - 1].Location, pj.Location);
+                //        }
+                //        else
+                //        {
+                //            p.RenderArrow(g, pen, brush, Font, p.PathJoints[j - 1].Location, pj.Location);
+                //        }
+                //    }
+                //}
+                //else
+                //{
                     p.Render(g, pen, brush, Font, ShowPathJoints, ShowPathArrows);
-                }
+                //}
             }
         }
 
@@ -270,7 +274,7 @@ namespace MetaphysicsIndustries.Crystalline
             {
                 pen = Pens.Black;
 
-                if (SelectionElement.Contains(elem))
+                if (Selection.Contains(elem))
                 {
                     RectangleV rect = elem.Rect;
                     rect.Inflate(SelectionOutlineMargin, SelectionOutlineMargin);
@@ -289,7 +293,7 @@ namespace MetaphysicsIndustries.Crystalline
         {
             foreach (Box box in Framework)
             {
-                if (!(box is Element) 
+                if (!(box is Element)
                     //&& !(box is Pathway)
                     //&& !(box is PathingJunction)
                     )
@@ -340,7 +344,7 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual Pen ChoosePenForElement(Element element)
         {
             Pen pen;
-            if (SelectionMode == SelectionModeType.Element && SelectionElement.Contains(element))
+            if (Selection.Contains(element))
             {
                 pen = _selectionPen;
             }
@@ -385,9 +389,9 @@ namespace MetaphysicsIndustries.Crystalline
             sb.Append(LastRightClickInClient);
             sb.Append("\r\n");
             sb.Append("\r\n");
-            sb.Append("selectionelement = ");
-            sb.Append(SelectionElement.Count);
-            if (SelectionElement.Count > 0)
+            sb.Append("selection = ");
+            sb.Append(Selection.Count);
+            if (SelectionElement.Length > 0)
             {
                 Element sel = null;
                 foreach (Element element in SelectionElement)
@@ -408,18 +412,15 @@ namespace MetaphysicsIndustries.Crystalline
                 sb.Append(" }");
             }
             sb.Append("\r\n");
-            sb.Append("selectionpath = ");
-            sb.Append(SelectionPathJoint.Count);
-            sb.Append("\r\n");
+            //sb.Append("selectionpath = ");
+            //sb.Append(SelectionPathJoint.Count);
+            //sb.Append("\r\n");
             //sb.Append("selectionpathingjunction = ");
             //sb.Append(SelectionPathingJunction.Count);
             //sb.Append("\r\n");
             //sb.Append("selectionpathway = ");
             //sb.Append(SelectionPathway.Count);
             //sb.Append("\r\n");
-            sb.Append("selectionmode = ");
-            sb.Append(_selectionMode.ToString());
-            sb.Append("\r\n");
             sb.Append("\r\n");
             sb.Append("isclick = ");
             sb.Append(_isClick);
@@ -587,7 +588,7 @@ namespace MetaphysicsIndustries.Crystalline
         //{
         //    RectangleF rect = CalcInvalidationRectForBox(element);
 
-        //    if (SelectionElement.Contains(element))
+        //    if (Selection.Contains(element))
         //    {
         //        float marginSize;
         //        switch (SelectionRenderStyle)
@@ -631,40 +632,23 @@ namespace MetaphysicsIndustries.Crystalline
             InvalidateRectInDocument(rect);
         }
 
-
         protected void SaveContentsAsImagePrompt()
         {
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "Bitmap Images (*.bmp)|*.bmp|JPEG Images (*.jpg, *.jpeg)|*.jpg;*.jpeg|GIF Images (*.gif)|*.gif|PNG Images (*.png)|*.png*.png|All Files (*.*)|*.*";
-
-            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            Image image = SaveContentsToImage();
+            if (image != null)
             {
-                ImageFormat format = ImageFormat.Bmp;
-                switch (saveFileDialog1.FilterIndex)
-                {
-                    case 2: format = System.Drawing.Imaging.ImageFormat.Jpeg; break;
-                    case 3: format = System.Drawing.Imaging.ImageFormat.Gif; break;
-                    case 4: format = System.Drawing.Imaging.ImageFormat.Png; break;
-                }
-
-                string filename = saveFileDialog1.FileName;
-
-                SaveContentsAsImage(format, filename);
+                SaveImagePrompt(image, this);
             }
         }
 
-        protected void SaveContentsAsImage(ImageFormat format, string filename)
+        protected Image SaveContentsToImage()
         {
             try
             {
-                RectangleF rect = this.Framework.Bounds;
-                foreach (Entity ent in Entities)
-                {
-                    RectangleF entrect = ent.GetBoundingBox();
+                RectangleV rect = this.Framework.Bounds;
+                rect = rect.Union(Entity.GetBoundingBoxFromEntities(Entities.ToArray()));
+                rect = rect.Inflate(100, 100);
 
-                    rect = RectangleF.Union(rect, entrect);
-                }
-                rect = RectangleF.Inflate(rect, 100, 100);
                 Rectangle rect2 = ClientSpaceFromDocumentSpace(rect);
                 rect2.X = 0;
                 rect2.Y = 0;
@@ -673,16 +657,68 @@ namespace MetaphysicsIndustries.Crystalline
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
                     g.FillRectangle(Brushes.White, rect2);
-                    this.Render(g);
+                    this.RenderWithTopLeft(g, rect.TopLeft);
                 }
-                //this.DrawToBitmap(bmp, rect2);
 
-                bmp.Save(filename, format);
+                return bmp;
             }
             catch (Exception ex)
             {
                 ReportException(ex);
             }
+
+            return null;
+        }
+
+        //move this to utilites
+        public static void SaveImagePrompt(Image image)
+        {
+            SaveImagePrompt(image, null);
+        }
+        public static void SaveImagePrompt(Image image, IWin32Window owner)
+        {
+            if (image == null) { throw new ArgumentNullException("image"); }
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Bitmap Images (*.bmp)|*.bmp|JPEG Images (*.jpg, *.jpeg)|*.jpg;*.jpeg|GIF Images (*.gif)|*.gif|PNG Images (*.png)|*.png*.png|All Files (*.*)|*.*";
+
+            DialogResult res;
+            if (owner == null)
+            {
+                res = sfd.ShowDialog();
+            }
+            else
+            {
+                res = sfd.ShowDialog(owner);
+            }
+
+            if (res == DialogResult.OK)
+            {
+                ImageFormat format = ImageFormat.Bmp;
+                switch (sfd.FilterIndex)
+                {
+                    case 2: format = System.Drawing.Imaging.ImageFormat.Jpeg; break;
+                    case 3: format = System.Drawing.Imaging.ImageFormat.Gif; break;
+                    case 4: format = System.Drawing.Imaging.ImageFormat.Png; break;
+                }
+
+                string filename = sfd.FileName;
+
+                SaveImage(image, filename, format);
+            }
+        }
+
+        //move this to utilities
+        public static void SaveImage(Image image, string filename)
+        {
+            SaveImage(image, filename, ImageFormat.Bmp);
+        }
+        public static void SaveImage(Image image, string filename, ImageFormat format)
+        {
+            if (image == null) { throw new ArgumentNullException("image"); }
+            if (string.IsNullOrEmpty(filename)) { throw new ArgumentNullException("filename"); }
+
+            image.Save(filename, format);
         }
 
         public void BringForward(Box box)

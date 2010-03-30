@@ -40,7 +40,7 @@ namespace MetaphysicsIndustries.Crystalline
             _roright = new BoxList(_right);
             _roup = new BoxList(_up);
             _rodown = new BoxList(_down);
-            _intervalSorter = new IntervalComparer(true);
+            //_intervalSorter = new IntervalComparer(true);
 
             _roZOrder = new BoxList(_zOrder);
         }
@@ -50,16 +50,6 @@ namespace MetaphysicsIndustries.Crystalline
             this.Clear();
             //_set.Dispose();
             //_set = null;
-        }
-
-        public virtual Set<Box> GetNeighborsAbove(float bottombound, float leftbound, float rightbound)
-        {
-            return this.GetNeighbors(BoxOrientation.Up, bottombound, leftbound, rightbound);
-        }
-
-        public virtual Set<Box> GetNeighborsRightward(float leftbound, float topbound, float bottombound)
-        {
-            return this.GetNeighbors(BoxOrientation.Right, leftbound, topbound, bottombound);
         }
 
         public virtual void Add(Box b)
@@ -88,32 +78,6 @@ namespace MetaphysicsIndustries.Crystalline
                 i = _down.BinarySearch(b, _sorterDown);
                 if (i < 0) { i = ~i; }
                 _down.Insert(i, b);
-
-                Set<Box> neighbors;
-
-                neighbors = this.GetNeighborsLeftward(b.Left, b.Top, b.Bottom);
-                foreach (Box ib in neighbors)
-                {
-                    b.LeftNeighbors.Add(ib);
-                }
-
-                neighbors = this.GetNeighborsRightward(b.Right, b.Top, b.Bottom);
-                foreach (Box ib in neighbors)
-                {
-                    b.RightNeighbors.Add(ib);
-                }
-
-                neighbors = this.GetNeighborsAbove(b.Top, b.Left, b.Right);
-                foreach (Box ib in neighbors)
-                {
-                    b.UpNeighbors.Add(ib);
-                }
-
-                neighbors = this.GetNeighborsBelow(b.Bottom, b.Left, b.Right);
-                foreach (Box ib in neighbors)
-                {
-                    b.DownNeighbors.Add(ib);
-                }
 
                 b.RectChanged += Box_RectChanged;
 
@@ -144,33 +108,48 @@ namespace MetaphysicsIndustries.Crystalline
             float delta2;
             Vector p;
 
-            Set<Box> newneighbors1;
-            Set<Box> newneighbors2;
-            Set<Box> removeneighbors;
-            ICollection<Box> moveneighbors;
-            object param;
+            Set<Box> moveneighbors=new Set<Box>();
 
-            //if (boxToMove is Element)
-            //{
-            //    param = ((Element)(boxToMove)).Text;
-            //}
-            //else
-            //{
-            //    param = boxToMove.ToString();
-            //}
+            if (deltax != 0 && deltay != 0)
+            {
+            }
+
+
             if (deltax != 0)
             {
                 if (deltax > 0)
                 {
-                    moveneighbors = boxToMove.RightNeighbors;
+                    RectangleV rect = RectangleV.FromLTRB(boxToMove.Right, boxToMove.Top, boxToMove.Right+deltax, boxToMove.Bottom);
+                    Box[] temp = ParentControl.GetEntitiesIntersectingRectInDocument<Box>(rect,false);
+                    if (temp.Length > 1)
+                    {
+                    }
+                    foreach (Box b in temp)
+                    {
+                        if (b != boxToMove && b.Left >= boxToMove.Right)
+                        {
+                            moveneighbors.Add(b);
+                        }
+                    }
+                    if (moveneighbors.Count > 0)
+                    {
+                    }
                 }
                 else
                 {
-                    moveneighbors = boxToMove.LeftNeighbors;
+                    RectangleV rect = RectangleV.FromLTRB(newLocation.X, boxToMove.Top, boxToMove.Left, boxToMove.Bottom);
+                    Box[] temp = ParentControl.GetEntitiesIntersectingRectInDocument<Box>(rect, false);
+                    foreach (Box b in temp)
+                    {
+                        if (b != boxToMove && b.Right <= boxToMove.Left)
+                        {
+                            moveneighbors.Add(b);
+                        }
+                    }
                 }
                 foreach (Box ib in moveneighbors)
                 {
-                    if (ib is Element && ParentControl.SelectionElement.Contains((Element)ib))
+                    if (ib is Element && ParentControl.Selection.Contains((Element)ib))
                     {
                         continue;
                     }
@@ -201,103 +180,41 @@ namespace MetaphysicsIndustries.Crystalline
                         }
                     }
                 }
-                if (deltax > boxToMove.Width || -deltax > boxToMove.Width)
-                {
-                    //no overlap, discard up/down neighbors 
-                    boxToMove.UpNeighbors.Clear();
-                    boxToMove.DownNeighbors.Clear();
-                }
-                else
-                {
-                    //overlap, discard some neighbors 
 
-                    //note: we don't care about whether or not they're obscured,
-                    //so we can just use simple bounds check instead of 
-                    //BoxFramework::GetNeighborsXXX
-
-                    removeneighbors = new Set<Box>();
-                    foreach (Box ib in boxToMove.UpNeighbors)
-                    {
-                        if (deltax > 0)
-                        {
-                            if (ib.Right < boxToMove.Left + deltax)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                        else
-                        {
-                            if (ib.Left > boxToMove.Right + deltax)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                    }
-                    foreach (Box ib in removeneighbors)
-                    {
-                        boxToMove.UpNeighbors.Remove(ib);
-                    }
-                    removeneighbors.Clear();
-                    foreach (Box ib in boxToMove.DownNeighbors)
-                    {
-                        if (deltax > 0)
-                        {
-                            if (ib.Right < boxToMove.Left + deltax)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                        else
-                        {
-                            if (ib.Left > boxToMove.Right + deltax)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                    }
-                    foreach (Box ib in removeneighbors)
-                    {
-                        boxToMove.DownNeighbors.Remove(ib);
-                    }
-                }
-                if (deltax > 0)
-                {
-                    newneighbors1 = boxToMove.Framework.GetNeighborsAbove(boxToMove.Top, Math.Max(boxToMove.Right, boxToMove.Left + deltax), boxToMove.Right + deltax);
-                    newneighbors2 = boxToMove.Framework.GetNeighborsBelow(boxToMove.Bottom, Math.Max(boxToMove.Right, boxToMove.Left + deltax), boxToMove.Right + deltax);
-                }
-                else
-                {
-                    newneighbors1 = boxToMove.Framework.GetNeighborsAbove(boxToMove.Top, boxToMove.Left + deltax, Math.Min(boxToMove.Left, boxToMove.Right + deltax));
-                    newneighbors2 = boxToMove.Framework.GetNeighborsBelow(boxToMove.Bottom, boxToMove.Left + deltax, Math.Min(boxToMove.Left, boxToMove.Right + deltax));
-                }
                 boxToMove.X += deltax;
-                foreach (Box ib in newneighbors1)
-                {
-                    boxToMove.UpNeighbors.Add(ib);
-                }
-                foreach (Box ib in newneighbors2)
-                {
-                    boxToMove.DownNeighbors.Add(ib);
-                }
             }
-            //else if (deltax < 0)
-            //{
-            //	//move left
-            //}
+
+            moveneighbors.Clear();
 
             if (deltay != 0)
             {
                 if (deltay > 0)
                 {
-                    moveneighbors = boxToMove.DownNeighbors;
+                    RectangleV rect = RectangleV.FromLTRB(boxToMove.Left, boxToMove.Bottom, boxToMove.Right, boxToMove.Bottom+deltay);
+                    Box[] temp = ParentControl.GetEntitiesIntersectingRectInDocument<Box>(rect, false);
+                    foreach (Box b in temp)
+                    {
+                        if (b != boxToMove && b.Top >= boxToMove.Bottom)
+                        {
+                            moveneighbors.Add(b);
+                        }
+                    }
                 }
                 else
                 {
-                    moveneighbors = boxToMove.UpNeighbors;
+                    RectangleV rect = RectangleV.FromLTRB(boxToMove.Left, newLocation.Y, boxToMove.Right, boxToMove.Top);
+                    Box[] temp = ParentControl.GetEntitiesIntersectingRectInDocument<Box>(rect, false);
+                    foreach (Box b in temp)
+                    {
+                        if (b != boxToMove && b.Bottom <= boxToMove.Top)
+                        {
+                            moveneighbors.Add(b);
+                        }
+                    }
                 }
                 foreach (Box ib in moveneighbors)
                 {
-                    if (ib is Element && ParentControl.SelectionElement.Contains((Element)ib))
+                    if (ib is Element && ParentControl.Selection.Contains((Element)ib))
                     {
                         continue;
                     }
@@ -328,89 +245,10 @@ namespace MetaphysicsIndustries.Crystalline
                         }
                     }
                 }
-                if (deltay > boxToMove.Height || -deltay > boxToMove.Height)
-                {
-                    //no overlap, discard left/right neighbors 
-                    boxToMove.LeftNeighbors.Clear();
-                    boxToMove.RightNeighbors.Clear();
-                }
-                else
-                {
-                    //overlap, discard some neighbors 
 
-                    //note: we don't care about whether or not they're obscured,
-                    //so we can just use simple bounds check instead of 
-                    //BoxFramework::GetNeighborsXXX
-
-                    removeneighbors = new Set<Box>();
-                    foreach (Box ib in boxToMove.LeftNeighbors)
-                    {
-                        if (deltay > 0)
-                        {
-                            if (ib.Bottom < boxToMove.Top + deltay)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                        else
-                        {
-                            if (ib.Top > boxToMove.Bottom + deltay)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                    }
-                    foreach (Box ib in removeneighbors)
-                    {
-                        boxToMove.LeftNeighbors.Remove(ib);
-                    }
-                    removeneighbors.Clear();
-                    foreach (Box ib in boxToMove.RightNeighbors)
-                    {
-                        if (deltay > 0)
-                        {
-                            if (ib.Bottom < boxToMove.Top + deltay)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                        else
-                        {
-                            if (ib.Top > boxToMove.Bottom + deltay)
-                            {
-                                removeneighbors.Add(ib);
-                            }
-                        }
-                    }
-                    foreach (Box ib in removeneighbors)
-                    {
-                        boxToMove.RightNeighbors.Remove(ib);
-                    }
-                }
-                if (deltay > 0)
-                {
-                    newneighbors1 = boxToMove.Framework.GetNeighborsLeftward(boxToMove.Left, Math.Max(boxToMove.Bottom, boxToMove.Top + deltay), boxToMove.Bottom + deltay);
-                    newneighbors2 = boxToMove.Framework.GetNeighborsRightward(boxToMove.Right, Math.Max(boxToMove.Bottom, boxToMove.Top + deltay), boxToMove.Bottom + deltay);
-                }
-                else
-                {
-                    newneighbors1 = boxToMove.Framework.GetNeighborsLeftward(boxToMove.Left, boxToMove.Top + deltay, Math.Min(boxToMove.Top, boxToMove.Bottom + deltay));
-                    newneighbors2 = boxToMove.Framework.GetNeighborsRightward(boxToMove.Right, boxToMove.Top + deltay, Math.Min(boxToMove.Top, boxToMove.Bottom + deltay));
-                }
                 boxToMove.Y += deltay;
-                foreach (Box ib in newneighbors1)
-                {
-                    boxToMove.LeftNeighbors.Add(ib);
-                }
-                foreach (Box ib in newneighbors2)
-                {
-                    boxToMove.RightNeighbors.Add(ib);
-                }
             }
-            //else if (deltay < 0)
-            //{
-            //	//move up
-            //}
+
 
             //we can use BinarySearch on the new position coordinates in conjunction
             //with Sort(int, int, IComparer<T>) to more efficiently sort these lists.
@@ -434,40 +272,6 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual void Resize(Box boxToResize, SizeV newSize, Set<Box> collidedBoxes)
         {
             throw new NotImplementedException();
-
-            if (boxToResize == null) { throw new ArgumentNullException("boxToResize"); }
-            if (newSize.Width < 0 || newSize.Height < 0) { return; }
-
-            float deltaw = newSize.Width - boxToResize.Width;
-            float deltah = newSize.Height - boxToResize.Height;
-            float delta2 = 0;
-            Vector newLocation;
-
-            if (deltaw > 0)
-            {
-                foreach (Box ib in boxToResize.RightNeighbors)
-                {
-                    delta2 = boxToResize.Right + deltaw - ib.Left;
-                    if (delta2 > 0)
-                    {
-                        newLocation = ib.Location + new Vector(delta2, 0);
-                        ib.Move(newLocation, collidedBoxes);
-                        if (collidedBoxes != null)
-                        {
-                            collidedBoxes.Add(ib);
-                        }
-                    }
-                }
-                //now we have to update the lists of 
-                //up-neighbors and down-neighbors
-
-                //deltaw is always >= 0, and within this if 
-                //block it's always > 0, so we might be adding
-                //neighbors.
-
-                //but! if we shrink the box, if deltaw < 0, we 
-                //still have to update the neighbors lists
-            }
         }
 
         public virtual void Clear()
@@ -502,11 +306,6 @@ namespace MetaphysicsIndustries.Crystalline
             _set.CopyTo(r, i);
         }
 
-        public virtual Set<Box> GetNeighborsLeftward(float rightbound, float topbound, float bottombound)
-        {
-            return this.GetNeighbors(BoxOrientation.Left, rightbound, topbound, bottombound);
-        }
-
         public virtual bool Remove(Box b)
         {
             if (this.Contains(b))
@@ -522,35 +321,35 @@ namespace MetaphysicsIndustries.Crystalline
                 bool ret;
                 ret = _set.Remove(b);
 
-                Box[] neighbors;
+                //Box[] neighbors;
 
-                neighbors = new Box[b.LeftNeighbors.Count];
-                b.LeftNeighbors.CopyTo(neighbors, 0);
-                foreach (Box box in neighbors)
-                {
-                    box.RightNeighbors.Remove(b);
-                }
+                //neighbors = new Box[b.LeftNeighbors.Count];
+                //b.LeftNeighbors.CopyTo(neighbors, 0);
+                //foreach (Box box in neighbors)
+                //{
+                //    box.RightNeighbors.Remove(b);
+                //}
 
-                neighbors = new Box[b.UpNeighbors.Count];
-                b.UpNeighbors.CopyTo(neighbors, 0);
-                foreach (Box box in neighbors)
-                {
-                    box.DownNeighbors.Remove(b);
-                }
+                //neighbors = new Box[b.UpNeighbors.Count];
+                //b.UpNeighbors.CopyTo(neighbors, 0);
+                //foreach (Box box in neighbors)
+                //{
+                //    box.DownNeighbors.Remove(b);
+                //}
 
-                neighbors = new Box[b.RightNeighbors.Count];
-                b.RightNeighbors.CopyTo(neighbors, 0);
-                foreach (Box box in neighbors)
-                {
-                    box.LeftNeighbors.Remove(b);
-                }
+                //neighbors = new Box[b.RightNeighbors.Count];
+                //b.RightNeighbors.CopyTo(neighbors, 0);
+                //foreach (Box box in neighbors)
+                //{
+                //    box.LeftNeighbors.Remove(b);
+                //}
 
-                neighbors = new Box[b.DownNeighbors.Count];
-                b.DownNeighbors.CopyTo(neighbors, 0);
-                foreach (Box box in neighbors)
-                {
-                    box.UpNeighbors.Remove(b);
-                }
+                //neighbors = new Box[b.DownNeighbors.Count];
+                //b.DownNeighbors.CopyTo(neighbors, 0);
+                //foreach (Box box in neighbors)
+                //{
+                //    box.UpNeighbors.Remove(b);
+                //}
 
                 b.ParentCrystallineControl = null;// Framework = null;
 
@@ -559,11 +358,6 @@ namespace MetaphysicsIndustries.Crystalline
                 return ret;
             }
             return false;
-        }
-
-        public virtual Set<Box> GetNeighborsBelow(float topbound, float leftbound, float rightbound)
-        {
-            return this.GetNeighbors(BoxOrientation.Down, topbound, leftbound, rightbound);
         }
 
         public void BringForward(Box box)
@@ -616,207 +410,37 @@ namespace MetaphysicsIndustries.Crystalline
         CrystallineControl _parentControl;
         public CrystallineControl ParentControl
         {
-            get
-            {
-                return _parentControl;
-            }
+            get { return _parentControl; }
         }
 
         public virtual BoxList Right
         {
-            get
-            {
-                return _roright;
-            }
+            get { return _roright; }
         }
 
         public virtual BoxList Up
         {
-            get
-            {
-                return _roup;
-            }
+            get { return _roup; }
         }
 
         public virtual int Count
         {
-            get
-            {
-                return _set.Count;
-            }
+            get { return _set.Count; }
         }
 
         public virtual BoxList Down
         {
-            get
-            {
-                return _rodown;
-            }
+            get { return _rodown; }
         }
 
         public virtual BoxList Left
         {
-            get
-            {
-                return _roleft;
-            }
+            get { return _roleft; }
         }
 
         public virtual BoxList ZOrder
         {
             get { return _roZOrder; }
-        }
-
-        protected virtual Set<Box> GetNeighbors(BoxOrientation orientation, float mainbound, float crossmin, float crossmax)
-        {
-            List<Box> list;
-            BoxComparer comp;
-            Set<Box> boxes;
-            int i;
-            Box bb = new Box();
-            bool reverse = false;
-            List<Interval> intervals;
-
-            //have to rethink this
-            //this->_left ISN'T sorted right-to-left, as would be useful 
-            //for the current form of the algorithm...
-
-            //throw gcnew NotImplementedException(__WCODESIG__);
-
-            if (orientation == BoxOrientation.Left)
-            {
-                list = (new List<Box>(_right));
-                //list->Reverse();
-                comp = _sorterRight;
-                bb.X = mainbound - 1;
-                bb.Width = 1;
-                reverse = true;
-            }
-            else if (orientation == BoxOrientation.Right)
-            {
-                list = _left;
-                comp = _sorterLeft;
-                bb.X = mainbound;
-            }
-            else if (orientation == BoxOrientation.Up)
-            {
-                list = (new List<Box>(_down));
-                //list->Reverse();
-                comp = _sorterDown;
-                bb.Y = mainbound - 1;
-                bb.Height = 1;
-                reverse = true;
-            }
-            else if (orientation == BoxOrientation.Down)
-            {
-                list = _up;
-                comp = _sorterUp;
-                bb.Y = mainbound;
-            }
-            else
-            {
-                throw new ArgumentException("invalid orientation");
-            }
-            i = list.BinarySearch(bb, comp);
-            if (i < 0) { i = ~i; }
-            //if (!reverse)
-            //{
-            //	i--;
-            //	if (i < 0) { i = 0; }
-            //}
-            if (reverse)
-            {
-                i = list.Count - i;
-                list = new List<Box>(list);
-                list.Reverse();
-
-            }
-            List<string> names;
-            names = new List<string>(list.Count);
-            foreach (Box ib in list)
-            {
-                if (ib is Element)
-                {
-                    if ((ib as Element).Text != null)
-                    {
-                        names.Add(((Element)(ib)).Text.ToString());
-                    }
-                }
-                else
-                {
-                    names.Add(null);
-                }
-            }
-            intervals = new List<Interval>();
-            boxes = new Set<Box>();
-            int end = (reverse ? 0 : list.Count);
-            int step = (reverse ? -1 : 1);
-            for (; i < list.Count; i++)
-            {
-                bb = list[i];
-                bool within;
-                if (orientation == BoxOrientation.Left ||
-                    orientation == BoxOrientation.Right)
-                {
-                    within = (bb.Top <= crossmax && bb.Bottom >= crossmin);
-                }
-                else
-                {
-                    within = (bb.Left <= crossmax && bb.Right >= crossmin);
-                }
-                if (within)
-                {
-                    Interval ii;
-                    Interval current;
-                    int k;
-                    if (orientation == BoxOrientation.Left ||
-                        orientation == BoxOrientation.Right)
-                    {
-                        ii = new Interval(bb.Top, bb.Bottom);
-                    }
-                    else
-                    {
-                        ii = new Interval(bb.Left, bb.Right);
-                    }
-                    if (intervals.Count > 0)
-                    {
-                        k = intervals.BinarySearch(ii, _intervalSorter);
-                        if (k < 0) { k = ~k; }
-                        k--;
-                        if (k < 0) { k = 0; }
-                        current = intervals[k];
-                        if (current.Min < ii.Min && current.Max > ii.Max)
-                        {
-
-                            continue;
-                        }
-                        while (current.Intersects(ii) && intervals.Count > k)
-                        {
-                            intervals.RemoveAt(k);
-                            ii = Interval.Merge(ii, current);
-                            if (intervals.Count < 1)
-                            {
-                                break;
-                            }
-                            if (k >= intervals.Count) { k = intervals.Count - 1; }
-                            current = intervals[k];
-                        }
-                        intervals.Insert(k, ii);
-                    }
-                    else
-                    {
-                        intervals.Add(ii);
-                    }
-                    boxes.Add(bb);
-                    if (intervals.Count == 1 && intervals[0].Min <= crossmin && intervals[0].Max >= crossmax)
-                    {
-
-
-                        break;
-                    }
-                }
-            }
-            return boxes;
         }
 
         [NonSerialized]
@@ -849,7 +473,7 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (Left.Count > 0)
             {
-                RectangleV r = 
+                RectangleV r =
                     new RectangleV(
                             Left[0].Left,
                             Up[0].Top,
@@ -885,8 +509,8 @@ namespace MetaphysicsIndustries.Crystalline
 
         [NonSerialized]
         private BoxList _roleft;
-        [NonSerialized]
-        private IntervalComparer _intervalSorter;
+        //[NonSerialized]
+        //private IntervalComparer _intervalSorter;
         [NonSerialized]
         private BoxList _roup;
         [NonSerialized]

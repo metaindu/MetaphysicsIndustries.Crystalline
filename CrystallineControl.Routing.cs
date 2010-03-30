@@ -58,10 +58,10 @@ namespace MetaphysicsIndustries.Crystalline
 
                 x = 0;
                 y = 0;
-                foreach (PathJoint pj in path.PathJoints)
+                foreach (Vector pj in path.PathJoints)
                 {
-                    x += pj.Location.X;
-                    y += pj.Location.Y;
+                    x += pj.X;
+                    y += pj.Y;
                 }
 
                 if (path.PathJoints.Count > 0)
@@ -70,20 +70,12 @@ namespace MetaphysicsIndustries.Crystalline
                     y /= path.PathJoints.Count;
                 }
 
-                foreach (PathJoint pj in path.PathJoints)
-                {
-                    SelectionPathJoint.Remove(pj);
-                }
                 path.PathJoints.Clear();
-                path.PathJoints.Add(new PathJoint(new Vector(x, y)));
-                path.PathJoints.Add(new PathJoint(new Vector(x + 20, y)));
+                path.PathJoints.Add(new Vector(x, y));
+                path.PathJoints.Add(new Vector(x + 20, y));
             }
             else
             {
-                foreach (PathJoint pj in path.PathJoints)
-                {
-                    SelectionPathJoint.Remove(pj);
-                }
                 path.PathJoints.Clear();
 
                 float x1 = 0;
@@ -112,23 +104,23 @@ namespace MetaphysicsIndustries.Crystalline
 
                 if (path.From != null && path.To != null)
                 {
-                    path.PathJoints.Add(new PathJoint(new Vector(x1, y1)));
+                    path.PathJoints.Add(new Vector(x1, y1));
                     if (y1 != y2)
                     {
-                        path.PathJoints.Add(new PathJoint(new Vector(x3, y1)));
-                        path.PathJoints.Add(new PathJoint(new Vector(x3, y2)));
+                        path.PathJoints.Add(new Vector(x3, y1));
+                        path.PathJoints.Add(new Vector(x3, y2));
                     }
-                    path.PathJoints.Add(new PathJoint(new Vector(x2, y2)));
+                    path.PathJoints.Add(new Vector(x2, y2));
                 }
                 else if (path.From != null)
                 {
-                    path.PathJoints.Add(new PathJoint(new Vector(x1, y1)));
-                    path.PathJoints.Add(new PathJoint(new Vector(x1 + 20, y1)));
+                    path.PathJoints.Add(new Vector(x1, y1));
+                    path.PathJoints.Add(new Vector(x1 + 20, y1));
                 }
                 else if (path.To != null)
                 {
-                    path.PathJoints.Add(new PathJoint(new Vector(x2 - 20, y2)));
-                    path.PathJoints.Add(new PathJoint(new Vector(x2, y2)));
+                    path.PathJoints.Add(new Vector(x2 - 20, y2));
+                    path.PathJoints.Add(new Vector(x2, y2));
                 }
             }
         }

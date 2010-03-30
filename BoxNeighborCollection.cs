@@ -20,164 +20,134 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-    [Serializable]
-	public class BoxNeighborCollection : ICollection<Box>
-	{
-        private BoxNeighborCollection() { }
-		public BoxNeighborCollection(Box parent, BoxOrientation orientation)
-		{
-			_parent = parent;
-			_orientation = orientation;
-			_set = new Set<Box>();
-		}
+    //[Serializable]
+    //public class BoxNeighborCollection : ICollection<Box>
+    //{
+    //    private BoxNeighborCollection() { }
+    //    public BoxNeighborCollection(Box parent, BoxOrientation orientation)
+    //    {
+    //        _parent = parent;
+    //        _orientation = orientation;
+    //        _set = new Set<Box>();
+    //    }
 
-		public virtual void Dispose()
-		{
-			this.Clear();
-		}
+    //    public virtual void Dispose()
+    //    {
+    //        this.Clear();
+    //    }
 
-		public virtual void Add(Box b)
-		{
-			if (b == null) { throw new ArgumentNullException("b"); }
+    //    public virtual void Add(Box b)
+    //    {
+    //        if (b == null) { throw new ArgumentNullException("b"); }
 			
 			
 			
 			
-			if (b != _parent && !this.Contains(b))
-			{
-				if (Orientation == BoxOrientation.Left ||
-					Orientation == BoxOrientation.Right ||
-					Orientation == BoxOrientation.Up ||
-					Orientation == BoxOrientation.Down)
-				{
-					_set.Add(b);
-				}
-				else
-				{
-					throw new InvalidOperationException("unknown BoxOrientation");
-				}
-				if (Orientation == BoxOrientation.Left)
-				{
-					b.RightNeighbors.Add(_parent);
-				}
-				else if (Orientation == BoxOrientation.Right)
-				{
-					b.LeftNeighbors.Add(_parent);
-				}
-				else if (Orientation == BoxOrientation.Up)
-				{
-					b.DownNeighbors.Add(_parent);
-				}
-				else if (Orientation == BoxOrientation.Down)
-				{
-					b.UpNeighbors.Add(_parent);
-				}
-			}
-		}
+    //        if (b != _parent && !this.Contains(b))
+    //        {
+    //            if (Orientation == BoxOrientation.Left ||
+    //                Orientation == BoxOrientation.Right ||
+    //                Orientation == BoxOrientation.Up ||
+    //                Orientation == BoxOrientation.Down)
+    //            {
+    //                _set.Add(b);
+    //            }
+    //            else
+    //            {
+    //                throw new InvalidOperationException("unknown BoxOrientation");
+    //            }
 
-        public virtual void AddRange(IEnumerable<Box> items)
-        {
-            foreach (Box box in items)
-            {
-                Add(box);
-            }
-        }
+    //        }
+    //    }
 
-		public virtual void Clear()
-		{
-			Box[]	r;
-			r = new Box[Count];
-			this.CopyTo(r, 0);
-			foreach (Box b in r)
-			{
-				this.Remove(b);
-			}
-			_set.Clear();
-		}
+    //    public virtual void AddRange(IEnumerable<Box> items)
+    //    {
+    //        foreach (Box box in items)
+    //        {
+    //            Add(box);
+    //        }
+    //    }
 
-		public virtual bool Contains(Box b)
-		{
-			return _set.Contains(b);
-		}
+    //    public virtual void Clear()
+    //    {
+    //        Box[]	r;
+    //        r = new Box[Count];
+    //        this.CopyTo(r, 0);
+    //        foreach (Box b in r)
+    //        {
+    //            this.Remove(b);
+    //        }
+    //        _set.Clear();
+    //    }
 
-		public virtual bool Remove(Box b)
-		{
-			if (b == null) { throw new ArgumentNullException("b"); }
-			if (this.Contains(b))
-			{
-				if (Orientation == BoxOrientation.Left ||
-					Orientation == BoxOrientation.Right ||
-					Orientation == BoxOrientation.Up ||
-					Orientation == BoxOrientation.Down)
-				{
-					if (!_set.Remove(b)) { return false; }
-				}
-				else
-				{
-					throw new InvalidOperationException("unknown BoxOrientation");
-				}
-				if (Orientation == BoxOrientation.Left)
-				{
-					b.RightNeighbors.Remove(_parent);
-				}
-				else if (Orientation == BoxOrientation.Right)
-				{
-					b.LeftNeighbors.Remove(_parent);
-				}
-				else if (Orientation == BoxOrientation.Up)
-				{
-					b.DownNeighbors.Remove(_parent);
-				}
-				else if (Orientation == BoxOrientation.Down)
-				{
-					b.UpNeighbors.Remove(_parent);
-				}
-				return true;
-			}
-			return false;
-		}
+    //    public virtual bool Contains(Box b)
+    //    {
+    //        return _set.Contains(b);
+    //    }
 
-		public virtual void CopyTo(Box[] r, int i)
-		{
-			_set.CopyTo(r, i);
-		}
+    //    public virtual bool Remove(Box b)
+    //    {
+    //        if (b == null) { throw new ArgumentNullException("b"); }
+    //        if (this.Contains(b))
+    //        {
+    //            if (Orientation == BoxOrientation.Left ||
+    //                Orientation == BoxOrientation.Right ||
+    //                Orientation == BoxOrientation.Up ||
+    //                Orientation == BoxOrientation.Down)
+    //            {
+    //                if (!_set.Remove(b)) { return false; }
+    //            }
+    //            else
+    //            {
+    //                throw new InvalidOperationException("unknown BoxOrientation");
+    //            }
 
-		public virtual IEnumerator<Box> GetEnumerator()
-		{
-			return _set.GetEnumerator();
-		}
+    //            return true;
+    //        }
+    //        return false;
+    //    }
 
-		public virtual BoxOrientation Orientation
-		{
-			get
-			{
-				return _orientation;
-			}
-		}
+    //    public virtual void CopyTo(Box[] r, int i)
+    //    {
+    //        _set.CopyTo(r, i);
+    //    }
 
-		public virtual bool IsReadOnly
-		{
-			get
-			{
-				return _set.IsReadOnly;
-			}
-		}
+    //    public virtual IEnumerator<Box> GetEnumerator()
+    //    {
+    //        return _set.GetEnumerator();
+    //    }
 
-		public virtual int Count
-		{
-			get
-			{
-				return _set.Count;
-			}
-		}
+    //    public virtual BoxOrientation Orientation
+    //    {
+    //        get
+    //        {
+    //            return _orientation;
+    //        }
+    //    }
 
-		  System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-            return GetEnumerator();
-		}
+    //    public virtual bool IsReadOnly
+    //    {
+    //        get
+    //        {
+    //            return _set.IsReadOnly;
+    //        }
+    //    }
 
-        private Box _parent;
-        private BoxOrientation _orientation;
-        private Set<Box> _set;
-	}
+    //    public virtual int Count
+    //    {
+    //        get
+    //        {
+    //            return _set.Count;
+    //        }
+    //    }
+
+    //      System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    //    {
+    //        return GetEnumerator();
+    //    }
+
+    //    private Box _parent;
+    //    private BoxOrientation _orientation;
+    //    private Set<Box> _set;
+    //}
 }

@@ -31,7 +31,6 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual void SetupContextMenuItems()
         {
             ToolStripMenuItem item;
-            ToolStripMenuItem item2;
 
             item = _createElementItem = new ToolStripMenuItem();
             item.Text = "Create Element";
@@ -64,32 +63,6 @@ namespace MetaphysicsIndustries.Crystalline
             item.Name = "DeleteItem";
             item.Click += new EventHandler(DeleteItem_Click);
             ContextMenuStrip.Items.Add(item);
-
-            ContextMenuStrip.Items.Add(new ToolStripSeparator());
-
-            item = _selectElementItem = new ToolStripMenuItem();
-            item.Text = "Select Element";
-            item.Name = "SelectElementItem";
-            item.Click += new EventHandler(SelectElementItem_Click);
-            ContextMenuStrip.Items.Add(item);
-
-            item = _selectPathItem = new ToolStripMenuItem();
-            item.Text = "Select Path";
-            item.Name = "SelectPathItem";
-            item.Click += new EventHandler(SelectPathItem_Click);
-            ContextMenuStrip.Items.Add(item);
-
-            //item = _selectPathingJunctionItem = new ToolStripMenuItem();
-            //item.Text = "Select PathingJunction";
-            //item.Name = "SelectPathingJunctionItem";
-            //item.Click += new EventHandler(SelectPathingJunctionItem_Click);
-            //ContextMenuStrip.Items.Add(item);
-
-            //item = _selectPathwayItem = new ToolStripMenuItem();
-            //item.Text = "Select Pathway";
-            //item.Name = "SelectPathwayItem";
-            //item.Click += new EventHandler(SelectPathwayItem_Click);
-            //ContextMenuStrip.Items.Add(item);
 
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
 
@@ -142,9 +115,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void UpdateContextMenuItems()
         {
-            if (SelectionMode == SelectionModeType.Element)
-            {
-                if (SelectionElement.Count > 0)
+                if (SelectionElement.Length> 0)
                 {
                     _deleteItem.Enabled = true;
                 }
@@ -153,82 +124,8 @@ namespace MetaphysicsIndustries.Crystalline
                     _deleteItem.Enabled = false;
                 }
 
-                _selectElementItem.Checked = true;
-                _selectPathItem.Checked = false;
-                //_selectPathingJunctionItem.Checked = false;
-                //_selectPathwayItem.Checked = false;
-
-                //_addPathwayItem.Enabled = false;
-            }
-            else if (SelectionMode == SelectionModeType.Path)
-            {
-                if (SelectionPathJoint.Count > 0)
-                {
-                    _deleteItem.Enabled = true;
-                }
-                else
-                {
-                    _deleteItem.Enabled = false;
-                }
-
-                _selectElementItem.Checked = false;
-                _selectPathItem.Checked = true;
-                //_selectPathingJunctionItem.Checked = false;
-                //_selectPathwayItem.Checked = false;
-
-                //_addPathwayItem.Enabled = false;
-            }
-            //else if (SelectionMode == SelectionModeType.PathingJunction)
-            //{
-            //    if (SelectionPathingJunction.Count > 0)
-            //    {
-            //        _deleteItem.Enabled = true;
-            //    }
-            //    else
-            //    {
-            //        _deleteItem.Enabled = false;
-            //    }
-
-            //    _selectElementItem.Checked = false;
-            //    _selectPathItem.Checked = false;
-            //    _selectPathingJunctionItem.Checked = true;
-            //    _selectPathwayItem.Checked = false;
-
-            //    if (SelectionPathingJunction.Count > 0)
-            //    {
-            //        _addPathwayItem.Enabled = true;
-            //    }
-            //    else
-            //    {
-            //        _addPathwayItem.Enabled = false;
-            //    }
-            //}
-            //else if (SelectionMode == SelectionModeType.Pathway)
-            //{
-            //    if (SelectionPathway.Count > 0)
-            //    {
-            //        _deleteItem.Enabled = true;
-            //    }
-            //    else
-            //    {
-            //        _deleteItem.Enabled = false;
-            //    }
-
-            //    _selectElementItem.Checked = false;
-            //    _selectPathItem.Checked = false;
-            //    _selectPathingJunctionItem.Checked = false;
-            //    _selectPathwayItem.Checked = true;
-
-            //    _addPathwayItem.Enabled = false;
-            //}
-
-            //_createPathingJunctionItem.Enabled = false;
-            //_createPathwayItem.Enabled = false;
-            //_selectPathingJunctionItem.Enabled = false;
-            //_selectPathwayItem.Enabled = false;
             _deleteItem.Enabled = false;
             _cleanupItem.Enabled = false;
-            //_addPathwayItem.Enabled = false;
 
             _showDebugInfoItem.Checked = ShowDebugInfo;
         }
@@ -262,7 +159,7 @@ namespace MetaphysicsIndustries.Crystalline
         public void AddMenuItem(ToolStripItem item, ToolStripMenuItem menu, EventHandler clickHandler)
         {
             if (item == null) { throw new ArgumentNullException("item"); }
-							
+
             if (clickHandler != null)
             {
                 item.Click += clickHandler;
@@ -285,7 +182,7 @@ namespace MetaphysicsIndustries.Crystalline
             AddElementAtLocation<T>(t, LastRightClickInDocument);
         }
 
-        protected void AddElementAtLocation<T>(T t, Vector location) 
+        protected void AddElementAtLocation<T>(T t, Vector location)
             where T : Element, new()
         {
             t.Location = location;
@@ -296,15 +193,15 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual void CreatePathItem_Click(Object sender, EventArgs e)
         {
             Path p;
-            PathJoint pj;
+            Vector pj;
 
             //p = CreatePath();
             p = new Path();
 
-            pj = new PathJoint(DocumentSpaceFromClientSpace(LastRightClickInClient));
+            pj = (DocumentSpaceFromClientSpace(LastRightClickInClient));
             p.PathJoints.Add(pj);
 
-            pj = new PathJoint(DocumentSpaceFromClientSpace(LastRightClickInClient) + new Vector(10, 0));
+            pj = (DocumentSpaceFromClientSpace(LastRightClickInClient) + new Vector(10, 0));
             p.PathJoints.Add(pj);
 
             AddPath(p);
@@ -313,8 +210,6 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void DeleteItem_Click(Object sender, EventArgs e)
         {
-            if (SelectionMode == SelectionModeType.Element)
-            {
                 Set<Element> s;
                 s = new Set<Element>();
                 foreach (Element element in SelectionElement)
@@ -328,222 +223,32 @@ namespace MetaphysicsIndustries.Crystalline
                     element.Inbound.Clear();
                     element.Outbound.Clear();
                     Elements.Remove(element);
-                    SelectionElement.Remove(element);
+                    Selection.Remove(element);
                     //element.Dispose();
                 }
-                SelectionElement.Clear();
-            }
-            else if (SelectionMode == SelectionModeType.Path)
-            {
-                Set<Path> s;
-                s = new Set<Path>();
-                foreach (PathJoint pathJoint in SelectionPathJoint)
-                {
-                    s.Add(pathJoint.ParentPath);
-                    if (pathJoint.ParentPath.From != null && pathJoint == pathJoint.ParentPath.PathJoints[0])
-                    {
-                        pathJoint.ParentPath.From = null;
-                    }
-                    if (pathJoint.ParentPath.To != null && pathJoint == pathJoint.ParentPath.PathJoints[pathJoint.ParentPath.PathJoints.Count - 1])
-                    {
-                        pathJoint.ParentPath.To = null;
-                    }
-                    pathJoint.ParentPath = null;
-                }
-                //foreach (Path e in s)
-                //{
-                //	//Paths.Remove(e);
-                //	if (
-                //}
-                SelectionPathJoint.Clear();
-            }
-            //else if (SelectionMode == SelectionModeType.PathingJunction)
-            //{
-            //    Set<PathingJunction> s;
-            //    s = new Set<PathingJunction>();
-            //    foreach (PathingJunction p in SelectionPathingJunction)
-            //    {
-            //        s.Add(p);
-            //    }
-            //    Set<Path> removepaths;
-            //    removepaths = new Set<Path>();
-            //    foreach (PathingJunction p in s)
-            //    {
-            //        RemovePathingJunction(p);
-            //    }
-            //    SelectionPathingJunction.Clear();
-            //}
-            //else if (SelectionMode == SelectionModeType.Pathway)
-            //{
-            //    Debug.Fail("SelectionMode == SelectionModeType.Pathway");
-            //}
+                Selection.RemoveRange<Element>(s);
+            
 
             Invalidate();
         }
 
-        protected virtual void SelectElementItem_Click(object sender, EventArgs e)
-        {
-            this.SelectionMode = SelectionModeType.Element;
-            this.Invalidate();
-        }
-        protected virtual void SelectPathItem_Click(object sender, EventArgs e)
-        {
-            this.SelectionMode = SelectionModeType.Path;
-            this.Invalidate();
-        }
         protected virtual void CleanupItem_Click(object sender, EventArgs e)
         {
             Cleanup();
         }
 
-        //protected virtual void CreatePathingJunctionItem_Click(object sender, EventArgs e)
-        //{
-        //    PathingJunction p;
-        //    p = new PathingJunction();// this.CreatePathingJunction();
-
-        //    //p->Location = this->lastrightclick;
-        //    //p.X = (float)DocumentSpaceFromClientSpace(LastRightClickInClient).X;
-        //    //p.Y = (float)DocumentSpaceFromClientSpace(LastRightClickInClient).Y;
-        //    p.Location = DocumentSpaceFromClientSpace(LastRightClickInClient);
-
-        //    //p->Size = SizeF(50, 20);
-
-        //    this.PathingJunctions.Add(p);
-        //    this.Invalidate();
-
-        //}
-        //protected virtual void SelectPathingJunctionItem_Click(object sender, EventArgs e)
-        //{
-        //    this.SelectionMode = SelectionModeType.PathingJunction;
-        //    this.Invalidate();
-        //}
-        //protected virtual void CreatePathwayItem_Click(object sender, EventArgs e)
-        //{
-        //    Pathway p;
-        //    p = new Pathway();// this.CreatePathway();
-
-        //    //p->Location = this->lastrightclick;
-        //    //p->X = (float)this->lastrightclick.X;
-        //    //p->Y = (float)this->lastrightclick.Y;
-
-        //    //p->Size = SizeF(50, 20);
-
-        //    this.Pathways.Add(p);
-        //    this.Invalidate();
-        //}
-        //protected virtual void SelectPathwayItem_Click(object sender, EventArgs e)
-        //{
-        //    this.SelectionMode = SelectionModeType.Pathway;
-        //    this.Invalidate();
-        //}
-
-        //protected virtual void AddPathwayLeftItem_Click(object sender, EventArgs e)
-        //{
-        //    if (this.SelectionMode == SelectionModeType.PathingJunction)
-        //    {
-        //        foreach (PathingJunction pj in this.SelectionPathingJunction)
-        //        {
-        //            Pathway pw;
-
-        //            pw = new Pathway();// this.CreatePathway();
-        //            pw.IsVertical = false;
-        //            pw.X = pj.Left - pw.Width;
-        //            pw.Y = pj.Y;
-        //            pj.LeftPathway = pw;
-        //            pw.RightDown = pj;
-        //            this.Pathways.Add(pw);
-        //        }
-
-        //        this.Invalidate();
-        //    }
-        //}
-        //protected virtual void AddPathwayRightItem_Click(object sender, EventArgs e)
-        //{
-        //    if (this.SelectionMode == SelectionModeType.PathingJunction)
-        //    {
-        //        foreach (PathingJunction pj in this.SelectionPathingJunction)
-        //        {
-        //            Pathway pw;
-
-        //            pw = new Pathway();//this.CreatePathway();
-        //            pw.IsVertical = false;
-        //            pw.X = pj.Right;
-        //            pw.Y = pj.Y;
-        //            pj.RightPathway = pw;
-        //            pw.LeftUp = pj;
-        //            this.Pathways.Add(pw);
-        //        }
-
-        //        this.Invalidate();
-        //    }
-        //}
-        //protected virtual void AddPathwayUpItem_Click(object sender, EventArgs e)
-        //{
-        //    if (this.SelectionMode == SelectionModeType.PathingJunction)
-        //    {
-        //        foreach (PathingJunction pj in this.SelectionPathingJunction)
-        //        {
-        //            Pathway pw;
-
-        //            pw = new Pathway();//this.CreatePathway();
-        //            pw.IsVertical = true;
-        //            pw.X = pj.X;
-        //            pw.Y = pj.Y - pw.Height;
-        //            pj.UpPathway = pw;
-        //            pw.RightDown = pj;
-        //            this.Pathways.Add(pw);
-        //        }
-
-        //        this.Invalidate();
-        //    }
-        //}
-        //protected virtual void AddPathwayDownItem_Click(object sender, EventArgs e)
-        //{
-        //    if (this.SelectionMode == SelectionModeType.PathingJunction)
-        //    {
-        //        foreach (PathingJunction pj in this.SelectionPathingJunction)
-        //        {
-        //            Pathway pw;
-
-        //            pw = new Pathway();//this.CreatePathway();
-        //            pw.IsVertical = true;
-        //            pw.X = pj.X;
-        //            pw.Y = pj.Bottom;
-        //            pj.DownPathway = pw;
-        //            pw.LeftUp = pj;
-        //            this.Pathways.Add(pw);
-        //        }
-
-        //        this.Invalidate();
-        //    }
-        //}
         protected virtual void ShowDebugInfoItem_Click(object sender, EventArgs e)
         {
             ShowDebugInfo = !ShowDebugInfo;
 
             Invalidate();
         }
-        
+
         ToolStripMenuItem _createElementItem;
         ToolStripMenuItem _createPathItem;
         ToolStripMenuItem _deleteItem;
-        ToolStripMenuItem _selectElementItem;
-        ToolStripMenuItem _selectPathItem;
         ToolStripMenuItem _cleanupItem;
 
-        //ToolStripMenuItem _createPathingJunctionItem;
-        //ToolStripMenuItem _selectPathingJunctionItem;
-
-        //ToolStripMenuItem _createPathwayItem;
-        //ToolStripMenuItem _selectPathwayItem;
-
-        //ToolStripMenuItem _addPathwayItem;
-        //ToolStripMenuItem _addPathwayLeftItem;
-        //ToolStripMenuItem _addPathwayRightItem;
-        //ToolStripMenuItem _addPathwayUpItem;
-        //ToolStripMenuItem _addPathwayDownItem;
-
         ToolStripMenuItem _showDebugInfoItem;
-        //ToolStripMenuItem
     }
 }

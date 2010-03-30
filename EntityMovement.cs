@@ -43,12 +43,12 @@ namespace MetaphysicsIndustries.Crystalline
         //                {
         //                    //clicked a different element
         //                    //need to update z-order
-        //                    ParentCrystallineEngine.Control.SelectionElement.Clear();
+        //                    ParentCrystallineEngine.Control.Selection.Clear();
         //                    Element frontmost = s1.GetFirst();
         //                    int index = ParentCrystallineEngine.Control.Framework.ZOrder.IndexOf(frontmost);
         //                    foreach (Element ee in s1)
         //                    {
-        //                        //SelectionElement.Add(ee);
+        //                        //Selection.Add(ee);
         //                        int index2 = ParentCrystallineEngine.Control.Framework.ZOrder.IndexOf(ee);
         //                        if (index2 > index)
         //                        {
@@ -57,13 +57,13 @@ namespace MetaphysicsIndustries.Crystalline
         //                        }
         //                    }
         //                    ParentCrystallineEngine.Control.BringToFront(frontmost);
-        //                    ParentCrystallineEngine.Control.SelectionElement.Add(frontmost);
+        //                    ParentCrystallineEngine.Control.Selection.Add(frontmost);
         //                }
         //                ParentCrystallineEngine.Control._isDragSelecting = false;
         //            }
         //            else
         //            {
-        //                ParentCrystallineEngine.Control.SelectionElement.Clear();
+        //                ParentCrystallineEngine.Control.Selection.Clear();
         //                _isDragSelecting = true;
         //            }
         //        }

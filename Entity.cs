@@ -85,22 +85,14 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (entities.Length > 0)
             {
-                //vec
-                RectangleV rect =
-                    new RectangleV(
-                        MIMath.CalcCenterOfRectangle(entities[0].GetBoundingBox()),
-                        new SizeF(0, 0));
+                List<Vector> centers = new List<Vector>();
 
                 foreach (Entity ent in entities)
                 {
-                    Vector v = MIMath.CalcCenterOfRectangle(ent.GetBoundingBox());
-                    rect = rect.Union(
-                        new RectangleV(
-                            v,
-                            new SizeV(0, 0)));
+                    centers.Add(ent.GetBoundingBox().CalcCenter());
                 }
 
-                return rect;
+                return RectangleV.BoundingBoxFromPoints(centers.ToArray());
             }
             else
             {

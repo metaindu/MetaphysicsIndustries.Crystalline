@@ -9,7 +9,7 @@
  *                                                                           *
  *  Converted from C++ to C# on 10 November 2007                             *
  *                                                                           *
- *  A collection that manages the path connections _ResetBoxNeighbors_inbound to an element.    *
+ *  A collection that manages the path connections inbound to an element.    *
  *                                                                           *
  *****************************************************************************/
 

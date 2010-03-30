@@ -142,5 +142,10 @@ namespace MetaphysicsIndustries.Crystalline
 
         private CrystallineControl _container;
         private Set<Entity> _set = new Set<Entity>();
+
+        public Entity[] ToArray()
+        {
+            return Collection.ToArray(this);
+        }
     }
 }

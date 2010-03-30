@@ -19,27 +19,27 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-    public struct Interval
-    {
-        public Interval(float min, float max)
-        {
-            Min = min;
-            Max = max;
-        }
+    //public struct Interval
+    //{
+    //    public Interval(float min, float max)
+    //    {
+    //        Min = min;
+    //        Max = max;
+    //    }
 
-        public static Interval Merge(Interval a, Interval b)
-        {
-            return new Interval(
-                Math.Min(a.Min, b.Min),
-                Math.Max(a.Max, b.Max));
-        }
+    //    public static Interval Merge(Interval a, Interval b)
+    //    {
+    //        return new Interval(
+    //            Math.Min(a.Min, b.Min),
+    //            Math.Max(a.Max, b.Max));
+    //    }
 
-        public bool Intersects(Interval i)
-        {
-            return (this.Min <= i.Max && this.Max >= i.Min);
-        }
+    //    public bool Intersects(Interval i)
+    //    {
+    //        return (this.Min <= i.Max && this.Max >= i.Min);
+    //    }
 
-        public float Min;
-        public float Max;
-    }
+    //    public float Min;
+    //    public float Max;
+    //}
 }

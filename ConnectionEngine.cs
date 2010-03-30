@@ -31,6 +31,13 @@ namespace MetaphysicsIndustries.Crystalline
             get { return _connectionSource != null; }
         }
 
+        private bool _allowSelfConnections = false;
+        public bool AllowSelfConnections
+        {
+            get { return _allowSelfConnections; }
+            set { _allowSelfConnections = value; }
+        }
+
         public override void ProcessMouseMove(MouseEventArgs e)
         {
             if (_connectionSource != null)
@@ -44,14 +51,16 @@ namespace MetaphysicsIndustries.Crystalline
                 InvalidateConnectionSelection();
 
                 _connectionTargetCandidate = null;
-                Set<Element> elementsUnderCursor = Control.GetElementsAtPoint(Control.DocumentSpaceFromClientSpace(e.Location));
-                if (elementsUnderCursor != null && elementsUnderCursor.Count > 0)
+
+                TTo[] entitiesUnderCursor = Control.GetEntitiesAtPointInDocument<TTo>(cursorLocationInDocument);
+
+                if (entitiesUnderCursor != null && entitiesUnderCursor.Length > 0)
                 {
-                    foreach (Element element in elementsUnderCursor)
+                    foreach (TTo ent in entitiesUnderCursor)
                     {
-                        if (element != _connectionSource)
+                        if (ent != _connectionSource || AllowSelfConnections)
                         {
-                            _connectionTargetCandidate = element as TTo;
+                            _connectionTargetCandidate = ent as TTo;
                             break;
                         }
                     }

@@ -112,10 +112,16 @@ namespace MetaphysicsIndustries.Crystalline
         public virtual void UpdateScrolls()
         {
             RectangleV client = GetClientRectInDocument();
+            RectangleV bounds = Framework.Bounds;
             RectangleV rect = client;
-            if (!Framework.Bounds.IsEmpty)
+            if (!Framework.Bounds.IsEmpty 
+                //&&
+                //(client.Width < bounds.Width || client.Height < bounds.Height)
+                )
             {
-                rect = rect.Union(Framework.Bounds.Inflate(25, 25));
+                float padx = 25;// ClientRectangle.Width / 2;
+                float pady = 25;// ClientRectangle.Height / 2;
+                rect = rect.Union(bounds.Inflate(padx, pady));
             }
 
             if (_scrollableAreaInDocument != rect)

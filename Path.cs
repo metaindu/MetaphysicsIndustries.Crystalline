@@ -26,14 +26,14 @@ namespace MetaphysicsIndustries.Crystalline
     {
         public Path()
         {
-            _pathJoints = new PathPathJointChildrenCollection(this);
+            //_pathJoints = new PathPathJointChildrenCollection(this);
         }
 
         public override RectangleV GetBoundingBox()
         {
             if (PathJoints.Count < 1) { return new RectangleV(); }
 
-            return GetBoundingBoxFromEntities(Collection.ToArray(PathJoints));
+            return RectangleV.BoundingBoxFromPoints(PathJoints.ToArray());
         }
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
@@ -49,11 +49,11 @@ namespace MetaphysicsIndustries.Crystalline
                 j = PathJoints.Count;
                 for (i = 0; i < j - 1; i++)
                 {
-                    if (renderPathJoints)
-                    {
-                        PathJoints[i].Render(g, pen, brush, font);
-                    }
-                    g.DrawLine(Pens.Black, PathJoints[i].Location, PathJoints[i + 1].Location);
+                    //if (renderPathJoints)
+                    //{
+                    //    PathJoints[i].Render(g, pen, brush, font);
+                    //}
+                    g.DrawLine(Pens.Black, PathJoints[i], PathJoints[i + 1]);
                 }
 
                 if (j > 1 && To != null)
@@ -79,15 +79,15 @@ namespace MetaphysicsIndustries.Crystalline
 
                         //g->FillPolygon(Brushes::Black, r);
 
-                        RenderArrow(g, pen, brush, font, PathJoints[j - 2].Location, PathJoints[j - 1].Location);
+                        RenderArrow(g, pen, brush, font, PathJoints[j - 2], PathJoints[j - 1]);
                     }
                 }
                 else if (j > 0)
                 {
-                    if (renderPathJoints)
-                    {
-                        PathJoints[j - 1].Render(g, pen, brush, font);
-                    }
+                    //if (renderPathJoints)
+                    //{
+                    //    PathJoints[j - 1].Render(g, pen, brush, font);
+                    //}
                 }
             }
             else if (From != null && To != null)
@@ -116,10 +116,10 @@ namespace MetaphysicsIndustries.Crystalline
 
                 g.DrawLine(pen, 10 * (to - center).Normalized(), to);
             }
-            else if (PathJoints.Count == 1)
-            {
-                PathJoints[0].Render(g, pen, brush, font);
-            }
+            //else if (PathJoints.Count == 1)
+            //{
+            //    PathJoints[0].Render(g, pen, brush, font);
+            //}
             else
             {
                 //no from, no to, no pathjoints
@@ -134,19 +134,16 @@ namespace MetaphysicsIndustries.Crystalline
             Vector p;
 
             float angle;
-            float angle2;
             float size;
 
             size = ArrowSize;
 
             p = tipLocation - startLocation;
 
-            angle = (float)Math.Atan2(p.Y, p.X);
+            angle = p.CalcTheta();
             r[0] = tipLocation;
-            angle2 = angle + (float)(Math.PI * 5.0 / 6.0);
-            r[1] = new Vector(size * (float)Math.Cos(angle2), size * (float)Math.Sin(angle2)) + r[0];
-            angle2 = angle - (float)(Math.PI * 5.0 / 6.0);
-            r[2] = new Vector(size * (float)Math.Cos(angle2), size * (float)Math.Sin(angle2)) + r[0];
+            r[1] = Vector.FromPolar(angle + (float)(Math.PI * 5.0 / 6.0), size) + r[0];
+            r[2] = Vector.FromPolar(angle - (float)(Math.PI * 5.0 / 6.0), size) + r[0];
 
             g.FillPolygon(pen.Brush, Vector.ConvertArray(r));
         }
@@ -160,7 +157,7 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
 
-        public virtual PathPathJointChildrenCollection PathJoints
+        public virtual List<Vector> PathJoints
         {
             get { return _pathJoints; }
         }
@@ -291,7 +288,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        private PathPathJointChildrenCollection _pathJoints;
+        private List<Vector> _pathJoints = new List<Vector>();
         private Element _to;
         private Element _from;
     }
