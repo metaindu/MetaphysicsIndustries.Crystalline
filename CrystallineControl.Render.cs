@@ -83,27 +83,12 @@ namespace MetaphysicsIndustries.Crystalline
             set { _shallRenderPaths = value; }
         }
 
-        private bool _shallRenderPathways = false;
-        public virtual bool ShallRenderPathways
-        {
-            get { return _shallRenderPathways; }
-            set { _shallRenderPathways = value; }
-        }
-
-        private bool _shallRenderPathingJunctions = false;
-        public virtual bool ShallRenderPathingJunctions
-        {
-            get { return _shallRenderPathingJunctions; }
-            set { _shallRenderPathingJunctions = value; }
-        }
-
         protected virtual void Render(Graphics g)
         {
             if (ShowDebugInfo)
             {
                 RenderDebugInfo(g);
             }
-
 
             RenderWithTopLeft(g, DocumentSpaceFromClientSpace(new Point(0, 0)));
         }
@@ -129,212 +114,75 @@ namespace MetaphysicsIndustries.Crystalline
 
             if (ShallRenderElements)
             {
-                RenderElements(g);
+                RenderBoxes(g);
             }
 
-            //if (ShallRenderPathingJunctions)
-            //{
-            //    RenderPathingJunctions(g);
-            //}
-
-            //if (ShallRenderPathways)
-            //{
-            //    RenderPathways(g);
-            //}
-
-            RenderBoxes(g);
+            foreach (Entity ent in Entities)
+            {
+                if (!(ent is Element) &&
+                    !(ent is Path))
+                {
+                    RenderEntity(g, ent);
+                }
+            }
 
             if (_isDragSelecting && _isClick)
             {
-                Vector topleft = new Vector(
-                                Math.Min(_dragAnchorInDocument.X, _selectionBoxPointInDocument.X),
-                                Math.Min(_dragAnchorInDocument.Y, _selectionBoxPointInDocument.Y));
-
-                Vector bottomright = new Vector(
-                                Math.Max(_dragAnchorInDocument.X, _selectionBoxPointInDocument.X),
-                                Math.Max(_dragAnchorInDocument.Y, _selectionBoxPointInDocument.Y));
-
-
-                RectangleV r = new RectangleV(topleft, bottomright);
+                RectangleV r = RectangleV.BoundingBoxFromPoints(_dragAnchorInDocument, _selectionBoxPointInDocument);
 
                 g.DrawRectangle(Pens.Gray, Rectangle.Truncate(r));
             }
         }
 
-        //protected virtual void RenderPathways(Graphics g)
-        //{
-        //    foreach (Pathway p in Pathways)
-        //    {
-        //        RenderPathway(g, p);
-        //    }
-        //}
-
-        //protected virtual void RenderPathway(Graphics g, Pathway p)
-        //{
-        //    Pen pen = ChoosePenForPathway(p);
-
-        //    p.Render(g, pen, pen.Brush, Font);
-        //}
-
-        //protected virtual void RenderPathingJunctions(Graphics g)
-        //{
-        //    foreach (PathingJunction p in PathingJunctions)
-        //    {
-        //        RenderPathingJunction(g, p);
-        //    }
-        //}
-
-        //protected virtual void RenderPathingJunction(Graphics g, PathingJunction p)
-        //{
-        //    Pen pen = ChoosePenForPathingJunction(p);
-
-        //    p.Render(g, pen, pen.Brush, Font);
-        //}
-
-        protected virtual void RenderPaths(Graphics g)
+        protected virtual void RenderEntity(Graphics g, Entity ent)
         {
-            //Set<Path> nojointpaths;
-            //nojointpaths = new Set<Path>();
-            //foreach (PathJoint pj in SelectionPathJoint)
-            //{
-            //    nojointpaths.Add(pj.ParentPath);
-            //}
-            foreach (Path p in Paths)
+            Pen pen = ChoosePenForEntity(ent);
+
+            if (ent is Path)
             {
-                Pen pen = ChoosePenForPath(p);
-                Brush brush = pen.Brush;
-
-                //if (nojointpaths.Contains(p))
-                //{
-                //    p.Render(g, pen, brush, Font, false, ShowPathArrows);
-
-                //    int i;
-                //    int j;
-                //    Vector pj;
-
-                //    j = p.PathJoints.Count;
-                //    if (p.To != null)
-                //    {
-                //        j--;
-                //    }
-                //    if (ShowPathJoints)
-                //    {
-                //        for (i = 0; i < j; i++)
-                //        {
-                //            pj = p.PathJoints[i];
-                //            if (SelectionPathJoint.Contains(pj))
-                //            {
-                //                pj.Render(g, _selectionPen, null, null);
-                //            }
-                //            else
-                //            {
-                //                pj.Render(g, pen, null, null);
-                //            }
-                //        }
-                //    }
-                //    if (p.To != null)
-                //    {
-                //        pj = p.PathJoints[j];
-                //        if (SelectionPathJoint.Contains(pj))
-                //        {
-                //            p.RenderArrow(g, _selectionPen, _selectionPen.Brush, Font, p.PathJoints[j - 1].Location, pj.Location);
-                //        }
-                //        else
-                //        {
-                //            p.RenderArrow(g, pen, brush, Font, p.PathJoints[j - 1].Location, pj.Location);
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                    p.Render(g, pen, brush, Font, ShowPathJoints, ShowPathArrows);
-                //}
-            }
-        }
-
-        protected virtual void RenderElements(Graphics g)
-        {
-            foreach (Box box in Framework.ZOrder)
-            {
-                if (box is Element)
-                {
-                    RenderElement(g, (Element)box);
-                }
-            }
-        }
-
-        protected virtual void RenderElement(Graphics g, Element elem)
-        {
-            Pen pen;
-            if (SelectionRenderStyle == SelectionRenderStyle.Highlight)
-            {
-                pen = ChoosePenForElement(elem);
+                (ent as Path).Render(g, pen, Brushes.Black, Font, ShowPathJoints, ShowPathArrows);
             }
             else
             {
-                pen = Pens.Black;
-
-                if (Selection.Contains(elem))
-                {
-                    RectangleV rect = elem.Rect;
-                    rect.Inflate(SelectionOutlineMargin, SelectionOutlineMargin);
-                    g.DrawRectangle(_selectionOutlinePen, rect.Left, rect.Top, rect.Width, rect.Height);
-                }
+                ent.Render(g, pen, Brushes.Black, Font);
             }
+        }
 
-            //Matrix transform = g.Transform;
-            //g.TranslateTransform(elem.X, elem.Y);
-            //g.RotateTransform(elem.Rotation);
-            elem.Render(g, pen, Brushes.Black, Font);
-            //g.Transform = transform;
+        protected virtual void RenderPaths(Graphics g)
+        {
+            foreach (Path p in Paths)
+            {
+                RenderEntity(g, p);
+            }
         }
 
         protected virtual void RenderBoxes(Graphics g)
         {
-            foreach (Box box in Framework)
+            foreach (Box box in Framework.ZOrder)
             {
-                if (!(box is Element)
-                    //&& !(box is Pathway)
-                    //&& !(box is PathingJunction)
-                    )
-                {
-                    RenderBox(g, box);
-                }
+                RenderEntity(g, box);
             }
         }
 
-        protected virtual void RenderBox(Graphics g, Box box)
+        public virtual Pen ChoosePenForEntity(Entity ent)
         {
-            box.Render(g, Pens.Black, Brushes.Black, Font);
+            if (Selection.Contains(ent))
+            {
+                return _selectionPen;
+            }
+            else if (ent is Path)
+            {
+                return ChoosePenForPath(ent as Path);
+            }
+            else if (ent is Element)
+            {
+                return ChoosePenForElement(ent as Element);
+            }
+            else
+            {
+                return Pens.Black;
+            }
         }
-
-        //protected virtual Pen ChoosePenForPathway(Pathway p)
-        //{
-        //    Pen pen;
-        //    if (SelectionMode == SelectionModeType.Pathway && SelectionPathway.Contains(p))
-        //    {
-        //        pen = _selectionPen;
-        //    }
-        //    else
-        //    {
-        //        pen = Pens.Orange;
-        //    }
-        //    return pen;
-        //}
-
-        //protected virtual Pen ChoosePenForPathingJunction(PathingJunction p)
-        //{
-        //    Pen pen;
-        //    if (SelectionMode == SelectionModeType.PathingJunction && SelectionPathingJunction.Contains(p))
-        //    {
-        //        pen = _selectionPen;
-        //    }
-        //    else
-        //    {
-        //        pen = Pens.Orange;
-        //    }
-        //    return pen;
-        //}
 
         protected virtual Pen ChoosePenForPath(Path path)
         {
@@ -343,16 +191,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual Pen ChoosePenForElement(Element element)
         {
-            Pen pen;
-            if (Selection.Contains(element))
-            {
-                pen = _selectionPen;
-            }
-            else
-            {
-                pen = Pens.Black;
-            }
-            return pen;
+            return Pens.Black;
         }
 
         protected virtual void RenderDebugInfo(Graphics g)
@@ -740,6 +579,13 @@ namespace MetaphysicsIndustries.Crystalline
         {
             Framework.SendToBack(box);
             InvalidateRectFromEntity(box);
+        }
+        public void BringToFront(IEnumerable<Box> boxes)
+        {
+            foreach (Box box in Collection.Reverse<Box>(boxes))
+            {
+                BringToFront(box);
+            }
         }
 
         Pen _selectionPen;

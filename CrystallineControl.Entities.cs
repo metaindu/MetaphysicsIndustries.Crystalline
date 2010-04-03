@@ -64,7 +64,7 @@ namespace MetaphysicsIndustries.Crystalline
         public T[] GetEntitiesAtPointInDocument<T>(Vector v)
             where T : Entity
         {
-            //replace this with R-Tree implementation
+            //eventually replace this with R-Tree implementation
 
             Set<T> set = new Set<T>();
 
@@ -103,166 +103,215 @@ namespace MetaphysicsIndustries.Crystalline
             return set.ToArray();
         }
 
-        public virtual Set<Element> GetElementsAtPoint(Vector v)
+        //public virtual Element[] GetElementsAtPoint(Vector v)
+        //{
+        //    return GetEntitiesAtPointInDocument<Element>(v);
+        //}
+        //protected virtual Set<Element> GetElementsInRect(RectangleV r)
+        //{
+        //    RectangleV _r = r;
+
+        //    Set<Element> outElements;
+
+        //    outElements = new Set<Element>();
+        //    foreach (Element ve in this.Elements)
+        //    {
+        //        if (ve.Rect.IntersectsWith(r))
+        //        {
+        //            outElements.Add(ve);
+        //        }
+        //    }
+
+        //    return outElements;
+        //}
+
+        protected bool AlwaysTrue<T>(T t)
         {
-            return new Set<Element>(GetEntitiesAtPointInDocument<Element>(v));
+            return true;
         }
-        protected virtual Set<Element> GetElementsInRect(RectangleV r)
+        protected T GetFrontmostBoxAtPoint<T>(Vector pointInDocSpace)
+            where T : Box
         {
-            RectangleV _r = r;
+            return GetFrontmostBoxAtPoint<T>(pointInDocSpace, AlwaysTrue<T>);
+        }
 
-            Set<Element> outElements;
-
-            outElements = new Set<Element>();
-            foreach (Element ve in this.Elements)
+        private T GetFrontmostBoxAtPoint<T>(Vector pointInDocSpace, Predicate<T> predicate)
+            where T : Box
+        {
+            foreach (T item in Collection.Reverse(Collection.Filter<T>(Collection.Extract<Box, T>(Framework.ZOrder), predicate)))
             {
-                if (ve.Rect.IntersectsWith(r))
+                if (item.Rect.Contains(pointInDocSpace))
                 {
-                    outElements.Add(ve);
+                    return item;
                 }
             }
-
-            return outElements;
+            return null;
         }
 
-        protected virtual Element GetFrontmostElementAtPointInDocumentSpace(Vector pointInDocSpace)
-        {
-            Element frontmost = null;
 
-            Set<Element> s1 = GetElementsAtPoint(pointInDocSpace);
-            if (s1.Count > 0)
+        private bool _boxCollisions = true;
+        public bool BoxCollisions
+        {
+            get { return _boxCollisions; }
+            set { _boxCollisions = value; }
+        }
+
+        public virtual void AddEntity(Entity entity)
+        {
+            InvalidateRectFromEntity(entity);
+
+            Entities.Add(entity);
+
+            if (entity is Box)
             {
-                frontmost = s1.GetFirst();
-                int index = Framework.ZOrder.IndexOf(frontmost);
-                foreach (Element ee in s1)
-                {
-                    //Selection.Add(ee);
-                    int index2 = Framework.ZOrder.IndexOf(ee);
-                    if (index2 > index)
-                    {
-                        index = index2;
-                        frontmost = ee;
-                    }
-                }
+                InternalAddBox(entity as Box);
             }
-            return frontmost;
+            else if (entity is Path)
+            {
+                InternalAddPath(entity as Path);
+            }
+
+            InvalidateRectFromEntity(entity);
         }
 
-
-        private bool _elementCollisions = true;
-        public bool ElementCollisions
+        protected virtual void InternalAddBox(Box box)
         {
-            get { return _elementCollisions; }
-            set { _elementCollisions = value; }
+            Boxes.Add(box);
+            Framework.Add(box);
+
+            if (box is Element)
+            {
+                InternalAddElement(box as Element);
+            }
         }
 
-
-        public virtual void AddElement(Element elementToAdd)
+        protected virtual void InternalAddElement(Element element)
         {
-            Elements.Add(elementToAdd);
-            InvalidateRectFromEntity(elementToAdd);
+            Elements.Add(element);
+
+            foreach (Path path in element.Inbound)
+            {
+                AddEntity(path);
+            }
+            foreach (Path path in element.Outbound)
+            {
+                AddEntity(path);
+            }
         }
 
-        public virtual void AddPath(Path pathToAdd)
+        protected virtual void InternalAddPath(Path pathToAdd)
         {
             Paths.Add(pathToAdd);
-            //InvalidateRectFromBox(pathToAdd, 2);
-            InvalidateRectFromEntity(pathToAdd);
         }
 
-        public virtual void RemoveElement(Element elementToRemove)
+        public virtual void RemoveEntity(Entity ent)
         {
-            InvalidateRectFromEntity(elementToRemove);
+            InvalidateRectFromEntity(ent);
 
-            Set<Path> paths = new Set<Path>();
-            paths.AddRange(elementToRemove.Inbound);
-            paths.AddRange(elementToRemove.Outbound);
+            Entities.Remove(ent);
 
-            elementToRemove.Inbound.Clear();
-            elementToRemove.Outbound.Clear();
+            Selection.Remove(ent);
 
-            foreach (Path path in paths)
+            if (ent is Box)
+            {
+                InternalRemoveBox(ent as Box);
+            }
+            else if (ent is Path)
+            {
+                InternalRemovePath(ent as Path);
+            }
+
+            InvalidateRectFromEntity(ent);
+        }
+
+        protected virtual void InternalRemoveBox(Box box)
+        {
+            Boxes.RemoveRange(box);
+            Framework.Remove(box);
+
+            if (box is Element)
+            {
+                InternalRemoveElement(box as Element);
+            }
+        }
+
+        protected virtual void InternalRemoveElement(Element element)
+        {
+            Elements.Remove(element);
+
+            foreach (Path path in element.Inbound)
             {
                 RoutePath(path);
             }
-
-            Elements.Remove(elementToRemove);
-            Boxes.Remove(elementToRemove);
-            Entities.Remove(elementToRemove);
-            Framework.Remove(elementToRemove);
-
-            Selection.Remove(elementToRemove);
-
-            //Invalidate();
+            foreach (Path path in element.Outbound)
+            {
+                RoutePath(path);
+            }
         }
 
-        public virtual void RemovePath(Path pathToRemove)
+        protected virtual void InternalRemovePath(Path pathToRemove)
         {
-            InvalidateRectFromEntity(pathToRemove);
-
             Paths.Remove(pathToRemove);
 
             //foreach (PathJoint pj in pathToRemove.PathJoints)
             //{
             //    SelectionPathJoint.Remove(pj);
             //}
-
-            //Invalidate();
         }
 
 
 
-        Set<Path> _ResetBoxNeighbors_inbound = new Set<Path>();
-        Set<Path> _ResetBoxNeighbors_outbound = new Set<Path>();
-        IEnumerable<Box> _ResetBoxNeighbors_lastBoxesToReset;
-        Set<Box> _ResetBoxNeighbors_boxen = new Set<Box>();
+        //Set<Path> _ResetBoxNeighbors_inbound = new Set<Path>();
+        //Set<Path> _ResetBoxNeighbors_outbound = new Set<Path>();
+        //IEnumerable<Box> _ResetBoxNeighbors_lastBoxesToReset;
+        //Set<Box> _ResetBoxNeighbors_boxen = new Set<Box>();
 
-        protected void ResetBoxNeighbors(IEnumerable<Box> boxesToReset)
-        {
-            //This method is a kludge necessary because changing the location
-            //of a box doesn't automatically update its neighbors collections.
-            //This will no longer be necessary once the R-Tree is in place,
-            //instead of the BoxFramework.
+        //protected void ResetBoxNeighbors(IEnumerable<Box> boxesToReset)
+        //{
+        //    //This method is a kludge necessary because changing the location
+        //    //of a box doesn't automatically update its neighbors collections.
+        //    //This will no longer be necessary once the R-Tree is in place,
+        //    //instead of the BoxFramework.
 
-            _ResetBoxNeighbors_boxen.Clear();
-            _ResetBoxNeighbors_boxen.AddRange(boxesToReset);
+        //    _ResetBoxNeighbors_boxen.Clear();
+        //    _ResetBoxNeighbors_boxen.AddRange(boxesToReset);
 
-            foreach (Box box in _ResetBoxNeighbors_boxen)
-            {
-                Element elem = (box as Element);
-                if (elem != null)
-                {
-                    InvalidateRectFromEntities(elem.Inbound);
-                    InvalidateRectFromEntities(elem.Outbound);
+        //    foreach (Box box in _ResetBoxNeighbors_boxen)
+        //    {
+        //        Element elem = (box as Element);
+        //        if (elem != null)
+        //        {
+        //            InvalidateRectFromEntities(elem.Inbound);
+        //            InvalidateRectFromEntities(elem.Outbound);
 
-                    _ResetBoxNeighbors_inbound.Clear();
-                    _ResetBoxNeighbors_outbound.Clear();
+        //            _ResetBoxNeighbors_inbound.Clear();
+        //            _ResetBoxNeighbors_outbound.Clear();
 
-                    _ResetBoxNeighbors_inbound.AddRange(elem.Inbound);
-                    _ResetBoxNeighbors_outbound.AddRange(elem.Outbound);
-                }
+        //            _ResetBoxNeighbors_inbound.AddRange(elem.Inbound);
+        //            _ResetBoxNeighbors_outbound.AddRange(elem.Outbound);
+        //        }
 
-                InvalidateRectFromEntity(box);
+        //        InvalidateRectFromEntity(box);
 
-                Framework.Remove(box);
-                Framework.Add(box);
+        //        Framework.Remove(box);
+        //        Framework.Add(box);
 
-                if (elem != null)
-                {
-                    Collection.AddRange<Path, Path>(elem.Inbound, _ResetBoxNeighbors_inbound);
-                    Collection.AddRange<Path, Path>(elem.Outbound, _ResetBoxNeighbors_outbound);
+        //        if (elem != null)
+        //        {
+        //            Collection.AddRange<Path, Path>(elem.Inbound, _ResetBoxNeighbors_inbound);
+        //            Collection.AddRange<Path, Path>(elem.Outbound, _ResetBoxNeighbors_outbound);
 
-                    InvalidateRectFromEntities(elem.Inbound);
-                    InvalidateRectFromEntities(elem.Outbound);
-                }
+        //            InvalidateRectFromEntities(elem.Inbound);
+        //            InvalidateRectFromEntities(elem.Outbound);
+        //        }
 
-                InvalidateRectFromEntity(box);
-            }
-        }
-        protected void ResetAllBoxNeighbors()
-        {
-            ResetBoxNeighbors(Boxes);
-        }
+        //        InvalidateRectFromEntity(box);
+        //    }
+        //}
+        //protected void ResetAllBoxNeighbors()
+        //{
+        //    ResetBoxNeighbors(Boxes);
+        //}
 
         protected static RectangleV GetBoundingBoxFromEntities(Entity[] entities)
         {
@@ -333,9 +382,6 @@ namespace MetaphysicsIndustries.Crystalline
                 Collection.AddRange(elem.Outbound, outbound[elem]);
                 Collection.AddRange(elem.Inbound, inbound[elem]);
             }
-
-            ResetBoxNeighbors(elements.ToArray());
-            ResetBoxNeighbors(Collection.Extract<Entity, Box>(others));
         }
 
         public virtual void ResetContent()

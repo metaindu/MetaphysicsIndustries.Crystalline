@@ -57,15 +57,6 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public void Move(float newX, float newY, Set<Box> collidedBoxes)
-        {
-            Move(new Vector(newX, newY), collidedBoxes);
-        }
-        public virtual void Move(Vector newlocation, Set<Box> collidedBoxes)
-        {
-            Framework.Move(this, newlocation, collidedBoxes);
-        }
-
         public virtual void Resize(SizeV newsize)
         {
             throw new NotImplementedException();
@@ -86,21 +77,6 @@ namespace MetaphysicsIndustries.Crystalline
         {
             get { return _text; }
             set { _text = value; }
-        }
-
-        public virtual BoxFramework Framework
-        {
-            get
-            {
-                if (ParentCrystallineControl != null)
-                {
-                    return ParentCrystallineControl.Framework;
-                }
-                else
-                {
-                    return null;
-                }
-            }
         }
 
         public virtual RectangleV Rect
@@ -205,16 +181,15 @@ namespace MetaphysicsIndustries.Crystalline
             //}
         }
 
-        protected virtual void InvalidateWithinParentControl()
-        {
-            if (Framework != null && Framework.ParentControl != null)
-            {
-                Framework.ParentControl.InvalidateRectFromEntity(this);
-            }
-        }
+        //protected virtual void InvalidateWithinParentControl()
+        //{
+        //    if (ParentCrystallineControl != null)
+        //    {
+        //        ParentCrystallineControl.InvalidateRectFromEntity(this);
+        //    }
+        //}
 
         //[NonSerialized]
-        private BoxFramework _framework;
         private RectangleV _rect;
 
         //because the collection classes interact, this override is unnecessary
@@ -239,5 +214,26 @@ namespace MetaphysicsIndustries.Crystalline
                 }
             }
         }
+
+        public override bool IsSelectable
+        {
+            get { return true; }
+        }
+
+        public virtual bool CanBeMoved
+        {
+            get { return true; }
+        }
+
+        public virtual bool ShallProcessDoubleClick
+        {
+            get { return false; }
+        }
+
+        public virtual void ProcessDoubleClick(CrystallineControl control)
+        {
+        }
+
+
     }
 }

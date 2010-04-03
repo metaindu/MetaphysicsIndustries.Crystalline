@@ -1,33 +1,9 @@
 
 bugs
-	-?-overlapping boxes may try to move each other, causing a stack overflow
-	fix cascade-merge
-	moving a box in between two other boxes doesn't cut their neighbor 
-		link. this is inefficient, but doesn't break any functionality.
-		the worse part is that removing a box from between two other
-		boxes doesn't _form_ a link, possibly leading to broken 
-		functionality.
-	(second) "current = intervals[k];", BoxFramework.cpp, line 355, sometimes throw arg-out-of-range.
-		implemented a quick fix, but that doesn't correct the underlying flaw in design.
-	boxes still push each other, even if they're both (or all) selected to be moved by the user.
-		this causes them to separate from each other
-	Move() doesn't know about Elements' paths, so pushing an element leaves its paths where they are
-	
+
 to-do
 	rework/perfect the box movement model
 		maintain intervals for neighbors indicating how objects are obscured from each other?
-	make leftword GetNeighbor searches use the left edge of the 
+	make leftward GetNeighbor searches use the left edge of the 
 		boxes so as to un-overlap boxes (and likewise for
 		rightward, upward, and downward searches)
-	change IBox to use float instead of ints? or change Element/Pathway/PJ to do the opposite? the first would be the easiest
-	GetNeighbors needs to be more exact. Boxes are being treated like they're their own neighbors
-	---change CrystallineContorl::Elements/Paths/PathingJunctions/Pathways to work with BoxFramework
-		---Y maybe add new classes (ElementCollection) or methods (Create/AddElement)
-		N make CrystallineControl inherit ICollection<Element^>, etc. ?? (no, for now at least)
-	---make ElementCollection, PathwayCollection and PathingJunctionCollection inherit
-	---	from specializations of a generic class that implements 
-	---	ICollection<T> where T : IBox^
-	change Box::Move to call BoxFramework::MoveBox(IBox^ boxToMove, Point newLocation) ?
-	IBox::RectChanging, IBox::RectChanged
-	
-	implementations of IBox on Pathway and PathingJunction

@@ -140,13 +140,13 @@ namespace MetaphysicsIndustries.Crystalline
                 _isClick = true;
                 _dragAnchorInDocument = clickLocationInDocument;
 
-                Element[] s1;
-                Element[] s2;
+                Box[] s1;
 
-                s1 = GetElementsAtPoint(_dragAnchorInDocument).ToArray();
+                s1 = Collection.Filter(GetEntitiesAtPointInDocument<Box>(_dragAnchorInDocument), Entity.IsSelectableEntity);
+
                 if (s1.Length > 0)
                 {
-                    s2 = Set<Element>.Intersection(s1, SelectionElement);
+                    Box[] s2 = Set<Box>.Intersection(s1, Collection.Extract<Entity, Box>(Selection));
                     if (s2.Length > 0)
                     {
                         //clicked a previously-selected element
@@ -154,7 +154,7 @@ namespace MetaphysicsIndustries.Crystalline
                         //if the shift key is down, remove it
                         if ((ModifierKeys & Keys.Shift) != Keys.None)
                         {
-                            Selection.RemoveRange<Element>(s2);
+                            Selection.RemoveRange<Box>(s2);
                         }
                     }
                     else
@@ -172,20 +172,12 @@ namespace MetaphysicsIndustries.Crystalline
                             Selection.Clear();
                         }
 
-                        Element frontmost = s1[0];//.GetFirst();
-                        int index = Framework.ZOrder.IndexOf(frontmost);
-                        foreach (Element ee in s1)
+                        Box frontmost = GetFrontmostBoxAtPoint<Box>(_dragAnchorInDocument, Entity.IsSelectableEntity);
+                        if (frontmost != null)
                         {
-                            //Selection.Add(ee);
-                            int index2 = Framework.ZOrder.IndexOf(ee);
-                            if (index2 > index)
-                            {
-                                index = index2;
-                                frontmost = ee;
-                            }
+                            BringToFront(frontmost);
+                            Selection.Add(frontmost);
                         }
-                        BringToFront(frontmost);
-                        Selection.Add(frontmost);
                     }
                     _isDragSelecting = false;
                 }
@@ -283,9 +275,9 @@ namespace MetaphysicsIndustries.Crystalline
 
             if (p != null)
             {
-                Set<Element> s;
-                s = GetElementsAtPoint(pt);
-                if (s.Count > 0)
+                Element[] s = GetEntitiesAtPointInDocument<Element>(pt);
+
+                if (s.Length > 0)
                 {
                     foreach (Element element in s)
                     {
@@ -313,38 +305,22 @@ namespace MetaphysicsIndustries.Crystalline
                     }
                 }
             }
-
-            //foreach (PathJoint ve in SelectionPathJoint)
-            //{
-            //    ve.Location += delta;
-            //    if (p == null)
-            //    {
-            //        if (ve == ve.ParentPath.PathJoints.First)
-            //        {
-            //            ve.ParentPath.From = null;
-            //        }
-            //        else if (ve == ve.ParentPath.PathJoints.Last)
-            //        {
-            //            ve.ParentPath.To = null;
-            //        }
-            //    }
-            //}
         }
 
         private void MoveElements(Vector delta)
         {
-            Set<Path> wholepaths;
-            wholepaths = new Set<Path>();
+            Set<Path> wholepaths = new Set<Path>();
             Set<Path> pathsToRoute = new Set<Path>();
-            Set<Element> selectionElement = new Set<Element>(SelectionElement);
 
-            foreach (Element ee in selectionElement)
+            Box[] selectedBoxes = Collection.Extract<Entity, Box>(Selection);
+
+            foreach (Element ee in SelectionElement)
             {
                 foreach (Path p in ee.Inbound)
                 {
                     if (!wholepaths.Contains(p) &&
-                        p.To != null && selectionElement.Contains(p.To) &&
-                        p.From != null && selectionElement.Contains(p.From))
+                        p.To != null && Selection.Contains(p.To) &&
+                        p.From != null && Selection.Contains(p.From))
                     {
                         wholepaths.Add(p);
                     }
@@ -353,41 +329,47 @@ namespace MetaphysicsIndustries.Crystalline
 
             Set<Box> collidedBoxes = new Set<Box>();
 
-            foreach (Element elem in selectionElement)
+            foreach (Box box in selectedBoxes)
             {
                 //ve.Location += delta;
-                if (elem.CanBeMoved)
+                if (box.CanBeMoved)
                 {
-                    if (ElementCollisions)
+                    if (BoxCollisions)
                     {
-                        elem.Move(elem.Location + delta, collidedBoxes);
+                        Framework.Move(box, box.Location + delta, collidedBoxes);
                     }
                     else
                     {
-                        elem.Location += delta;
+                        box.Location += delta;
                     }
-                    foreach (Path p in elem.Inbound)
+
+                    if (box is Element)
                     {
-                        pathsToRoute.Add(p);
-                        //if (!wholepaths.Contains(p))
-                        //{
-                        //    //p.PathJoints[p.PathJoints.Count - 1].Location += delta;
-                        //    RoutePath(p);
-                        //}
-                    }
-                    foreach (Path p in elem.Outbound)
-                    {
-                        pathsToRoute.Add(p);
-                        //if (!wholepaths.Contains(p))
-                        //{
-                        //    //p.PathJoints[0].Location += delta;
-                        //    RoutePath(p);
-                        //}
+                        Element elem = box as Element;
+
+                        foreach (Path p in elem.Inbound)
+                        {
+                            pathsToRoute.Add(p);
+                            //if (!wholepaths.Contains(p))
+                            //{
+                            //    //p.PathJoints[p.PathJoints.Count - 1].Location += delta;
+                            //    RoutePath(p);
+                            //}
+                        }
+                        foreach (Path p in elem.Outbound)
+                        {
+                            pathsToRoute.Add(p);
+                            //if (!wholepaths.Contains(p))
+                            //{
+                            //    //p.PathJoints[0].Location += delta;
+                            //    RoutePath(p);
+                            //}
+                        }
                     }
                 }
             }
 
-            if (ElementCollisions)
+            if (BoxCollisions)
             {
                 foreach (Box ib in collidedBoxes)
                 {
@@ -438,7 +420,7 @@ namespace MetaphysicsIndustries.Crystalline
                         Selection.Clear();
 
                         Vector pointInDocSpace = _dragAnchorInDocument;
-                        Element frontmost = GetFrontmostElementAtPointInDocumentSpace(pointInDocSpace);
+                        Box frontmost = GetFrontmostBoxAtPoint<Box>(pointInDocSpace, Entity.IsSelectableEntity);
                         if (frontmost != null)
                         {
                             BringToFront(frontmost);
@@ -447,36 +429,12 @@ namespace MetaphysicsIndustries.Crystalline
                     }
                     else
                     {
-                        RectangleV r = new RectangleV();
-                        Vector pt;
-                        SizeV s = new SizeV();
+                        RectangleV r = RectangleV.BoundingBoxFromPoints(_dragAnchorInDocument, clickLocationInDocument);
 
-                        pt = clickLocationInDocument;//MainPanel.PointToClient(MainPanel.MousePosition);
-
-                        //s.Width = Math.Abs(pt.X - _dragAnchorInDocument.X);
-                        //s.Height = Math.Abs(pt.Y - _dragAnchorInDocument.Y);
-                        s = new SizeV(
-                            Math.Abs(pt.X - _dragAnchorInDocument.X),
-                            Math.Abs(pt.Y - _dragAnchorInDocument.Y));
-
-                        //pt.X = Math.Min(_dragAnchorInDocument.X, pt.X);
-                        //pt.Y = Math.Min(_dragAnchorInDocument.Y, pt.Y);
-                        pt = new Vector(
-                                    Math.Min(_dragAnchorInDocument.X, pt.X),
-                                    Math.Min(_dragAnchorInDocument.Y, pt.Y));
-
-                        //r.Location = pt;
-                        //r.Size = s;
-                        r = new RectangleV(pt, s);
-
-                            Set<Element> set;
-                            set = GetElementsInRect(r);
-                            Selection.Clear();
-                            foreach (Element ee in set)
-                            {
-                                Selection.Add(ee);
-                            }
-                            //need to update z-order
+                        Box[] elems = Collection.Filter(GetEntitiesIntersectingRectInDocument<Box>(r), Entity.IsSelectableEntity);
+                        Selection.Clear();
+                        Selection.AddRange<Box>(elems);
+                        BringToFront(elems);
                     }
                 }
                 else
@@ -510,15 +468,15 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual void ProcessMouseDoubleClick(MouseEventArgs e)
         {
             Vector docSpace = DocumentSpaceFromClientSpace(e.Location);
-            Element element = GetFrontmostElementAtPointInDocumentSpace(docSpace);
+            Box box = GetFrontmostBoxAtPoint<Box>(docSpace);
 
-            if (element != null)
+            if (box != null)
             {
                 try
                 {
-                    if (element.ShallProcessDoubleClick)
+                    if (box.ShallProcessDoubleClick)
                     {
-                        element.ProcessDoubleClick(this);
+                        box.ProcessDoubleClick(this);
                     }
                 }
                 catch (Exception ee)

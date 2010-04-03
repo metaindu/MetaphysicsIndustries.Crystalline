@@ -44,10 +44,9 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (PathJoints.Count >= 2)
             {
+                int n = PathJoints.Count;
                 int i;
-                int j;
-                j = PathJoints.Count;
-                for (i = 0; i < j - 1; i++)
+                for (i = 0; i < n - 1; i++)
                 {
                     //if (renderPathJoints)
                     //{
@@ -56,33 +55,14 @@ namespace MetaphysicsIndustries.Crystalline
                     g.DrawLine(Pens.Black, PathJoints[i], PathJoints[i + 1]);
                 }
 
-                if (j > 1 && To != null)
+                if (n > 1 && To != null)
                 {
                     if (renderArrow)
                     {
-                        //array<PointF>^	r = { PointF(), PointF(), PointF() };
-                        //PointF	p;
-                        //float	angle;
-                        //float	angle2;
-                        //float	size;
-
-                        //size = 10;
-
-                        //p = this->PathJoints[j - 1]->Location - SizeF(this->PathJoints[j - 2]->Location);
-                        //angle = (float)Math::Atan2(p.Y, p.X);
-
-                        //r[0] = this->PathJoints[j - 1]->Location;
-                        //angle2 = angle + (float)(Math::PI * 5.0 / 6.0);
-                        //r[1] = PointF(size * (float)Math::Cos(angle2), size * (float)Math::Sin(angle2)) + SizeF(r[0]);
-                        //angle2 = angle - (float)(Math::PI * 5.0 / 6.0);
-                        //r[2] = PointF(size * (float)Math::Cos(angle2), size * (float)Math::Sin(angle2)) + SizeF(r[0]);
-
-                        //g->FillPolygon(Brushes::Black, r);
-
-                        RenderArrow(g, pen, brush, font, PathJoints[j - 2], PathJoints[j - 1]);
+                        RenderArrow(g, pen, brush, font, PathJoints[n - 2], PathJoints[n - 1]);
                     }
                 }
-                else if (j > 0)
+                else if (n > 0)
                 {
                     //if (renderPathJoints)
                     //{

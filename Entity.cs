@@ -54,7 +54,7 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        protected void InvalidateRectInParentControlFromSelf()
+        protected virtual void InvalidateWithinParentControl()
         {
             if (ParentCrystallineControl != null)
             {
@@ -98,6 +98,18 @@ namespace MetaphysicsIndustries.Crystalline
             {
                 return new RectangleV();
             }
+        }
+
+        public virtual bool IsSelectable
+        {
+            get { return false; }
+        }
+
+        //for use as a static delegate
+        public static bool IsSelectableEntity(Entity entity)
+        {
+            if (entity == null) { throw new ArgumentNullException("entity"); }
+            return entity.IsSelectable;
         }
     }
 }

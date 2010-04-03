@@ -55,7 +55,7 @@ namespace MetaphysicsIndustries.Crystalline
         //    float	max;
 
         //    ////extract all debug stuff out of entity classes and into crystallinecontrol classes
-        //    //if (Framework.ParentControl.ShowDebugInfo)
+        //    //if (ParentCrystallineControl.ShowDebugInfo)
         //    //{
         //    //    foreach (Box ib in this.LeftNeighbors)
         //    //    {
@@ -96,7 +96,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected override void RenderText(Graphics g, Pen pen, Brush brush, Font font)
         {
-            //if (Framework.ParentControl.ShowDebugInfo)
+            //if (ParentCrystallineControl.ShowDebugInfo)
             //{
                 base.RenderText(g, pen, brush, font);
             //}
@@ -204,20 +204,6 @@ namespace MetaphysicsIndustries.Crystalline
         //    get { return _subElements; }
         //    protected set { _subElements = value; }
         //}
-
-        public virtual bool CanBeMoved
-        {
-            get { return true; }
-        }
-
-        public virtual bool ShallProcessDoubleClick
-        {
-            get { return false; }
-        }
-
-        public virtual void ProcessDoubleClick(CrystallineControl control)
-        {
-        }
 
 
     }

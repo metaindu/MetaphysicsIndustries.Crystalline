@@ -36,13 +36,13 @@ namespace MetaphysicsIndustries.Crystalline
             _right = new List<Box>();
             _up = new List<Box>();
             _down = new List<Box>();
-            _roleft = new BoxList(_left);
-            _roright = new BoxList(_right);
-            _roup = new BoxList(_up);
-            _rodown = new BoxList(_down);
+            _roleft = new ReadOnlyList<Box>(_left);
+            _roright = new ReadOnlyList<Box>(_right);
+            _roup = new ReadOnlyList<Box>(_up);
+            _rodown = new ReadOnlyList<Box>(_down);
             //_intervalSorter = new IntervalComparer(true);
 
-            _roZOrder = new BoxList(_zOrder);
+            _roZOrder = new ReadOnlyList<Box>(_zOrder);
         }
 
         public virtual void Dispose()
@@ -173,7 +173,7 @@ namespace MetaphysicsIndustries.Crystalline
                         {
                             p = new Vector(p.X - delta2, p.Y);
                         }
-                        ib.Move(p, collidedBoxes);
+                        Move(ib, p, collidedBoxes);
                         if (collidedBoxes != null)
                         {
                             collidedBoxes.Add(ib);
@@ -238,7 +238,7 @@ namespace MetaphysicsIndustries.Crystalline
                         {
                             p = new Vector(p.X, p.Y - delta2);
                         }
-                        ib.Move(p, collidedBoxes);
+                        Move(ib, p, collidedBoxes);
                         if (collidedBoxes != null)
                         {
                             collidedBoxes.Add(ib);
@@ -318,38 +318,7 @@ namespace MetaphysicsIndustries.Crystalline
                 _down.Remove(b);
                 _zOrder.Remove(b);
 
-                bool ret;
-                ret = _set.Remove(b);
-
-                //Box[] neighbors;
-
-                //neighbors = new Box[b.LeftNeighbors.Count];
-                //b.LeftNeighbors.CopyTo(neighbors, 0);
-                //foreach (Box box in neighbors)
-                //{
-                //    box.RightNeighbors.Remove(b);
-                //}
-
-                //neighbors = new Box[b.UpNeighbors.Count];
-                //b.UpNeighbors.CopyTo(neighbors, 0);
-                //foreach (Box box in neighbors)
-                //{
-                //    box.DownNeighbors.Remove(b);
-                //}
-
-                //neighbors = new Box[b.RightNeighbors.Count];
-                //b.RightNeighbors.CopyTo(neighbors, 0);
-                //foreach (Box box in neighbors)
-                //{
-                //    box.LeftNeighbors.Remove(b);
-                //}
-
-                //neighbors = new Box[b.DownNeighbors.Count];
-                //b.DownNeighbors.CopyTo(neighbors, 0);
-                //foreach (Box box in neighbors)
-                //{
-                //    box.UpNeighbors.Remove(b);
-                //}
+                bool ret = _set.Remove(b);
 
                 b.ParentCrystallineControl = null;// Framework = null;
 
@@ -362,7 +331,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         public void BringForward(Box box)
         {
-            if (box.Framework != this) { throw new InvalidOperationException("The box is not within this framework."); }
+            if (!this._set.Contains(box)) { throw new InvalidOperationException("The box is not within this framework."); }
 
             int index = _zOrder.IndexOf(box);
             if (index < _zOrder.Count - 1)
@@ -373,7 +342,7 @@ namespace MetaphysicsIndustries.Crystalline
         }
         public void SendBackward(Box box)
         {
-            if (box.Framework != this) { throw new InvalidOperationException("The box is not within this framework."); }
+            if (!this._set.Contains(box)) { throw new InvalidOperationException("The box is not within this framework."); }
 
             int index = _zOrder.IndexOf(box);
             if (index > 0)
@@ -385,7 +354,7 @@ namespace MetaphysicsIndustries.Crystalline
         }
         public void BringToFront(Box box)
         {
-            if (box.Framework != this) { throw new InvalidOperationException("The box is not within this framework."); }
+            if (!this._set.Contains(box)) { throw new InvalidOperationException("The box is not within this framework."); }
 
             int index = _zOrder.IndexOf(box);
             if (index < _zOrder.Count - 1)
@@ -396,7 +365,7 @@ namespace MetaphysicsIndustries.Crystalline
         }
         public void SendToBack(Box box)
         {
-            if (box.Framework != this) { throw new InvalidOperationException("The box is not within this framework."); }
+            if (!this._set.Contains(box)) { throw new InvalidOperationException("The box is not within this framework."); }
 
             int index = _zOrder.IndexOf(box);
             if (index > 0)
@@ -413,12 +382,12 @@ namespace MetaphysicsIndustries.Crystalline
             get { return _parentControl; }
         }
 
-        public virtual BoxList Right
+        public virtual ReadOnlyList<Box> Right
         {
             get { return _roright; }
         }
 
-        public virtual BoxList Up
+        public virtual ReadOnlyList<Box> Up
         {
             get { return _roup; }
         }
@@ -428,17 +397,17 @@ namespace MetaphysicsIndustries.Crystalline
             get { return _set.Count; }
         }
 
-        public virtual BoxList Down
+        public virtual ReadOnlyList<Box> Down
         {
             get { return _rodown; }
         }
 
-        public virtual BoxList Left
+        public virtual ReadOnlyList<Box> Left
         {
             get { return _roleft; }
         }
 
-        public virtual BoxList ZOrder
+        public virtual ReadOnlyList<Box> ZOrder
         {
             get { return _roZOrder; }
         }
@@ -508,11 +477,11 @@ namespace MetaphysicsIndustries.Crystalline
         //}
 
         [NonSerialized]
-        private BoxList _roleft;
+        private ReadOnlyList<Box> _roleft;
         //[NonSerialized]
         //private IntervalComparer _intervalSorter;
         [NonSerialized]
-        private BoxList _roup;
+        private ReadOnlyList<Box> _roup;
         [NonSerialized]
         private BoxComparer _sorterRight;
         [NonSerialized]
@@ -522,9 +491,9 @@ namespace MetaphysicsIndustries.Crystalline
         [NonSerialized]
         private List<Box> _left;
         [NonSerialized]
-        private BoxList _rodown;
+        private ReadOnlyList<Box> _rodown;
         [NonSerialized]
-        private BoxList _roright;
+        private ReadOnlyList<Box> _roright;
         [NonSerialized]
         private List<Box> _up;
         [NonSerialized]
@@ -538,6 +507,6 @@ namespace MetaphysicsIndustries.Crystalline
         [NonSerialized]
         private List<Box> _zOrder = new List<Box>();
         [NonSerialized]
-        private BoxList _roZOrder;
+        private ReadOnlyList<Box> _roZOrder;
     }
 }

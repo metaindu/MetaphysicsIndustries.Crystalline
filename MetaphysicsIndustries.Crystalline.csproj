@@ -41,7 +41,6 @@
     <Compile Include="BoxCollection.cs" />
     <Compile Include="BoxComparer.cs" />
     <Compile Include="BoxFramework.cs" />
-    <Compile Include="BoxList.cs" />
     <Compile Include="BoxNeighborCollection.cs" />
     <Compile Include="BoxOrientation.cs" />
     <Compile Include="ConnectionEngine.cs" />
@@ -119,6 +118,12 @@
     <Compile Include="RTree.cs" />
     <Compile Include="RTree.RNode.cs" />
     <Compile Include="SelectionRenderStyle.cs" />
+    <Compile Include="StringEditorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StringEditorForm.Designer.cs">
+      <DependentUpon>StringEditorForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SubElement.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -128,6 +133,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CrystallineControl.resx">
       <DependentUpon>CrystallineControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StringEditorForm.resx">
+      <DependentUpon>StringEditorForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

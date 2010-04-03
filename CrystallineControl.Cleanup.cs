@@ -103,8 +103,8 @@ namespace MetaphysicsIndustries.Crystalline
                         {
                             //collision
                             float delta = rects[i].Right - rects[k].Left;
-
-                            Framework.Left[k].Move(rects[k].Left + delta + 10, rects[k].Top, null);
+                            Vector newLocation = rects[k].Location + Vector.OffsetY(delta + 10);
+                            Framework.Move(Framework.Left[k], newLocation, null);
                             cont = true;
                             break;
                         }

@@ -51,6 +51,12 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
+        public T[] Extract<T>()
+            where T : Entity
+        {
+            return Collection.Extract<Entity, T>(this);
+        }
+
         //ICollection<Entity>
         public virtual void Add(Entity item)
         {

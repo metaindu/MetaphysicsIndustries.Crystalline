@@ -115,7 +115,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void UpdateContextMenuItems()
         {
-                if (SelectionElement.Length> 0)
+                if (Selection.Count > 0)
                 {
                     _deleteItem.Enabled = true;
                 }
@@ -141,7 +141,7 @@ namespace MetaphysicsIndustries.Crystalline
             element.Location = DocumentSpaceFromClientSpace(LastRightClickInClient);
             element.Size = new SizeV(50, 20);
             element.Text = _names[Elements.Count % _names.Count];
-            AddElement(element);
+            AddEntity(element);
         }
 
         protected void AddMenuItemForElement<T>(ToolStripItem item, ToolStripMenuItem menu)
@@ -186,7 +186,7 @@ namespace MetaphysicsIndustries.Crystalline
             where T : Element, new()
         {
             t.Location = location;
-            AddElement(t);
+            AddEntity(t);
         }
 
 
@@ -204,30 +204,20 @@ namespace MetaphysicsIndustries.Crystalline
             pj = (DocumentSpaceFromClientSpace(LastRightClickInClient) + new Vector(10, 0));
             p.PathJoints.Add(pj);
 
-            AddPath(p);
+            AddEntity(p);
             Invalidate();
         }
 
         protected virtual void DeleteItem_Click(Object sender, EventArgs e)
         {
-                Set<Element> s;
-                s = new Set<Element>();
-                foreach (Element element in SelectionElement)
-                {
-                    s.Add(element);
-                }
-                Set<Path> removepaths;
-                removepaths = new Set<Path>();
-                foreach (Element element in s)
-                {
-                    element.Inbound.Clear();
-                    element.Outbound.Clear();
-                    Elements.Remove(element);
-                    Selection.Remove(element);
-                    //element.Dispose();
-                }
-                Selection.RemoveRange<Element>(s);
-            
+            Set<Entity> s = new Set<Entity>(Selection);
+
+            foreach (Entity ent in s)
+            {
+                RemoveEntity(ent);
+            }
+
+            Selection.Clear();
 
             Invalidate();
         }
