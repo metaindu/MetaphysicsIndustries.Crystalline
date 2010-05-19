@@ -85,14 +85,9 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public virtual void Move(Box boxToMove, Vector newLocation)
-        {
-            Move(boxToMove, newLocation, null);
-        }
-
         [NonSerialized]
         private static int _moveCallCount = 0;
-        public virtual void Move(Box boxToMove, Vector newLocation, Set<Box> collidedBoxes)
+        public virtual void Move(Box boxToMove, Vector newLocation, Set<Box> collidedBoxes, Set<Box> doNotCollide)
         {
             if (boxToMove == null) { throw new ArgumentNullException("boxToMove"); }
 
@@ -108,7 +103,6 @@ namespace MetaphysicsIndustries.Crystalline
             float delta2;
             Vector p;
 
-            Set<Box> moveneighbors=new Set<Box>();
 
             if (deltax != 0 && deltay != 0)
             {
@@ -117,6 +111,7 @@ namespace MetaphysicsIndustries.Crystalline
 
             if (deltax != 0)
             {
+                Set<Box> moveneighbors=new Set<Box>();
                 if (deltax > 0)
                 {
                     RectangleV rect = RectangleV.FromLTRB(boxToMove.Right, boxToMove.Top, boxToMove.Right+deltax, boxToMove.Bottom);
@@ -147,6 +142,7 @@ namespace MetaphysicsIndustries.Crystalline
                         }
                     }
                 }
+                moveneighbors.RemoveRange(doNotCollide);
                 foreach (Box ib in moveneighbors)
                 {
                     if (ib is Element && ParentControl.Selection.Contains((Element)ib))
@@ -173,7 +169,7 @@ namespace MetaphysicsIndustries.Crystalline
                         {
                             p = new Vector(p.X - delta2, p.Y);
                         }
-                        Move(ib, p, collidedBoxes);
+                        Move(ib, p, collidedBoxes, doNotCollide);
                         if (collidedBoxes != null)
                         {
                             collidedBoxes.Add(ib);
@@ -184,10 +180,12 @@ namespace MetaphysicsIndustries.Crystalline
                 boxToMove.X += deltax;
             }
 
-            moveneighbors.Clear();
+
+
 
             if (deltay != 0)
             {
+                Set<Box> moveneighbors = new Set<Box>();
                 if (deltay > 0)
                 {
                     RectangleV rect = RectangleV.FromLTRB(boxToMove.Left, boxToMove.Bottom, boxToMove.Right, boxToMove.Bottom+deltay);
@@ -212,6 +210,7 @@ namespace MetaphysicsIndustries.Crystalline
                         }
                     }
                 }
+                moveneighbors.RemoveRange(doNotCollide);
                 foreach (Box ib in moveneighbors)
                 {
                     if (ib is Element && ParentControl.Selection.Contains((Element)ib))
@@ -238,7 +237,7 @@ namespace MetaphysicsIndustries.Crystalline
                         {
                             p = new Vector(p.X, p.Y - delta2);
                         }
-                        Move(ib, p, collidedBoxes);
+                        Move(ib, p, collidedBoxes,doNotCollide);
                         if (collidedBoxes != null)
                         {
                             collidedBoxes.Add(ib);
@@ -320,7 +319,7 @@ namespace MetaphysicsIndustries.Crystalline
 
                 bool ret = _set.Remove(b);
 
-                b.ParentCrystallineControl = null;// Framework = null;
+                //b.ParentCrystallineControl = null;// Framework = null;
 
                 UpdateBounds();
 

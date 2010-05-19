@@ -112,7 +112,7 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     Control.InvalidateRectFromEntity(_connectionPath);
                     _connectionPath.From = null;
-                    Control.RemoveEntity(_connectionPath);
+                    Control.DisconnectAndRemoveEntity(_connectionPath);
                 }
 
                 _connectionPath = null;
@@ -180,7 +180,7 @@ namespace MetaphysicsIndustries.Crystalline
             return null;
         }
 
-        public void InitiateConnection(TFrom connectionSource)
+        public TConduit InitiateConnection(TFrom connectionSource)
         {
             if (connectionSource == null) { throw new ArgumentNullException("connectionSource"); }
 
@@ -190,6 +190,8 @@ namespace MetaphysicsIndustries.Crystalline
             Control.AddEntity(path);
             path.From = _connectionSource;
             _connectionPath = path;
+
+            return path;
         }
 
     }

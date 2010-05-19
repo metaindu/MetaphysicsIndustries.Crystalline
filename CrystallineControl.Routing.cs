@@ -30,7 +30,7 @@ namespace MetaphysicsIndustries.Crystalline
     {
         public virtual void RouteAllPaths()
         {
-            foreach (Path p in Paths)
+            foreach (Path p in Entities.Extract<Path>())
             {
                 RoutePath(p);
             }
@@ -39,7 +39,7 @@ namespace MetaphysicsIndustries.Crystalline
         public void RoutePath(Path path)
         {
             if (path == null) { throw new ArgumentNullException("path"); }
-            if (!Paths.Contains(path)) { return; } //throw?
+            if (!Entities.Contains(path)) { return; } //throw?
 
             InvalidateRectFromEntity(path);
 

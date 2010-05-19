@@ -94,25 +94,15 @@ namespace MetaphysicsIndustries.Crystalline
             _framework = new BoxFramework(this);
 
             _entities = new CrystallineControlEntityParentChildrenCollection(this);
-            _boxes = new CrystallineControlBoxParentChildrenCollection(_entities);
+
+            Entities.ItemAdded += new CrystallineControlEntityParentChildrenCollection.InterlinkingEventHandler<Entity>(Entities_ItemAdded);
+            Entities.ItemRemoved += new CrystallineControlEntityParentChildrenCollection.InterlinkingEventHandler<Entity>(Entities_ItemRemoved);
 
             Framework.BoundsChanged += new EventHandler(Framework_BoundsChanged);
 
-            _elements = new ElementCollection(Framework);
-            _paths = new CrystallineControlPathParentChildrenCollection(_entities);
-            //_pathingJunctions = new PathingJunctionCollection(Framework);
-            //_pathways = new PathwayCollection(Framework);
-
-            //_selectionElement = new Set<Element>();
-            //_selectionPathJoint = new Set<PathJoint>();
-            //_selectionPathingJunction = new Set<PathingJunction>();
-            //_selectionPathway = new Set<Pathway>();
-
-            //selectingelement = true;
-            //SelectionMode = SelectionModeType.Element;
-
             InternalInitEntities();
         }
+
 
         protected virtual void InternalInitEntities()
         {

@@ -160,5 +160,10 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
         RectangleV _scrollableAreaInDocument;
+
+        protected void CenterViewOnPointInDocument(Vector center)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

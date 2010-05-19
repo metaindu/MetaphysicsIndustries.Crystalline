@@ -132,6 +132,9 @@ namespace MetaphysicsIndustries.Crystalline
 
                 g.DrawRectangle(Pens.Gray, Rectangle.Truncate(r));
             }
+            if (_isDragSelecting || _isClick)
+            {
+            }
         }
 
         protected virtual void RenderEntity(Graphics g, Entity ent)
@@ -150,7 +153,7 @@ namespace MetaphysicsIndustries.Crystalline
 
         protected virtual void RenderPaths(Graphics g)
         {
-            foreach (Path p in Paths)
+            foreach (Path p in Entities.Extract<Path>())
             {
                 RenderEntity(g, p);
             }
@@ -199,10 +202,10 @@ namespace MetaphysicsIndustries.Crystalline
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             sb.Append("elements = ");
-            sb.Append(_elements.Count);
+            sb.Append(Entities.Extract<Element>().Length);
             sb.Append("\r\n");
             sb.Append("paths = ");
-            sb.Append(_paths.Count);
+            sb.Append(Entities.Extract<Path>().Length);
             sb.Append("\r\n");
             //sb.Append("pathingjunctions = ");
             //sb.Append(_pathingJunctions.Count);
@@ -230,10 +233,11 @@ namespace MetaphysicsIndustries.Crystalline
             sb.Append("\r\n");
             sb.Append("selection = ");
             sb.Append(Selection.Count);
-            if (SelectionElement.Length > 0)
+            Element[] elements = Selection.Extract<Element>();
+            if (elements.Length > 0)
             {
                 Element sel = null;
-                foreach (Element element in SelectionElement)
+                foreach (Element element in elements)
                 {
                     sel = element;
                     break;

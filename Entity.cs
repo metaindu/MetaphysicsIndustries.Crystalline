@@ -9,6 +9,10 @@ namespace MetaphysicsIndustries.Crystalline
     [Serializable]
     public abstract class Entity
     {
+        public virtual string EntityClassName
+        {
+            get { return "Entity"; }
+        }
         public abstract void Render(Graphics g, Pen pen, Brush brush, Font font);//InternalRender and try/catch?
 
         [NonSerialized]
@@ -110,6 +114,16 @@ namespace MetaphysicsIndustries.Crystalline
         {
             if (entity == null) { throw new ArgumentNullException("entity"); }
             return entity.IsSelectable;
+        }
+
+        public void Disconnect()
+        {
+            Entity[] entities;
+            Disconnect(out entities);
+        }
+        public virtual void Disconnect(out Entity[] entitiesToRemove)
+        {
+            entitiesToRemove = null;
         }
     }
 }

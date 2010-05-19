@@ -214,7 +214,7 @@ namespace MetaphysicsIndustries.Crystalline
             //    e = e;
             //}
 
-            if (e.Button == System.Windows.Forms.MouseButtons.Left)
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
             {
                 //Invalidate();
 
@@ -312,9 +312,9 @@ namespace MetaphysicsIndustries.Crystalline
             Set<Path> wholepaths = new Set<Path>();
             Set<Path> pathsToRoute = new Set<Path>();
 
-            Box[] selectedBoxes = Collection.Extract<Entity, Box>(Selection);
+            Set<Box> selectedBoxes = new Set<Box>(Selection.Extract<Box>());
 
-            foreach (Element ee in SelectionElement)
+            foreach (Element ee in Selection.Extract<Element>())
             {
                 foreach (Path p in ee.Inbound)
                 {
@@ -336,7 +336,7 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     if (BoxCollisions)
                     {
-                        Framework.Move(box, box.Location + delta, collidedBoxes);
+                        Framework.Move(box, box.Location + delta, collidedBoxes, selectedBoxes);
                     }
                     else
                     {

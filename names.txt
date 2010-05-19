@@ -4,8 +4,8 @@ Zirconia	Build (Stonemason)
 Diamond		the successor to Build/Stonemason
 Ruby		flow charts
 Emerald		state graphs
-Sapphire	??? Regency(UI) or hydras? general charts & graphs?
-Amethyst	Epiphany
+Sapphire	general charts & graphs
+Amethyst	Epiphany data flows/transformations
 Onyx		makes crystalline controls?
 Quartz		electrical circuits
 Garnet		controls

@@ -23,7 +23,7 @@ using MetaphysicsIndustries.Utilities;
 namespace MetaphysicsIndustries.Crystalline
 {
     [Serializable]
-    public class Element : Box, IConnector<Element, Element, Path>, IConnectee<Element, Element, Path>
+    public abstract class Element : Box, IConnector<Element, Element, Path>, IConnectee<Element, Element, Path>
 	{
 		public Element()
 		{
@@ -205,6 +205,17 @@ namespace MetaphysicsIndustries.Crystalline
         //    protected set { _subElements = value; }
         //}
 
+        public override void Disconnect(out Entity[] entitiesToRemove)
+        {
+            List<Entity> paths = new List<Entity>();
+            paths.AddRange(this.Inbound.ToArray());
+            paths.AddRange(this.Outbound.ToArray());
+
+            this.Inbound.Clear();
+            this.Outbound.Clear();
+
+            entitiesToRemove = paths.ToArray();
+        }
 
     }
 }

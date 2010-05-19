@@ -37,6 +37,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddEntityUndoEvent.cs" />
+    <Compile Include="ChangeEntityUndoEvent.cs" />
+    <Compile Include="CompoundUndoEvent.cs" />
+    <Compile Include="CrystallineAppForm.ResourceKludge.cs">
+    </Compile>
+    <Compile Include="CrystallineAppForm.File.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CrystallineAppForm.Menu.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Box.cs" />
     <Compile Include="BoxCollection.cs" />
     <Compile Include="BoxComparer.cs" />
@@ -44,6 +55,12 @@
     <Compile Include="BoxNeighborCollection.cs" />
     <Compile Include="BoxOrientation.cs" />
     <Compile Include="ConnectionEngine.cs" />
+    <Compile Include="CrystallineAppForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CrystallineAppForm.Designer.cs">
+      <DependentUpon>CrystallineAppForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="CrystallineContainerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -51,6 +68,9 @@
       <DependentUpon>CrystallineContainerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="CrystallineControl.Cleanup.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CrystallineControl.Clipboard.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="CrystallineControl.Contents.cs">
@@ -115,28 +135,25 @@
     <Compile Include="PathwayCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProxyMenuItem.cs" />
+    <Compile Include="RemoveEntityUndoEvent.cs" />
     <Compile Include="RTree.cs" />
     <Compile Include="RTree.RNode.cs" />
     <Compile Include="SelectionRenderStyle.cs" />
-    <Compile Include="StringEditorForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="StringEditorForm.Designer.cs">
-      <DependentUpon>StringEditorForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="SubElement.cs" />
+    <Compile Include="UndoEngine.cs" />
+    <Compile Include="UndoEvent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CrystallineAppForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CrystallineAppForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="CrystallineContainerForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CrystallineContainerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CrystallineControl.resx">
       <DependentUpon>CrystallineControl.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="StringEditorForm.resx">
-      <DependentUpon>StringEditorForm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
@@ -155,6 +172,10 @@
     <ProjectReference Include="..\MetaphysicsIndustries.Collections\MetaphysicsIndustries.Collections.csproj">
       <Project>{FF2B8A90-E8D2-4CF6-81E6-4A7BCE1FF900}</Project>
       <Name>MetaphysicsIndustries.Collections</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MetaphysicsIndustries.Serialization\MetaphysicsIndustries.Serialization.csproj">
+      <Project>{486F1C93-4C96-436A-860D-D77DC7F48FB9}</Project>
+      <Name>MetaphysicsIndustries.Serialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\MetaphysicsIndustries.Utilities\MetaphysicsIndustries.Utilities.csproj">
       <Project>{221A3FBA-E14C-4F05-A099-42508116E910}</Project>

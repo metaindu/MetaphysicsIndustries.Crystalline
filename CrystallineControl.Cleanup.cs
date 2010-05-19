@@ -104,7 +104,7 @@ namespace MetaphysicsIndustries.Crystalline
                             //collision
                             float delta = rects[i].Right - rects[k].Left;
                             Vector newLocation = rects[k].Location + Vector.OffsetY(delta + 10);
-                            Framework.Move(Framework.Left[k], newLocation, null);
+                            Framework.Move(Framework.Left[k], newLocation, null, null);
                             cont = true;
                             break;
                         }
@@ -117,7 +117,7 @@ namespace MetaphysicsIndustries.Crystalline
                 }
             }
 
-            foreach (Path path in Paths)
+            foreach (Path path in Entities.Extract<Path>())
             {
                 RoutePath(path);
             }

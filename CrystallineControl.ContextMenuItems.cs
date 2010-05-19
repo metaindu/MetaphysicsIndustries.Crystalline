@@ -32,17 +32,17 @@ namespace MetaphysicsIndustries.Crystalline
         {
             ToolStripMenuItem item;
 
-            item = _createElementItem = new ToolStripMenuItem();
-            item.Text = "Create Element";
-            item.Name = "CreateElementItem";
-            item.Click += new EventHandler(CreateElementItem_Click);
-            ContextMenuStrip.Items.Add(item);
+            //item = _createElementItem = new ToolStripMenuItem();
+            //item.Text = "Create Element";
+            //item.Name = "CreateElementItem";
+            //item.Click += new EventHandler(CreateElementItem_Click);
+            //ContextMenuStrip.Items.Add(item);
 
-            item = _createPathItem = new ToolStripMenuItem();
-            item.Text = "Create Path";
-            item.Name = "CreatePathItem";
-            item.Click += new EventHandler(CreatePathItem_Click);
-            ContextMenuStrip.Items.Add(item);
+            //item = _createPathItem = new ToolStripMenuItem();
+            //item.Text = "Create Path";
+            //item.Name = "CreatePathItem";
+            //item.Click += new EventHandler(CreatePathItem_Click);
+            //ContextMenuStrip.Items.Add(item);
 
             //item = _createPathingJunctionItem = new ToolStripMenuItem();
             //item.Text = "Create PathingJunction";
@@ -71,6 +71,15 @@ namespace MetaphysicsIndustries.Crystalline
             item.Name = "CleanupItem";
             item.Click += new EventHandler(CleanupItem_Click);
             ContextMenuStrip.Items.Add(item);
+
+            ContextMenuStrip.Items.Add(new ToolStripSeparator());
+
+            _cutItem.Click += new EventHandler(CutItem_Click);
+            ContextMenuStrip.Items.Add(_cutItem);
+            _copyItem.Click += new EventHandler(CopyItem_Click);
+            ContextMenuStrip.Items.Add(_copyItem);
+            _pasteItem.Click += new EventHandler(PasteItem_Click);
+            ContextMenuStrip.Items.Add(_pasteItem);
 
             ContextMenuStrip.Items.Add(new ToolStripSeparator());
 
@@ -113,16 +122,57 @@ namespace MetaphysicsIndustries.Crystalline
 
         }
 
+        protected void PasteItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                PasteEntitiesAtLocation(LastRightClickInDocument);
+            }
+            catch (Exception ex)
+            {
+                ReportException(ex);
+            }
+        }
+
+        protected void CopyItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CopyEntitiesToClipboard(Selection.ToArray());
+            }
+            catch (Exception ex)
+            {
+                ReportException(ex);
+            }
+        }
+
+        protected void CutItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CopyEntitiesToClipboard(Selection.ToArray());
+
+                foreach (Entity ent in Selection.ToArray())
+                {
+                    DisconnectAndRemoveEntity(ent);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReportException(ex);
+            }
+        }
+
         protected virtual void UpdateContextMenuItems()
         {
-                if (Selection.Count > 0)
-                {
-                    _deleteItem.Enabled = true;
-                }
-                else
-                {
-                    _deleteItem.Enabled = false;
-                }
+            if (Selection.Count > 0)
+            {
+                _deleteItem.Enabled = true;
+            }
+            else
+            {
+                _deleteItem.Enabled = false;
+            }
 
             _deleteItem.Enabled = false;
             _cleanupItem.Enabled = false;
@@ -134,15 +184,15 @@ namespace MetaphysicsIndustries.Crystalline
         {
         }
 
-        protected virtual void CreateElementItem_Click(Object sender, EventArgs e)
-        {
-            Element element;
-            element = new Element();// CreateElement();
-            element.Location = DocumentSpaceFromClientSpace(LastRightClickInClient);
-            element.Size = new SizeV(50, 20);
-            element.Text = _names[Elements.Count % _names.Count];
-            AddEntity(element);
-        }
+        //protected virtual void CreateElementItem_Click(Object sender, EventArgs e)
+        //{
+        //    Element element;
+        //    element = new Element();// CreateElement();
+        //    element.Location = DocumentSpaceFromClientSpace(LastRightClickInClient);
+        //    element.Size = new SizeV(50, 20);
+        //    element.Text = _names[Entities.Extract<Element>().Length % _names.Count];
+        //    AddEntity(element);
+        //}
 
         protected void AddMenuItemForElement<T>(ToolStripItem item, ToolStripMenuItem menu)
             where T : Element, new()
@@ -190,23 +240,23 @@ namespace MetaphysicsIndustries.Crystalline
         }
 
 
-        protected virtual void CreatePathItem_Click(Object sender, EventArgs e)
-        {
-            Path p;
-            Vector pj;
+        //protected virtual void CreatePathItem_Click(Object sender, EventArgs e)
+        //{
+        //    Path p;
+        //    Vector pj;
 
-            //p = CreatePath();
-            p = new Path();
+        //    //p = CreatePath();
+        //    p = new Path();
 
-            pj = (DocumentSpaceFromClientSpace(LastRightClickInClient));
-            p.PathJoints.Add(pj);
+        //    pj = (DocumentSpaceFromClientSpace(LastRightClickInClient));
+        //    p.PathJoints.Add(pj);
 
-            pj = (DocumentSpaceFromClientSpace(LastRightClickInClient) + new Vector(10, 0));
-            p.PathJoints.Add(pj);
+        //    pj = (DocumentSpaceFromClientSpace(LastRightClickInClient) + new Vector(10, 0));
+        //    p.PathJoints.Add(pj);
 
-            AddEntity(p);
-            Invalidate();
-        }
+        //    AddEntity(p);
+        //    Invalidate();
+        //}
 
         protected virtual void DeleteItem_Click(Object sender, EventArgs e)
         {
@@ -214,7 +264,7 @@ namespace MetaphysicsIndustries.Crystalline
 
             foreach (Entity ent in s)
             {
-                RemoveEntity(ent);
+                DisconnectAndRemoveEntity(ent);
             }
 
             Selection.Clear();
@@ -234,11 +284,15 @@ namespace MetaphysicsIndustries.Crystalline
             Invalidate();
         }
 
-        ToolStripMenuItem _createElementItem;
-        ToolStripMenuItem _createPathItem;
+        //ToolStripMenuItem _createElementItem;
+        //ToolStripMenuItem _createPathItem;
         ToolStripMenuItem _deleteItem;
         ToolStripMenuItem _cleanupItem;
 
         ToolStripMenuItem _showDebugInfoItem;
+
+        protected ToolStripMenuItem _cutItem = new ToolStripMenuItem("Cut");
+        protected ToolStripMenuItem _copyItem = new ToolStripMenuItem("Copy");
+        protected ToolStripMenuItem _pasteItem = new ToolStripMenuItem("Paste");
     }
 }

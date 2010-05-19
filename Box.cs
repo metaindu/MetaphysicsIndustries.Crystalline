@@ -24,7 +24,7 @@ using MetaphysicsIndustries.Utilities;
 namespace MetaphysicsIndustries.Crystalline
 {
     [Serializable]
-    public class Box : Entity
+    public abstract class Box : Entity
     {
         public override RectangleV GetBoundingBox()
         {
@@ -67,6 +67,10 @@ namespace MetaphysicsIndustries.Crystalline
             return Rect.CalcCenter();
         }
 
+        public void SetCenterOfBox(float x, float y)
+        {
+            SetCenterOfBox(new Vector(x, y));
+        }
         public void SetCenterOfBox(Vector pt)
         {
             this.Location = new Vector(pt.X - Width / 2, pt.Y - Height / 2);
@@ -202,14 +206,14 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     if (ParentCrystallineControl != null)
                     {
-                        ParentCrystallineControl.Boxes.Remove(this);
+                        ParentCrystallineControl.Entities.Remove(this);
                     }
 
                     SetParentCrystallineControl(value);
 
                     if (ParentCrystallineControl != null)
                     {
-                        ParentCrystallineControl.Boxes.Add(this);
+                        ParentCrystallineControl.Entities.Add(this);
                     }
                 }
             }

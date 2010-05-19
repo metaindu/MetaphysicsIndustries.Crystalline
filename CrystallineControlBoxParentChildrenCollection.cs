@@ -16,148 +16,166 @@ using MetaphysicsIndustries.Collections;
 
 namespace MetaphysicsIndustries.Crystalline
 {
-    public class CrystallineControlBoxParentChildrenCollection : ICollection<Box>, IDisposable
-    {
-        public CrystallineControlBoxParentChildrenCollection(CrystallineControlEntityParentChildrenCollection parentInterlinking)
-        {
-            //if (container == null) { throw new ArgumentNullException("container"); }
-            if (parentInterlinking == null) { throw new ArgumentNullException("parentInterlinking"); }
+    //public class CrystallineControlBoxParentChildrenCollection : ICollection<Box>//, IDisposable
+    //{
+    //    public CrystallineControlBoxParentChildrenCollection(CrystallineControlEntityParentChildrenCollection parentInterlinking)
+    //    {
+    //        if (parentInterlinking == null) { throw new ArgumentNullException("parentInterlinking"); }
 
-            //_container = container;
-            _parentInterlinking = parentInterlinking;
-            //parentInterlinking.ItemAdded += parentInterlinking_ItemAdded;
-            //parentInterlinking.ItemRemoved += parentInterlinking_ItemRemoved;
+    //        _parentInterlinking = parentInterlinking;
+    //        parentInterlinking.ItemAdded += parentInterlinking_ItemAdded;
+    //        parentInterlinking.ItemRemoved += parentInterlinking_ItemRemoved;
 
-            foreach (Box item in this)
-            {
-                _count++;
-            }
-        }
+    //        _count = 0;
+    //        foreach (Box item in this)
+    //        {
+    //            _count++;
+    //        }
+    //    }
 
-        //void parentInterlinking_ItemAdded(Entity item)
-        //{
-        //    if (item is Box)
-        //    {
-        //        Add((Box)item);
-        //    }
-        //}
 
-        //void parentInterlinking_ItemRemoved(Entity item)
-        //{
-        //    if (item is Box)
-        //    {
-        //        Remove((Box)item);
-        //    }
-        //}
+    //    public event CrystallineControlEntityParentChildrenCollection.InterlinkingEventHandler<Box> ItemAdded;
+    //    public event CrystallineControlEntityParentChildrenCollection.InterlinkingEventHandler<Box> ItemRemoved;
 
-        public virtual void Dispose()
-        {
-            Clear();
-        }
+    //    void parentInterlinking_ItemAdded(Entity item)
+    //    {
+    //        if (item is Box)
+    //        {
+    //            Add(item as Box);
+    //        }
+    //    }
 
-        public void AddRange(params Box[] items)
-        {
-            AddRange((IEnumerable<Box>)items);
-        }
-        public void AddRange(IEnumerable<Box> items)
-        {
-            foreach (Box item in items)
-            {
-                Add(item);
-            }
-        }
-        public void RemoveRange(params Box[] items)
-        {
-            RemoveRange((IEnumerable<Box>)items);
-        }
-        public void RemoveRange(IEnumerable<Box> items)
-        {
-            foreach (Box item in items)
-            {
-                Remove(item);
-            }
-        }
+    //    void parentInterlinking_ItemRemoved(Entity item)
+    //    {
+    //        if (item is Box)
+    //        {
+    //            Remove(item as Box);
+    //        }
+    //    }
 
-        //ICollection<Box>
-        public virtual void Add(Box item)
-        {
-            if (!Contains(item))
-            {
-                _count++;
-            }
 
-            _parentInterlinking.Add(item);
-        }
+    //    protected void OnItemAdded(Box item)
+    //    {
+    //        if (ItemAdded != null)
+    //        {
+    //            ItemAdded(item);
+    //        }
+    //    }
+    //    protected void OnItemRemoved(Box item)
+    //    {
+    //        if (ItemRemoved != null)
+    //        {
+    //            ItemRemoved(item);
+    //        }
+    //    }
 
-        public virtual bool Contains(Box item)
-        {
-            return _parentInterlinking.Contains(item);
-        }
+    //    //public virtual void Dispose()
+    //    //{
+    //    //    Clear();
+    //    //}
 
-        public virtual bool Remove(Box item)
-        {
-            if (Contains(item))
-            {
-                _count--;
-            }
+    //    public void AddRange(params Box[] items)
+    //    {
+    //        AddRange((IEnumerable<Box>)items);
+    //    }
+    //    public void AddRange(IEnumerable<Box> items)
+    //    {
+    //        foreach (Box item in items)
+    //        {
+    //            Add(item);
+    //        }
+    //    }
+    //    public void RemoveRange(params Box[] items)
+    //    {
+    //        RemoveRange((IEnumerable<Box>)items);
+    //    }
+    //    public void RemoveRange(IEnumerable<Box> items)
+    //    {
+    //        foreach (Box item in items)
+    //        {
+    //            Remove(item);
+    //        }
+    //    }
 
-            return _parentInterlinking.Remove(item);
-        }
+    //    public Box[] ToArray()
+    //    {
+    //        return Collection.ToArray(this);
+    //    }
 
-        public virtual void Clear()
-        {
-            Box[] array = new Box[Count];
+    //    //ICollection<Box>
+    //    public virtual void Add(Box item)
+    //    {
+    //        if (!Contains(item))
+    //        {
+    //            _count++;
+    //            OnItemAdded(item);
+    //        }
 
-            CopyTo(array, 0);
+    //        _parentInterlinking.Add(item);
+    //    }
 
-            foreach (Box item in array)
-            {
-                Remove(item);
-            }
-        }
+    //    public virtual bool Contains(Box item)
+    //    {
+    //        return _parentInterlinking.Contains(item);
+    //    }
 
-        public virtual void CopyTo(Box[] array, int arrayIndex)
-        {
-            List<Box> list = new List<Box>(Count);
-            foreach (Box item in this)
-            {
-                list.Add(item);
-            }
-            list.CopyTo(array, arrayIndex);
-        }
+    //    public virtual bool Remove(Box item)
+    //    {
+    //        if (Contains(item))
+    //        {
+    //            _count--;
+    //            OnItemRemoved(item);
+    //        }
 
-        public virtual IEnumerator<Box> GetEnumerator()
-        {
-            foreach (object item in _parentInterlinking)
-            {
-                if (item is Box)
-                {
-                    yield return (Box)item;
-                }
-            }
+    //        return _parentInterlinking.Remove(item);
+    //    }
 
-            yield break;
-        }
+    //    public virtual void Clear()
+    //    {
+    //        foreach (Box item in this.ToArray())
+    //        {
+    //            Remove(item);
+    //        }
+    //    }
 
-        //ICollection<Box>
-        public virtual int Count
-        {
-            get { return _count; }
-        }
+    //    public virtual void CopyTo(Box[] array, int arrayIndex)
+    //    {
+    //        List<Box> list = new List<Box>(this);
+    //        list.CopyTo(array, arrayIndex);
+    //    }
 
-        public virtual bool IsReadOnly
-        {
-            get { return _parentInterlinking.IsReadOnly; }
-        }
+    //    public virtual IEnumerator<Box> GetEnumerator()
+    //    {
+    //        foreach (object item in _parentInterlinking)
+    //        {
+    //            if (item is Box)
+    //            {
+    //                yield return (item as Box);
+    //            }
+    //        }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+    //        yield break;
+    //    }
 
-        //private CrystallineControl _container;
-        //private Set<Box> _set = new Set<Box>();
-        private CrystallineControlEntityParentChildrenCollection _parentInterlinking;
-        int _count = 0;
-    }
+    //    //ICollection<Box>
+    //    public virtual int Count
+    //    {
+    //        get { return _count; }
+    //    }
+
+    //    public virtual bool IsReadOnly
+    //    {
+    //        get { return _parentInterlinking.IsReadOnly; }
+    //    }
+
+    //    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+    //    {
+    //        return GetEnumerator();
+    //    }
+
+    //    //private CrystallineControl _container;
+    //    //private Set<Box> _set = new Set<Box>();
+    //    private CrystallineControlEntityParentChildrenCollection _parentInterlinking;
+    //    int _count = 0;
+    //}
 }

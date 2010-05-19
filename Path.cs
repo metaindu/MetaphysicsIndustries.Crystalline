@@ -22,7 +22,7 @@ using MetaphysicsIndustries.Utilities;
 namespace MetaphysicsIndustries.Crystalline
 {
     [Serializable]
-    public class Path : Entity, IConnectionConduit<Element, Element, Path>
+    public abstract class Path : Entity, IConnectionConduit<Element, Element, Path>
     {
         public Path()
         {
@@ -215,14 +215,14 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     if (ParentCrystallineControl != null)
                     {
-                        ParentCrystallineControl.Paths.Remove(this);
+                        ParentCrystallineControl.Entities.Remove(this);
                     }
 
                     SetParentCrystallineControl(value);
 
                     if (ParentCrystallineControl != null)
                     {
-                        ParentCrystallineControl.Paths.Add(this);
+                        ParentCrystallineControl.Entities.Add(this);
                     }
                 }
             }
@@ -266,6 +266,13 @@ namespace MetaphysicsIndustries.Crystalline
             {
                 this.ToChanging(this, e);
             }
+        }
+
+        public override void Disconnect(out Entity[] entitiesToRemove)
+        {
+            From = null;
+            To = null;
+            entitiesToRemove = null;
         }
 
         private List<Vector> _pathJoints = new List<Vector>();

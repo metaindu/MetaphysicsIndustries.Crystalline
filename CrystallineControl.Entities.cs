@@ -35,25 +35,48 @@ namespace MetaphysicsIndustries.Crystalline
             get { return _entities; }
         }
 
-        private CrystallineControlBoxParentChildrenCollection _boxes;
-        public CrystallineControlBoxParentChildrenCollection Boxes
+        //private CrystallineControlBoxParentChildrenCollection _boxes;
+        //public CrystallineControlBoxParentChildrenCollection Boxes
+        //{
+        //    get { return _boxes; }
+        //}
+
+        //public virtual ElementCollection Elements
+        //{
+        //    get
+        //    {
+        //        return _elements;
+        //    }
+        //}
+        //public virtual CrystallineControlPathParentChildrenCollection Paths
+        //{
+        //    get
+        //    {
+        //        return _paths;
+        //    }
+        //}
+
+
+        void Entities_ItemAdded(Entity item)
         {
-            get { return _boxes; }
+            if (item is Box)
+            {
+                Framework.Add(item as Box);
+            }
+
+            InvalidateRectFromEntity(item);
         }
 
-        public virtual ElementCollection Elements
+        void Entities_ItemRemoved(Entity item)
         {
-            get
+            if (item is Box)
             {
-                return _elements;
+                Framework.Remove(item as Box);
             }
-        }
-        public virtual CrystallineControlPathParentChildrenCollection Paths
-        {
-            get
-            {
-                return _paths;
-            }
+
+            Selection.Remove(item);
+
+            InvalidateRectFromEntity(item);
         }
 
         public Entity[] GetEntitiesAtPointInDocument(Vector v)
@@ -158,36 +181,19 @@ namespace MetaphysicsIndustries.Crystalline
 
         public virtual void AddEntity(Entity entity)
         {
-            InvalidateRectFromEntity(entity);
-
             Entities.Add(entity);
 
-            if (entity is Box)
+            if (entity is Element)
             {
-                InternalAddBox(entity as Box);
-            }
-            else if (entity is Path)
-            {
-                InternalAddPath(entity as Path);
+                InternalAddElement(entity as Element);
             }
 
             InvalidateRectFromEntity(entity);
-        }
-
-        protected virtual void InternalAddBox(Box box)
-        {
-            Boxes.Add(box);
-            Framework.Add(box);
-
-            if (box is Element)
-            {
-                InternalAddElement(box as Element);
-            }
         }
 
         protected virtual void InternalAddElement(Element element)
         {
-            Elements.Add(element);
+            Entities.Add(element);
 
             foreach (Path path in element.Inbound)
             {
@@ -199,65 +205,28 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        protected virtual void InternalAddPath(Path pathToAdd)
+        public virtual void DisconnectAndRemoveEntity(Entity ent)
         {
-            Paths.Add(pathToAdd);
-        }
-
-        public virtual void RemoveEntity(Entity ent)
-        {
-            InvalidateRectFromEntity(ent);
-
-            Entities.Remove(ent);
-
-            Selection.Remove(ent);
-
-            if (ent is Box)
+            if (ent != null)
             {
-                InternalRemoveBox(ent as Box);
-            }
-            else if (ent is Path)
-            {
-                InternalRemovePath(ent as Path);
-            }
+                Entity[] entitiesToRemove;
+                ent.Disconnect(out entitiesToRemove);
 
-            InvalidateRectFromEntity(ent);
-        }
+                Entities.Remove(ent);
 
-        protected virtual void InternalRemoveBox(Box box)
-        {
-            Boxes.RemoveRange(box);
-            Framework.Remove(box);
-
-            if (box is Element)
-            {
-                InternalRemoveElement(box as Element);
+                if (entitiesToRemove != null)
+                {
+                    foreach (Entity ent2 in entitiesToRemove)
+                    {
+                        if (ent2 != null)
+                        {
+                            DisconnectAndRemoveEntity(ent2);
+                        }
+                    }
+                }
             }
         }
 
-        protected virtual void InternalRemoveElement(Element element)
-        {
-            Elements.Remove(element);
-
-            foreach (Path path in element.Inbound)
-            {
-                RoutePath(path);
-            }
-            foreach (Path path in element.Outbound)
-            {
-                RoutePath(path);
-            }
-        }
-
-        protected virtual void InternalRemovePath(Path pathToRemove)
-        {
-            Paths.Remove(pathToRemove);
-
-            //foreach (PathJoint pj in pathToRemove.PathJoints)
-            //{
-            //    SelectionPathJoint.Remove(pj);
-            //}
-        }
 
 
 
@@ -325,44 +294,15 @@ namespace MetaphysicsIndustries.Crystalline
 
 
 
-        ElementCollection _elements;
-        CrystallineControlPathParentChildrenCollection _paths;
+        //ElementCollection _elements;
+        //CrystallineControlPathParentChildrenCollection _paths;
         //PathingJunctionCollection _pathingJunctions;
         //PathwayCollection _pathways;
 
 
         public void ImportEntities(Entity[] entities)
         {
-            Set<Element> elements = new Set<Element>();
-            Set<Path> paths = new Set<Path>();
-            Set<Entity> others = new Set<Entity>();
-
-            //foreach (Entity ent in entities)
-            //{
-            //    if (ent is EmeraldElement)
-            //    {
-            //        elements.Add((EmeraldElement)ent);
-            //    }
-            //    else if (ent is EmeraldPath)
-            //    {
-            //        paths.Add((EmeraldPath)ent);
-            //    }
-            //}
-            foreach (Entity ent in entities)
-            {
-                if (ent is Element)
-                {
-                    elements.Add((Element)ent);
-                }
-                else if (ent is Path)
-                {
-                    paths.Add((Path)ent);
-                }
-                else
-                {
-                    others.Add(ent);
-                }
-            }
+            Element[] elements = Collection.Extract<Entity, Element>(entities);
 
             Dictionary<Element, Path[]> outbound = new Dictionary<Element, Path[]>();
             Dictionary<Element, Path[]> inbound = new Dictionary<Element, Path[]>();
@@ -373,9 +313,7 @@ namespace MetaphysicsIndustries.Crystalline
                 inbound[elem] = Collection.ToArray(elem.Inbound);
             }
 
-            Elements.AddRange(elements);
-            Paths.AddRange(paths);
-            Entities.AddRange(others);
+            Entities.AddRange(entities);
 
             foreach (Element elem in elements)
             {
@@ -386,12 +324,127 @@ namespace MetaphysicsIndustries.Crystalline
 
         public virtual void ResetContent()
         {
-            Selection.Clear();
-            Elements.Clear();
-            Boxes.Clear();
-            Paths.Clear();
             Entities.Clear();
         }
 
+        //eventually replace these with IClonable on Entity
+        protected Entity[] CloneEntities(IEnumerable<Entity> entities)
+        {
+            Set<Entity> ents = new Set<Entity>(entities);
+            foreach (Entity ent in entities)
+            {
+                Entity[] ents2 = GetAdditionalClonableEntities(ent);
+                ents.AddRange(ents2);
+            }
+
+
+            List<Entity> clones = new List<Entity>();
+            Dictionary<Entity, Entity> matchup = new Dictionary<Entity, Entity>();
+
+            foreach (Entity ent in ents)
+            {
+                Entity clone = InstantiateEntityClone(ent);
+                if (clone != null)
+                {
+                    matchup[ent] = clone;
+                    matchup[clone] = ent;
+                    clones.Add(clone);
+                }
+            }
+            foreach (Entity clone in clones)
+            {
+                PopulateEntityClone(clone, matchup);
+            }
+
+            return clones.ToArray();
+        }
+        protected Entity[] GetAdditionalClonableEntities(Entity ent)
+        {
+            Set<Entity> ents = new Set<Entity>();
+            GetAdditionalClonableEntities(ent, ents);
+            return ents.ToArray();
+        }
+        protected virtual void GetAdditionalClonableEntities(Entity ent, Set<Entity> ents)
+        {
+            if (ent is Element)
+            {
+                Element elem = (Element)ent;
+                foreach (Path p in elem.Inbound)
+                {
+                    if (ents.Contains(p.From))
+                    {
+                        ents.Add(p);
+                    }
+                }
+                foreach (Path p in elem.Outbound)
+                {
+                    if (ents.Contains(p.From))
+                    {
+                        ents.Add(p);
+                    }
+                }
+            }
+        }
+        protected virtual Entity InstantiateEntityClone(Entity ent)
+        {
+            if (ent == null) { throw new ArgumentNullException("ent"); }
+
+            //if (ent is Path)
+            //{
+            //    return new Path();
+            //}
+            //if (ent is Element)
+            //{
+            //    return new Element();
+            //}
+
+            throw new InvalidOperationException("Unknown entity type: " + ent.GetType().FullName);
+        }
+        protected virtual void PopulateEntityClone(Entity clone, Dictionary<Entity, Entity> matchup)
+        {
+            if (clone == null) { throw new ArgumentNullException("clone"); }
+            if (matchup == null) { throw new ArgumentNullException("matchup"); }
+
+            if (clone is Path)
+            {
+                Path src = (Path)matchup[clone];
+                if (src.From != null &&
+                    matchup.ContainsKey(src.From))
+                {
+                    ((Path)clone).From = (Element)matchup[src.From];
+                }
+                if (src.To != null &&
+                    matchup.ContainsKey(src.To))
+                {
+                    ((Path)clone).To = (Element)matchup[src.To];
+                }
+            }
+            if (clone is Box)
+            {
+                Box src = (Box)matchup[clone];
+                ((Box)clone).Rect = src.Rect;
+                ((Box)clone).Text = src.Text;
+            }
+            if (clone is Element)
+            {
+                Element src = (Element)matchup[clone];
+                Element elem = (Element)clone;
+
+                foreach (Path p in src.Inbound)
+                {
+                    if (matchup.ContainsKey(p))
+                    {
+                        elem.Inbound.Add((Path)matchup[p]);
+                    }
+                }
+                foreach (Path p in src.Outbound)
+                {
+                    if (matchup.ContainsKey(p))
+                    {
+                        elem.Outbound.Add((Path)matchup[p]);
+                    }
+                }
+            }
+        }
     }
 }

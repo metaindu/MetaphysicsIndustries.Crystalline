@@ -27,17 +27,6 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public partial class CrystallineControl : UserControl
     {
-        
-
-        public int SelectionEntitiesCount
-        {
-            get
-            {
-                return Selection.Count;
-            }
-        }
-
-
         Set<Entity> _selectionElement = new Set<Entity>();
         public Set<Entity> Selection
         {
@@ -47,7 +36,5 @@ namespace MetaphysicsIndustries.Crystalline
         {
             get { return Selection.Extract<Element>(); }
         }
-
-
     }
 }

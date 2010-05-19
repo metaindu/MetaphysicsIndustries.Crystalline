@@ -30,11 +30,10 @@ namespace MetaphysicsIndustries.Crystalline
 			_set = new Set<Path>();
 		}
 
-        //public virtual void Dispose()
-        //{
-        //    this.Clear();
-        //    //_set.Dispose();
-        //}
+        public Path[] ToArray()
+        {
+            return _set.ToArray();
+        }
 
 		public virtual void Add(Path path)
 		{
