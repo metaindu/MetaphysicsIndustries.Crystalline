@@ -309,8 +309,8 @@ namespace MetaphysicsIndustries.Crystalline
 
             foreach (Element elem in elements)
             {
-                outbound[elem] = Collection.ToArray(elem.Outbound);
-                inbound[elem] = Collection.ToArray(elem.Inbound);
+                outbound[elem] = elem.Outbound.ToArray();
+                inbound[elem] = elem.Inbound.ToArray();
             }
 
             Entities.AddRange(entities);
