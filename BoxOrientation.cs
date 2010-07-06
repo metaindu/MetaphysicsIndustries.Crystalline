@@ -24,8 +24,8 @@ namespace MetaphysicsIndustries.Crystalline
     public enum BoxOrientation
     {
         Left,
-        Right,
         Up,
+        Right,
         Down,
     }
 }

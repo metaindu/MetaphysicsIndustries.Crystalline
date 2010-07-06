@@ -218,7 +218,7 @@ namespace MetaphysicsIndustries.Crystalline
                 {
                     foreach (Entity ent2 in entitiesToRemove)
                     {
-                        if (ent2 != null)
+                        if (ent2 != null && Entities.Contains(ent2))
                         {
                             DisconnectAndRemoveEntity(ent2);
                         }

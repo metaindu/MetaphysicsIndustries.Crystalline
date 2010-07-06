@@ -26,7 +26,6 @@ namespace MetaphysicsIndustries.Crystalline
     {
         public Path()
         {
-            //_pathJoints = new PathPathJointChildrenCollection(this);
         }
 
         public override RectangleV GetBoundingBox()
@@ -149,7 +148,7 @@ namespace MetaphysicsIndustries.Crystalline
             {
                 if (_to != value)
                 {
-                    this.OnToChanging(new EventArgs());
+                    //this.OnToChanging(new EventArgs());
 
                     if (_to != null)
                     {
@@ -180,7 +179,7 @@ namespace MetaphysicsIndustries.Crystalline
             {
                 if (_from != value)
                 {
-                    this.OnFromChanging(new EventArgs());
+                    //this.OnFromChanging(new EventArgs());
 
                     if (_from != null)
                     {
@@ -228,45 +227,45 @@ namespace MetaphysicsIndustries.Crystalline
             }
         }
 
-        public event EventHandler ToChanging;
+        //public event EventHandler ToChanging;
 
-        public event EventHandler ToChanged;
+        //public event EventHandler ToChanged;
 
-        public event EventHandler FromChanged;
+        //public event EventHandler FromChanged;
 
-        public event EventHandler FromChanging;
+        //public event EventHandler FromChanging;
 
         protected virtual void OnFromChanged(EventArgs e)
         {
-            if (FromChanged != null)
-            {
-                this.FromChanged(this, e);
-            }
+            //if (FromChanged != null)
+            //{
+            //    this.FromChanged(this, e);
+            //}
         }
 
         protected virtual void OnToChanged(EventArgs e)
         {
-            if (ToChanged != null)
-            {
-                this.ToChanged(this, e);
-            }
+            //if (ToChanged != null)
+            //{
+            //    this.ToChanged(this, e);
+            //}
         }
 
-        protected virtual void OnFromChanging(EventArgs e)
-        {
-            if (FromChanging != null)
-            {
-                this.FromChanging(this, e);
-            }
-        }
+        //protected virtual void OnFromChanging(EventArgs e)
+        //{
+        //    if (FromChanging != null)
+        //    {
+        //        this.FromChanging(this, e);
+        //    }
+        //}
 
-        protected virtual void OnToChanging(EventArgs e)
-        {
-            if (ToChanging != null)
-            {
-                this.ToChanging(this, e);
-            }
-        }
+        //protected virtual void OnToChanging(EventArgs e)
+        //{
+        //    if (ToChanging != null)
+        //    {
+        //        this.ToChanging(this, e);
+        //    }
+        //}
 
         public override void Disconnect(out Entity[] entitiesToRemove)
         {

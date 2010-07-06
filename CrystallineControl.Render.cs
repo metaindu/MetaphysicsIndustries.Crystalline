@@ -523,7 +523,7 @@ namespace MetaphysicsIndustries.Crystalline
             if (image == null) { throw new ArgumentNullException("image"); }
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "Bitmap Images (*.bmp)|*.bmp|JPEG Images (*.jpg, *.jpeg)|*.jpg;*.jpeg|GIF Images (*.gif)|*.gif|PNG Images (*.png)|*.png*.png|All Files (*.*)|*.*";
+            sfd.Filter = "Bitmap Images (*.bmp)|*.bmp|JPEG Images (*.jpg, *.jpeg)|*.jpg;*.jpeg|GIF Images (*.gif)|*.gif|PNG Images (*.png)|*.png|All Files (*.*)|*.*";
 
             DialogResult res;
             if (owner == null)
