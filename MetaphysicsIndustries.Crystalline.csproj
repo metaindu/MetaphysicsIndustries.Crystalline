@@ -197,6 +197,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>perl -W "C:\Metaphysics Industries\Projects\Publish\publish.pl" $(ConfigurationName) "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>perl -W "$(SolutionDir)\Publish\publish.pl" $(ConfigurationName) "$(TargetPath)" $(ConfigurationName) "$(TargetPath)"</PostBuildEvent>
   </PropertyGroup>
 </Project>
