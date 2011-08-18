@@ -58,6 +58,7 @@ namespace MetaphysicsIndustries.Crystalline
             base.OnPaint(e);
         }
 
+
         protected virtual void ProcessPaint(PaintEventArgs e)
         {
             PaintEventArgs _e = e;
@@ -66,7 +67,18 @@ namespace MetaphysicsIndustries.Crystalline
 
             g = e.Graphics;
 
+            //if (_zoom != 1 && _zoom != 0)
+            //{
+            //    g.ScaleTransform(_zoom, _zoom);
+            //}
+
             Render(g);
+
+            //if (_zoom != 1 && _zoom != 0)
+            //{
+            //    float invzoom = 1.0f / _zoom;
+            //    g.ScaleTransform(invzoom, invzoom);
+            //}
         }
 
         private bool _shallRenderElements = true;

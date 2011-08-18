@@ -29,41 +29,43 @@ namespace MetaphysicsIndustries.Crystalline
 {
     public partial class CrystallineControl : UserControl
     {
+        //////////////////////////////////////////////////////////////////
+        // space conversions
 
-        public Point ClientSpaceFromDocumentSpace(Vector locationInDocumentSpace)
-        {
-            //return Point.Round(locationInDocumentSpace) + new Size(AutoScrollPosition);
-            return Point.Truncate(ClientSpaceFromScrollableSpace(ScrollableSpaceFromDocumentSpace(locationInDocumentSpace)));
-        }
-
-        public Vector DocumentSpaceFromClientSpace(Point locationInClientSpace)
-        {
-            //return locationInClientSpace - new Size(AutoScrollPosition);
-            return DocumentSpaceFromScrollableSpace(ScrollableSpaceFromClientSpace(locationInClientSpace));
-        }
+        // client space
+        // scrollable space
+        // document space
 
         protected Point ClientSpaceFromScrollableSpace(Vector locationInScrollableSpace)
         {
-            return new Point((int)Math.Round(locationInScrollableSpace.X + AutoScrollPosition.X),
-                             (int)Math.Round(locationInScrollableSpace.Y + AutoScrollPosition.Y));
+            return new Point((int)Math.Round(locationInScrollableSpace.X / Zoom + AutoScrollPosition.X),
+                             (int)Math.Round(locationInScrollableSpace.Y / Zoom + AutoScrollPosition.Y));
         }
-
         protected Vector ScrollableSpaceFromClientSpace(Point locationInClientSpace)
         {
-            return (Vector)((PointF)locationInClientSpace) - ((PointF)AutoScrollPosition);
+            return Zoom * (Vector)((PointF)locationInClientSpace) - ((PointF)AutoScrollPosition);
         }
 
         protected Vector ScrollableSpaceFromDocumentSpace(Vector locationInDocumentSpace)
         {
             return locationInDocumentSpace - _scrollableAreaInDocument.Location;
         }
-
         protected Vector DocumentSpaceFromScrollableSpace(Vector locationInScrollableSpace)
         {
-            return locationInScrollableSpace + _scrollableAreaInDocument.Location;
+            return (locationInScrollableSpace + _scrollableAreaInDocument.Location)/_zoom;
         }
 
+        public Point ClientSpaceFromDocumentSpace(Vector locationInDocumentSpace)
+        {
+            return ClientSpaceFromScrollableSpace(ScrollableSpaceFromDocumentSpace(locationInDocumentSpace));
+        }
+        public Vector DocumentSpaceFromClientSpace(Point locationInClientSpace)
+        {
+            return DocumentSpaceFromScrollableSpace(ScrollableSpaceFromClientSpace(locationInClientSpace));
+        }
 
+        //////////////////////////////////////////////////////////////////
+        // rectangle helpers
 
         public Rectangle ClientSpaceFromDocumentSpace(RectangleV rectInDocumentSpace)
         {
@@ -96,6 +98,30 @@ namespace MetaphysicsIndustries.Crystalline
         {
             return new RectangleV(DocumentSpaceFromScrollableSpace(rectInScrollableSpace.Location), rectInScrollableSpace.Size);
         }
+        //////////////////////////////////////////////////////////////////
+        // zoom
+
+        float _zoom = 1;
+        public float Zoom
+        {
+            get { return _zoom; }
+            protected set
+            {
+                if (_zoom != value)
+                {
+                    _zoom = value;
+
+                    OnZoomChanged(new EventArgs());
+                }
+            }
+        }
+
+        protected virtual void OnZoomChanged(EventArgs eventArgs)
+        {
+        }
+
+        //////////////////////////////////////////////////////////////////
+        // event handlers, forms stuff, etc.
 
         protected override void OnScroll(ScrollEventArgs se)
         {

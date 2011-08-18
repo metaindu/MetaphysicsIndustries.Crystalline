@@ -158,15 +158,6 @@ namespace MetaphysicsIndustries.Crystalline
             MessageBox.Show(this, "There was an error: \r\n" + ex.ToString());
         }
 
-        //private double Dist(PointF p1, PointF p2)
-        //{
-        //    float xx;
-        //    float yy;
-        //    xx = (p1.X - p2.X);
-        //    yy = (p1.Y - p2.Y);
-        //    return Math.Sqrt(xx * xx + yy * yy);
-        //}
-
         //private CrystallineControlFunctionalityOrderedParentChildrenCollection _functionalities;
         //public CrystallineControlFunctionalityOrderedParentChildrenCollection Functionalities
         //{

@@ -33,13 +33,11 @@ namespace MetaphysicsIndustries.Crystalline
 
         public override void Render(Graphics g, Pen pen, Brush brush, Font font)
         {
-            RectangleV r;
             if (pen == null)
             {
                 pen = Pens.Black;
             }
-            r = this.Rect;
-            RenderShape(g, pen, Brushes.White, r);
+            RenderShape(g, pen, Brushes.White, Rect);
             RenderText(g, pen, brush, font);
         }
 
@@ -80,7 +78,18 @@ namespace MetaphysicsIndustries.Crystalline
         public virtual string Text
         {
             get { return _text; }
-            set { _text = value; }
+            set
+            {
+                if (_text != value)
+                {
+                    _text = value;
+
+                    OnTextChanged(new EventArgs());
+                }
+            }
+        }
+        protected virtual void OnTextChanged(EventArgs e)
+        {
         }
 
         public virtual RectangleV Rect

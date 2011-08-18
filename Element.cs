@@ -94,13 +94,13 @@ namespace MetaphysicsIndustries.Crystalline
         //    base.Render(g, pen, brush, font);
         //}
 
-        protected override void RenderText(Graphics g, Pen pen, Brush brush, Font font)
-        {
-            //if (ParentCrystallineControl.ShowDebugInfo)
-            //{
-                base.RenderText(g, pen, brush, font);
-            //}
-        }
+        //protected override void RenderText(Graphics g, Pen pen, Brush brush, Font font)
+        //{
+        //    //if (ParentCrystallineControl.ShowDebugInfo)
+        //    //{
+        //        base.RenderText(g, pen, brush, font);
+        //    //}
+        //}
 
 		public virtual InboundToElementPathChildrenCollection Inbound
 		{
