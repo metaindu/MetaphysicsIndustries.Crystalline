@@ -36,7 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -84,8 +83,8 @@
     <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MetaphysicsIndustries.Crystalline\MetaphysicsIndustries.Crystalline.csproj">
-      <Project>{A2EA7ECC-F70D-40F4-BAEB-8E21608DCDDA}</Project>
+    <ProjectReference Include="..\MetaphysicsIndustries.Crystalline.csproj">
+      <Project>{a2ea7ecc-f70d-40f4-baeb-8e21608dcdda}</Project>
       <Name>MetaphysicsIndustries.Crystalline</Name>
     </ProjectReference>
   </ItemGroup>
