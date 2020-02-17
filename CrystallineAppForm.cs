@@ -17,6 +17,17 @@ namespace MetaphysicsIndustries.Crystalline
 
             this.crystallineControl1 = InitControl();
 
+            if (Environment.OSVersion.Platform == PlatformID.Unix ||
+                Environment.OSVersion.Platform == PlatformID.MacOSX)
+            {
+                this.Controls.Remove(this.toolStripContainer1);
+                this.Controls.Add(this.crystallineControl1);
+            }
+            else
+            {
+                this.toolStripContainer1.ContentPanel.Controls.Add(this.crystallineControl1);
+            }
+
             openFileDialog1.Filter = Filter;
             openFileDialog1.DefaultExt = DefaultExtension;
 
@@ -28,8 +39,6 @@ namespace MetaphysicsIndustries.Crystalline
         protected virtual T InitControl()
         {
             T control = new T();
-
-            this.toolStripContainer1.ContentPanel.Controls.Add(control);
 
             control.AutoScroll = true;
             control.AutoScrollMinSize = new System.Drawing.Size(142, 142);
