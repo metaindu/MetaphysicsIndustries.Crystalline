@@ -171,8 +171,10 @@
     <None Include="key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="LICENSE" />
     <Content Include="names.txt" />
     <Content Include="notes.txt" />
+    <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MetaphysicsIndustries.Collections\MetaphysicsIndustries.Collections.csproj">
